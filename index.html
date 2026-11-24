@@ -783,7 +783,7 @@ function spawnScreen(id){
   }
   if(id==='den'&&!G.grakDown){
     var gs=grakStats();
-    enemies.push({x:480,y:170,hp:gs.hp,maxhp:gs.hp,t:0,idx:'grak',hitT:0,boss:true,dmg:gs.dmg,dying:false,dieT:0});
+    enemies.push({x:480,y:170,hp:gs.hp,maxhp:gs.hp,t:0,idx:99,hitT:0,boss:true,dmg:gs.dmg,dying:false,dieT:0});
   }
   (HERB_SPOTS[id]||[]).forEach(function(hs,hi){ if(!G.herbsTaken[id+':'+hi]) herbsHere.push({x:hs[0],y:hs[1],idx:hi}); });
   (NPC_SPOTS[id]||[]).forEach(function(ns){ npcs.push({id:ns.id,x:ns.x,y:ns.y,homeX:ns.x,homeY:ns.y}); });
