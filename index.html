@@ -27,7 +27,9 @@
   .panel { background:rgba(16,26,48,.92); border:1px solid #4a6394; border-radius:10px; box-shadow:0 10px 40px rgba(0,0,0,.5); }
   #slotsPanel { width:min(680px, 94vw); padding:14px 16px; }
   #slotsPanel h2, .setup h2 { margin:2px 0 10px; font-size:18px; color:#ffd97a; letter-spacing:.04em; font-weight:normal; }
-  .slot { display:flex; align-items:center; gap:12px; width:100%; text-align:left; background:#1c2c4e; color:#f2e8c9; border:1px solid #3a5484; border-radius:8px; padding:10px 12px; margin:0 0 8px; min-height:56px; }
+  .slot { display:flex; align-items:center; gap:12px; width:100%; text-align:left; background:#1c2c4e; color:#f2e8c9; border:1px solid #3a5484; border-radius:8px; padding:10px 12px; margin:0 0 8px; min-height:56px; cursor:pointer; }
+  .slot .clear-btn { flex:0 0 auto; background:#3a2430; color:#f0b8c4; border:1px solid #8a4a5a; border-radius:6px; padding:6px 12px; font-size:13px; min-height:36px; }
+  .slot .clear-btn:hover { border-color:#e88aa0; color:#ffd7de; }
   .slot:hover { border-color:#ffd97a; }
   .slot .avatar { width:38px;height:38px;border-radius:50%; flex:0 0 auto; display:flex;align-items:center;justify-content:center; font-size:20px; color:#0d1730; font-weight:bold; }
   .slot .meta { flex:1; min-width:0; }
@@ -283,15 +285,6 @@
           <button class="menu-btn" id="bagClose">Back</button>
         </div>
       </div>
-      <!-- confirm -->
-      <div class="overlay" id="confirmOverlay" style="z-index:60">
-        <div class="panel modal-panel" style="text-align:center">
-          <h2 id="confirmTitle">Start over?</h2>
-          <p id="confirmText" style="color:#d8e0f2;line-height:1.55"></p>
-          <button class="menu-btn" id="confirmYes" style="background:#8a6d2f;border-color:#c9a44a">Yes, erase that game</button>
-          <button class="menu-btn" id="confirmNo">Keep it</button>
-        </div>
-      </div>
     </div>
   </section>
 
@@ -318,6 +311,15 @@
         <p>Goblins dissolve into embers and drop <b>coins</b>. Sunleaf herbs grow in the North Meadow and the Herb Field.</p>
       </div>
       <button class="menu-btn" id="howClose">Back</button>
+    </div>
+  </div>
+  <!-- confirm (app level, so it can appear over the title screen as well as in game) -->
+  <div class="overlay" id="confirmOverlay" style="z-index:60">
+    <div class="panel modal-panel" style="text-align:center">
+      <h2 id="confirmTitle">Start over?</h2>
+      <p id="confirmText" style="color:#d8e0f2;line-height:1.55"></p>
+      <button class="menu-btn" id="confirmYes" style="background:#8a6d2f;border-color:#c9a44a">Yes, erase that game</button>
+      <button class="menu-btn" id="confirmNo">Keep it</button>
     </div>
   </div>
 </div>
@@ -381,8 +383,8 @@ var GRID={}; Object.keys(SCREENS).forEach(function(k){ GRID[SCREENS[k].col+','+S
 var HERB_SPOTS={ north:[[300,205],[625,300],[480,455]], herb:[[250,180],[700,225],[400,425],[620,485]] };
 var NPC_SPOTS={
  village:[
-  {id:'bram',x:612,y:270},{id:'renn',x:290,y:235},{id:'mira',x:640,y:400},
-  {id:'dell',x:185,y:465},{id:'joren',x:755,y:215},{id:'girl',x:535,y:365}
+  {id:'bram',x:612,y:270},{id:'renn',x:290,y:235},{id:'mira',x:681,y:462},
+  {id:'dell',x:185,y:465},{id:'joren',x:755,y:300},{id:'girl',x:535,y:365}
  ]};
 var CHEST_SPOT={x:852,y:118};
 /* ================= HELPERS ================= */
@@ -480,20 +482,32 @@ var selSlot=0, selHero=0, selGender='male', selDiff='Medium', pendingConfirm=nul
 function renderSlots(){
   var slots=loadSlots(), list=$('slotList'); list.innerHTML='';
   [0,1,2,3,4].forEach(function(i){
-    var s=slots[i], b=document.createElement('button');
+    var s=slots[i], b=document.createElement('div');
     b.className='slot'+(s?'':' empty');
+    b.setAttribute('role','button'); b.tabIndex=0;
     if(s){
       var h=HEROES[s.hero];
       b.innerHTML='<span class="avatar" style="background:'+h.color+'">'+h.face+'</span><span class="meta">'
         +'<b>Slot '+(i+1)+' · '+h.name+'</b> · '+(s.gender==='female'?'Female':'Male')+' · '+s.diff
         +'<span>'+SCREENS[s.screen].name+', Meadowlands · '+s.coins+' coins · Keys 0/4 · '+(s.weapon?h.weapon:'No weapon yet')+'</span></span>'
         +'<span class="tag">CONTINUE ▸</span>';
+      var cb=document.createElement('button');
+      cb.type='button'; cb.className='clear-btn'; cb.textContent='Clear';
+      cb.setAttribute('aria-label','Empty save slot '+(i+1));
+      cb.addEventListener('click',function(e){
+        e.stopPropagation(); audioInit(); SFX.select();
+        askConfirm('Empty this slot?','This erases the saved game in Slot '+(i+1)+'.',function(){
+          var sl=loadSlots(); sl[i]=null; storeSlots(sl); renderSlots();
+        });
+      });
+      b.appendChild(cb);
     } else {
       b.innerHTML='<span class="avatar" style="background:#2a3a5c;color:#9fb2d8;font-size:17px">'+(i+1)+'</span><span class="meta">'
         +'<b>Slot '+(i+1)+'</b><span>Empty — tap to start a new game</span></span>'
         +'<span class="tag">NEW GAME ▸</span>';
     }
     b.addEventListener('click',function(){ audioInit(); SFX.select(); slotClicked(i); });
+    b.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); audioInit(); SFX.select(); slotClicked(i); } });
     list.appendChild(b);
   });
 }
@@ -623,8 +637,8 @@ function buildScreen(id){
   }
   if(sc.type==='village'){
     drawHouse(g,90,86,150,104,'#8a4a3a','#d8c49a'); solids.push({x:90,y:86,w:150,h:104});
-    drawHouse(g,522,64,180,106,'#7a5a8a','#e0cda2'); solids.push({x:522,y:64,w:180,h:106});
-    drawHouse(g,702,74,168,116,'#8a4a3a','#d8c49a'); solids.push({x:702,y:74,w:168,h:116});
+    drawHouse(g,538,64,164,106,'#7a5a8a','#e0cda2'); solids.push({x:538,y:64,w:164,h:106});
+    drawHouse(g,702,150,168,116,'#8a4a3a','#d8c49a'); solids.push({x:702,y:150,w:168,h:116});
     drawHouse(g,606,336,150,106,'#4a6b8a','#e0cda2'); solids.push({x:606,y:336,w:150,h:106});
     drawHouse(g,120,300,130,96,'#4a6b8a','#dcc9a0'); solids.push({x:120,y:300,w:130,h:96});
     g.fillStyle='#8a97a5'; g.fillRect(306,388,56,42); g.fillStyle='#3a5a7a'; g.fillRect(314,396,40,26); solids.push({x:306,y:388,w:56,h:42});
@@ -638,7 +652,7 @@ function buildScreen(id){
     g.fillStyle='#c94f7c'; for(var f=0;f<26;f++){ g.beginPath(); g.arc(560+rand()*220,470+rand()*110,3.4,0,7); g.fill(); }
   } else if(sc.type==='den'){
     g.fillStyle='#6e5c3e'; g.fillRect(0,0,W,H);
-    for(var i2=0;i2<300;i++){ g.fillStyle='rgba(0,0,0,.12)'; g.fillRect(rand()*W,rand()*H,4,4); }
+    for(var i2=0;i2<300;i2++){ g.fillStyle='rgba(0,0,0,.12)'; g.fillRect(rand()*W,rand()*H,4,4); }
     g.fillStyle='#241a10'; g.beginPath(); g.ellipse(480,120,190,86,0,0,7); g.fill();
     g.fillStyle='#120c06'; g.beginPath(); g.ellipse(480,128,130,58,0,0,7); g.fill();
     g.fillStyle='#cfc4a8'; for(var bn=0;bn<8;bn++){ g.beginPath(); g.arc(150+rand()*660,300+rand()*260,7+rand()*6,0,7); g.fill(); }
@@ -1076,13 +1090,13 @@ function update(dt){
   if(girl&&curScreen==='village'){
     if(!G.girlMet){ /* idle sway */ girl.x=girl.homeX+Math.sin(Date.now()/900)*4; }
     else if(!G.girlChest){
-      var tx=812, ty=168;
+      var tx=820, ty=140;
       if(girlState==='leading'){
         var gd=dist(girl.x,girl.y,tx,ty);
         if(gd>10){ girl.x+=(tx-girl.x)/gd*105*dt; girl.y+=(ty-girl.y)/gd*105*dt; }
         if(gd<26&&dist(player.x,player.y,CHEST_SPOT.x,CHEST_SPOT.y)<210){ girlState='atchest'; chestVisible=true; toast('She points behind the barrels — a chest! Press E / TALK to open it.'); }
       } else if(girlState==='atchest'){
-        girl.x+= (806-girl.x)*dt*2; girl.y+=(168-girl.y)*dt*2;
+        girl.x+= (820-girl.x)*dt*2; girl.y+=(140-girl.y)*dt*2;
       } else {
         var fd=dist(girl.x,girl.y,player.x,player.y);
         if(fd>64){ girl.x+=(player.x-girl.x)/fd*120*dt; girl.y+=(player.y-girl.y)/fd*120*dt; }
