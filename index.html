@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <meta name="color-scheme" content="dark" />
 <link rel="icon" href="data:," />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&display=swap" rel="stylesheet" />
 <title>The Remnant Beneath</title>
 <style>
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -16,7 +19,8 @@
   .view.active { display:flex; }
   /* ---------- Title ---------- */
   #titleView { background: radial-gradient(900px 500px at 50% 18%, rgba(255,150,50,.14), transparent 60%), linear-gradient(#0d1730, #0a0f1e); }
-  .game-title { font-size:clamp(38px, 7vw, 64px); letter-spacing:.06em; color:#ffd97a; text-shadow:0 0 24px rgba(255,140,40,.45), 0 2px 0 #6b4d12; margin:4px 0 2px; text-align:center; }
+  .game-title { font-family:'Cinzel', Georgia, 'Times New Roman', serif; font-weight:900; font-size:clamp(36px, 7vw, 62px); letter-spacing:.05em; text-transform:uppercase; color:#eec25e; margin:4px 0 2px; text-align:center;
+    text-shadow: 0 -1px 1px rgba(0,0,0,.65), 0 1px 0 #ffedb0, 0 2px 0 #b57f22, 0 3px 0 #8a5c14, 0 4px 0 #66420c, 0 5px 0 #4a2d07, 0 7px 3px rgba(0,0,0,.5), 0 12px 28px rgba(0,0,0,.65), 0 0 36px rgba(255,140,40,.35); }
   .game-sub { color:#9fb2d8; letter-spacing:.28em; font-size:clamp(11px,2vw,14px); text-transform:uppercase; margin-bottom:14px; text-align:center;}
   .ember-dot { width:14px;height:14px;border-radius:50%;background:radial-gradient(circle at 40% 35%, #fff3c4, #ffb347 45%, #e25822 80%); box-shadow:0 0 14px 4px rgba(255,140,40,.55); display:inline-block; animation:pulse 2.2s ease-in-out infinite; }
   @keyframes pulse { 0%,100%{ transform:scale(1); opacity:.9 } 50%{ transform:scale(1.18); opacity:1 } }
@@ -69,10 +73,10 @@
   .rising-embers i { position:absolute; bottom:12%; width:6px;height:6px;border-radius:50%; background:#ffb347; box-shadow:0 0 10px 3px rgba(255,140,40,.6); animation:rise linear infinite; opacity:0;}
   @keyframes rise { 0%{ transform:translateY(0); opacity:0 } 12%{opacity:1} 100%{ transform:translateY(-46vh); opacity:0 } }
   /* slim textbox */
-  .textbox { position:absolute; left:50%; transform:translateX(-50%); bottom:max(14px, env(safe-area-inset-bottom)); width:min(860px, 94vw); background:rgba(8,12,24,.92); border:1px solid #8a6d2f; border-radius:8px; padding:12px 16px 10px; cursor:pointer; z-index:30; }
+  .textbox { position:absolute; left:50%; transform:translateX(-50%); bottom:max(14px, env(safe-area-inset-bottom)); width:min(860px, 94vw); background:rgba(8,12,24,.92); border:1px solid #8a6d2f; border-radius:8px; padding:12px 16px 10px; cursor:pointer; z-index:30; overflow:hidden; }
   .textbox .who { color:#ffd97a; font-size:14px; letter-spacing:.08em; margin-bottom:3px; display:flex; align-items:center; gap:12px;}
   .textbox .txt { font-size:clamp(15px,2.4vw,18px); line-height:1.5; color:#f5efdb; min-height:48px; }
-  .textbox .next { text-align:right; color:#c9a44a; font-size:12px; animation:pulse 1.4s infinite; }
+  .textbox .next { text-align:right; color:#c9a44a; font-size:12px; }
   #cutSkip { position:absolute; top:12px; right:12px; z-index:31; }
   /* ---------- Game ---------- */
   #gameView { padding:0; background:#060a14; }
@@ -141,6 +145,10 @@
   body.phone #topBtns { display:flex; }
   body.phone.desktop-forced #topBtns { display:none; }
   #topBtns button { width:48px; height:48px; border-radius:50%; background:rgba(20,30,55,.65); border:1px solid rgba(159,178,216,.6); color:#f2e8c9; font-size:10px; min-height:48px;}
+  /* Controls button: on desktop layouts only it shows, so the keys are always one tap away during play */
+  body:not(.phone) #topBtns { display:flex; }
+  body:not(.phone) #topBtns button:not(#tbControls) { display:none; }
+  #topBtns #tbControls { width:auto; min-width:48px; padding:0 12px; border-radius:24px; font-size:11px; letter-spacing:.06em; }
   @media (prefers-reduced-motion: reduce) { * { animation-duration:.01s !important; } }
 </style>
 </head>
@@ -153,7 +161,7 @@
     <h1 class="game-title">The Remnant Beneath</h1>
     <div class="game-sub">Meadowlands — First Journey</div>
     <div id="slotsPanel" class="panel">
-      <h2>Choose your hero — five journeys, five slots</h2>
+      <h2>Five save slots — begin a journey or continue one</h2>
       <div id="slotList"></div>
       <div class="title-btns">
         <button class="btn" id="howBtn">How to Play</button>
@@ -208,6 +216,7 @@
         <button id="tbPause">PAUSE</button>
         <button id="tbMap">MAP</button>
         <button id="tbBag">BAG</button>
+        <button id="tbControls">CONTROLS</button>
       </div>
       <div id="touchUI">
         <div id="stick"><div id="stickKnob"></div></div>
@@ -257,21 +266,6 @@
           <button class="menu-btn" id="pQuit">Quit to Title</button>
         </div>
       </div>
-      <!-- how to play -->
-      <div class="overlay" id="howOverlay">
-        <div class="panel modal-panel">
-          <h2>How to Play</h2>
-          <div class="howto-txt">
-            <p><b>Move</b> — WASD or arrow keys · left stick on touch</p>
-            <p><b>Attack</b> — Space or J · ATTACK button (you start with no weapon — earn one first)</p>
-            <p><b>Talk / Use</b> — E · TALK button. Walk up to a villager, a chest, or the shrine.</p>
-            <p><b>Pause</b> — Esc or P &nbsp;·&nbsp; <b>Bag</b> — I &nbsp;·&nbsp; <b>Map</b> — M</p>
-            <p>Walk off the edge of a screen to enter the next one. Your <b>embers</b> are your health — a weak hit takes half an ember. Rest at the <b>Meadow Shrine</b> (far south) to heal and save. The game also saves when you enter a new screen.</p>
-            <p>Goblins dissolve into embers and drop <b>coins</b>. Sunleaf herbs grow in the North Meadow and the Herb Field.</p>
-          </div>
-          <button class="menu-btn" id="howClose">Back</button>
-        </div>
-      </div>
       <!-- map -->
       <div class="overlay" id="mapOverlay">
         <div class="panel modal-panel" style="text-align:center">
@@ -311,6 +305,21 @@
       <button class="btn" id="deathTitleBtn">Return to Title</button>
     </div>
   </section>
+  <!-- how to play -->
+  <div class="overlay" id="howOverlay">
+    <div class="panel modal-panel">
+      <h2>How to Play</h2>
+      <div class="howto-txt">
+        <p><b>Move</b> — WASD or arrow keys · left stick on touch</p>
+        <p><b>Attack</b> — Space or J · ATTACK button (you start with no weapon — earn one first)</p>
+        <p><b>Talk / Use</b> — E · TALK button. Walk up to a villager, a chest, or the shrine.</p>
+        <p><b>Pause</b> — Esc or P &nbsp;·&nbsp; <b>Bag</b> — I &nbsp;·&nbsp; <b>Map</b> — M</p>
+        <p>Walk off the edge of a screen to enter the next one. Your <b>embers</b> are your health — a weak hit takes half an ember. Rest at the <b>Meadow Shrine</b> (far south) to heal and save. The game also saves when you enter a new screen.</p>
+        <p>Goblins dissolve into embers and drop <b>coins</b>. Sunleaf herbs grow in the North Meadow and the Herb Field.</p>
+      </div>
+      <button class="menu-btn" id="howClose">Back</button>
+    </div>
+  </div>
 </div>
 <script>
 'use strict';
@@ -372,7 +381,7 @@ var GRID={}; Object.keys(SCREENS).forEach(function(k){ GRID[SCREENS[k].col+','+S
 var HERB_SPOTS={ north:[[300,205],[625,300],[480,455]], herb:[[250,180],[700,225],[400,425],[620,485]] };
 var NPC_SPOTS={
  village:[
-  {id:'bram',x:480,y:270},{id:'renn',x:290,y:235},{id:'mira',x:640,y:400},
+  {id:'bram',x:612,y:270},{id:'renn',x:290,y:235},{id:'mira',x:640,y:400},
   {id:'dell',x:185,y:465},{id:'joren',x:755,y:215},{id:'girl',x:535,y:365}
  ]};
 var CHEST_SPOT={x:852,y:118};
@@ -450,8 +459,8 @@ function startMusic(){
 var SLOTKEY='fifthrealm_slots_v1';
 function loadSlots(){ try{ var s=JSON.parse(localStorage.getItem(SLOTKEY)); if(Array.isArray(s)&&s.length===5) return s; }catch(e){} return [null,null,null,null,null]; }
 function storeSlots(s){ try{ localStorage.setItem(SLOTKEY,JSON.stringify(s)); }catch(e){} }
-function newState(heroIdx,gender,diff){
-  return { hero:heroIdx, gender:gender, diff:diff, screen:'village', x:480, y:520,
+function newState(slot,heroIdx,gender,diff){
+  return { slot:slot, hero:heroIdx, gender:gender, diff:diff, screen:'village', x:480, y:520,
     hp:6, maxEmbers:3, coins:0, herbs:0, weapon:false, quest:'none',
     visited:{village:true}, herbsTaken:{}, enemiesDown:{}, millChest:false, girlChest:false,
     talked:{}, rennAfter:false, girlMet:false, shrineSeen:false, playSec:0 };
@@ -459,7 +468,7 @@ function newState(heroIdx,gender,diff){
 var G=null; /* current game state */
 function persist(){
   if(!G) return;
-  var slots=loadSlots(); slots[G.hero]=G; storeSlots(slots);
+  var slots=loadSlots(); slots[(G.slot!=null?G.slot:G.hero)]=G; storeSlots(slots);
 }
 </script>
 <script>
@@ -467,17 +476,23 @@ function persist(){
 function showView(id){
   ['titleView','cutView','gameView','deathView'].forEach(function(v){ $(v).classList.toggle('active', v===id); });
 }
-var selSlot=0, selGender='male', selDiff='Medium', pendingConfirm=null;
+var selSlot=0, selHero=0, selGender='male', selDiff='Medium', pendingConfirm=null;
 function renderSlots(){
   var slots=loadSlots(), list=$('slotList'); list.innerHTML='';
-  HEROES.forEach(function(h,i){
+  [0,1,2,3,4].forEach(function(i){
     var s=slots[i], b=document.createElement('button');
     b.className='slot'+(s?'':' empty');
-    var meta=s
-      ? '<b>'+h.name+'</b> · '+(s.gender==='female'?'Female':'Male')+' · '+s.diff
-        +'<span>'+SCREENS[s.screen].name+', Meadowlands · '+s.coins+' coins · Keys 0/4 · '+(s.weapon?h.weapon:'No weapon yet')+'</span>'
-      : '<b>'+h.name+'</b><span>Empty slot — begin a new journey</span>';
-    b.innerHTML='<span class="avatar" style="background:'+h.color+'">'+h.face+'</span><span class="meta">'+meta+'</span><span class="tag">'+(s?'CONTINUE ▸':'NEW GAME ▸')+'</span>';
+    if(s){
+      var h=HEROES[s.hero];
+      b.innerHTML='<span class="avatar" style="background:'+h.color+'">'+h.face+'</span><span class="meta">'
+        +'<b>Slot '+(i+1)+' · '+h.name+'</b> · '+(s.gender==='female'?'Female':'Male')+' · '+s.diff
+        +'<span>'+SCREENS[s.screen].name+', Meadowlands · '+s.coins+' coins · Keys 0/4 · '+(s.weapon?h.weapon:'No weapon yet')+'</span></span>'
+        +'<span class="tag">CONTINUE ▸</span>';
+    } else {
+      b.innerHTML='<span class="avatar" style="background:#2a3a5c;color:#9fb2d8;font-size:17px">'+(i+1)+'</span><span class="meta">'
+        +'<b>Slot '+(i+1)+'</b><span>Empty — tap to start a new game</span></span>'
+        +'<span class="tag">NEW GAME ▸</span>';
+    }
     b.addEventListener('click',function(){ audioInit(); SFX.select(); slotClicked(i); });
     list.appendChild(b);
   });
@@ -488,7 +503,7 @@ function slotClicked(i){
   else openSetup(i);
 }
 function openSetup(i){
-  selSlot=i; selGender='male'; selDiff='Medium';
+  selSlot=i; selHero=0; selGender='male'; selDiff='Medium';
   $('slotsPanel').style.display='none'; $('setupPanel').classList.add('open');
   renderSetup();
 }
@@ -497,16 +512,15 @@ function closeSetup(){
 }
 function renderSetup(){
   var row=$('heroRow'); row.innerHTML='';
-  var slots=loadSlots();
   HEROES.forEach(function(h,i){
     var b=document.createElement('button');
-    b.className='hero-card'+(i===selSlot?' sel':'')+(slots[i]?' filled':'');
-    b.innerHTML='<span class="face">'+h.face+'</span>'+h.name+(slots[i]?'<br><span style="color:#9fd68a;font-size:11px">IN PROGRESS</span>':'');
-    b.addEventListener('click',function(){ selSlot=i; SFX.select(); renderSetup(); });
+    b.className='hero-card'+(i===selHero?' sel':'');
+    b.innerHTML='<span class="face">'+h.face+'</span>'+h.name;
+    b.addEventListener('click',function(){ selHero=i; SFX.select(); renderSetup(); });
     row.appendChild(b);
   });
-  var h=HEROES[selSlot];
-  $('setupTitle').textContent='New Game — '+h.name+(loadSlots()[selSlot]?' (slot in use)':'');
+  var h=HEROES[selHero];
+  $('setupTitle').textContent='New Game — Slot '+(selSlot+1);
   $('heroDesc').textContent=h.desc;
   var gp=$('genderPicks'); gp.innerHTML='';
   [['male','Male'],['female','Female']].forEach(function(g){
@@ -528,8 +542,8 @@ $('confirmNo').addEventListener('click',function(){ $('confirmOverlay').classLis
 $('startBtn').addEventListener('click',function(){
   audioInit();
   var existing=loadSlots()[selSlot];
-  var begin=function(){ G=newState(selSlot,selGender,selDiff); persist(); closeSetup(); startCutscene(); };
-  if(existing) askConfirm('Erase this journey?','This slot already holds a '+HEROES[selSlot].name+' game. Starting a new game here erases it.',begin);
+  var begin=function(){ G=newState(selSlot,selHero,selGender,selDiff); persist(); closeSetup(); startCutscene(); };
+  if(existing) askConfirm('Erase this journey?','Slot '+(selSlot+1)+' already holds a journey. Starting a new game here erases it.',begin);
   else begin();
 });
 $('setupBack').addEventListener('click',closeSetup);
@@ -609,7 +623,7 @@ function buildScreen(id){
   }
   if(sc.type==='village'){
     drawHouse(g,90,86,150,104,'#8a4a3a','#d8c49a'); solids.push({x:90,y:86,w:150,h:104});
-    drawHouse(g,392,64,180,106,'#7a5a8a','#e0cda2'); solids.push({x:392,y:64,w:180,h:106});
+    drawHouse(g,522,64,180,106,'#7a5a8a','#e0cda2'); solids.push({x:522,y:64,w:180,h:106});
     drawHouse(g,702,74,168,116,'#8a4a3a','#d8c49a'); solids.push({x:702,y:74,w:168,h:116});
     drawHouse(g,606,336,150,106,'#4a6b8a','#e0cda2'); solids.push({x:606,y:336,w:150,h:106});
     drawHouse(g,120,300,130,96,'#4a6b8a','#dcc9a0'); solids.push({x:120,y:300,w:130,h:96});
@@ -963,13 +977,18 @@ function loop(ts){
   requestAnimationFrame(loop);
   var dt=Math.min(.05,(ts-lastTs)/1000||0); lastTs=ts;
   if(!inGame) return;
-  render(dt);
+  try{ render(dt); }
+  catch(err){ /* one bad frame must never freeze the game: drop any stuck transition and keep playing */
+    trans=null;
+    if(window.console&&console.error) console.error(err);
+  }
 }
 function render(dt){
   ctx.clearRect(0,0,W,H);
   if(trans){
     trans.t+=dt/.38;
     var k=Math.min(1,trans.t), W2=W, H2=H;
+    if(trans.started&&Date.now()-trans.started>1200) k=1; /* failsafe: a transition always completes */
     var ox=0,oy=0,ox2=0,oy2=0;
     if(trans.dir==='left'){ ox=-k*W2; ox2=W2-k*W2; }
     if(trans.dir==='right'){ ox=k*W2; ox2=-W2+k*W2; }
@@ -983,8 +1002,8 @@ function render(dt){
     drawFigure(ctx,px,py,HEROES[G.hero].color,HEROES[G.hero].skin,HEROES[G.hero].hair,{weapon:G.weapon});
     ctx.restore();
     if(k>=1){ var to=trans.to,dir=trans.dir; trans=null;
-      if(dir==='left') player.x=26; if(dir==='right') player.x=W-26;
-      if(dir==='up') player.y=26; if(dir==='down') player.y=H-26;
+      if(dir==='left') player.x=W-26; if(dir==='right') player.x=26;
+      if(dir==='up') player.y=H-26; if(dir==='down') player.y=26;
       enterScreen(to,dir);
     }
     return;
@@ -997,7 +1016,7 @@ function startTransition(dir){
   var dc=dir==='left'?-1:dir==='right'?1:0, dr=dir==='up'?-1:dir==='down'?1:0;
   var nid=GRID[(sc.col+dc)+','+(sc.row+dr)];
   if(!nid) return false;
-  trans={from:curScreen,to:nid,dir:dir,t:0};
+  trans={from:curScreen,to:nid,dir:dir,t:0,started:Date.now()};
   return true;
 }
 function update(dt){
@@ -1014,8 +1033,9 @@ function update(dt){
   if(player.moving){
     if(Math.abs(mx)>Math.abs(my)) player.dir=mx>0?'right':'left'; else player.dir=my>0?'down':'up';
     var sp=185, nx=player.x+mx*sp*dt, ny=player.y+my*sp*dt;
-    if(!collide(nx,player.y)) player.x=nx;
-    if(!collide(player.x,ny)) player.y=ny;
+    var wedged=collide(player.x,player.y); /* if a knockback left the hero inside a solid, always let him walk out */
+    if(wedged||!collide(nx,player.y)) player.x=nx;
+    if(wedged||!collide(player.x,ny)) player.y=ny;
   }
   if(player.atkT>0) player.atkT-=dt;
   if(player.invuln>0) player.invuln-=dt;
@@ -1044,8 +1064,9 @@ function update(dt){
       player.invuln=.9;
       G.hp-= (G.diff==='Hard'?2:1); /* half an ember; a full ember on Hard */
       SFX.hurt(); burst(player.x,player.y,7,['#e25822','#ffb347']);
-      player.x+= (player.x-e.x)*1.2; player.y+=(player.y-e.y)*1.2;
-      player.x=clamp(player.x,20,W-20); player.y=clamp(player.y,20,H-20);
+      var kx=clamp(player.x+(player.x-e.x)*1.2,20,W-20), ky=clamp(player.y+(player.y-e.y)*1.2,20,H-20);
+      if(!collide(kx,player.y)) player.x=kx;
+      if(!collide(player.x,ky)) player.y=ky;
       updateHUD();
       if(G.hp<=0){ die(); }
     }
@@ -1176,6 +1197,7 @@ $('pQuit').addEventListener('click',function(){
 $('tbPause').addEventListener('click',openPause);
 $('tbMap').addEventListener('click',function(){ drawBigMap(); $('mapOverlay').classList.add('open'); });
 $('tbBag').addEventListener('click',openBag);
+$('tbControls').addEventListener('click',function(){ openPause(); $('howOverlay').classList.add('open'); });
 $('mapClose').addEventListener('click',function(){ $('mapOverlay').classList.remove('open'); });
 $('bagClose').addEventListener('click',function(){ $('bagOverlay').classList.remove('open'); });
 function openBag(){
