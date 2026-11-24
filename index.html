@@ -852,6 +852,7 @@ function npcHasQuest(id){
   if(!G) return false;
   if(id==='bram') return G.quest==='none';
   if(id==='mira') return G.quest==='deliver';
+  if(id==='renn') return !G.weapon&&(G.quest==='renn'||G.quest==='done');
   if(id==='girl') return G.girlMet&&!G.girlChest&&girlState!=='idle';
   return false;
 }
@@ -901,19 +902,23 @@ function talkTo(npc){
   }
   else if(id==='mira'){
     if(G.quest==='deliver'){
-      G.herbs-=3; G.quest='done';
+      G.herbs-=3; G.quest='renn'; persist(); updateHUD();
       openDialogue('mira',LINES.miraThanks,function(){
-        var h=HEROES[G.hero]; G.weapon=true; persist(); updateHUD();
-        showItemFind(h.wimg,'You got the '+h.weapon+'! It has seen better days, but it is yours. Now you can fight back.',function(){
-          toast('You can attack now — Space / J or ATTACK');
-        });
+        toast('Herb quest complete — Captain Renn has a blade for you. Go see him in the village.');
       });
     }
     else if(G.quest==='collect') openDialogue('mira',LINES.miraWait);
     else openDialogue('mira',LINES.miraRepeat);
   }
   else if(id==='renn'){
-    if(G.weapon&&!G.rennAfter){ G.rennAfter=true; openDialogue('renn',LINES.rennAfter); }
+    if(!G.weapon&&(G.quest==='renn'||G.quest==='done')){
+      openDialogue('renn',LINES.rennAfter,function(){
+        var h=HEROES[G.hero]; G.weapon=true; G.rennAfter=true; G.quest='done'; persist(); updateHUD();
+        showItemFind(h.wimg,'You got the '+h.weapon+'! It has seen better days, but it is yours. Now you can fight back.',function(){
+          toast('You can attack now — Space / J or ATTACK');
+        });
+      });
+    }
     else if(G.weapon) openDialogue('renn',LINES.rennRepeat);
     else openDialogue('renn',first?LINES.rennFirst:LINES.rennRepeat);
     persist();
@@ -1136,6 +1141,7 @@ function updateHUD(){
     G.quest==='none'?'✦ Speak with Elder Bram in the village':
     G.quest==='collect'?'✦ Sunleaf for Mira: '+Math.min(G.herbs,3)+'/3 — North Meadow & Herb Field':
     G.quest==='deliver'?'✦ Bring the sunleaf to Mira in the village':
+    (G.quest==='renn'||(G.quest==='done'&&!G.weapon))?'✦ Go see Captain Renn in the village':
     '✦ Armed and ready — explore the Meadowlands';
 }
 function drawMinimap(){
