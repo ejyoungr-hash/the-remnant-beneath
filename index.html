@@ -303,9 +303,9 @@
       <!-- map -->
       <div class="overlay" id="mapOverlay">
         <div class="panel modal-panel" style="text-align:center">
-          <h2>The Meadowlands</h2>
-          <canvas id="bigMap" width="430" height="430" style="max-width:88vw;background:#0d1730;border:1px solid #3a5484;border-radius:8px"></canvas>
-          <p style="color:#9fb2d8;font-size:13px">Only places you have visited are revealed. Thornwood lies west, Dustfall east, Whitepeak north, Mistmire south — journeys for another day.</p>
+          <h2>The World</h2>
+          <canvas id="bigMap" width="640" height="430" style="max-width:88vw;background:#0d1730;border:1px solid #3a5484;border-radius:8px"></canvas>
+          <p style="color:#9fb2d8;font-size:13px">Only places you have visited are revealed. Dustfall lies east, Whitepeak north, Mistmire south — journeys for another day.</p>
           <button class="menu-btn" id="mapClose">Back</button>
         </div>
       </div>
@@ -1072,6 +1072,20 @@ var SCREENS={
  fshrine:{name:'Forest Shrine',col:-3,row:2,type:'shrine',realm:'thornwood',goblins:0,wisps:0,wolves:0}
 };
 var GRID={}; Object.keys(SCREENS).forEach(function(k){ GRID[SCREENS[k].col+','+SCREENS[k].row]=k; });
+/* map bounds, from the screens themselves, so new realms widen the map */
+var MAPB=(function(){ var mnC=99,mxC=-99,mnR=99,mxR=-99;
+  Object.keys(SCREENS).forEach(function(k){ var s=SCREENS[k];
+    if(s.col<mnC)mnC=s.col; if(s.col>mxC)mxC=s.col; if(s.row<mnR)mnR=s.row; if(s.row>mxR)mxR=s.row; });
+  return {minC:mnC,maxC:mxC,minR:mnR,maxR:mxR,cols:mxC-mnC+1,rows:mxR-mnR+1}; })();
+/* one small thumbnail per discovered scene, built from the screen's own art */
+var mapThumbs={};
+function mapThumb(id){
+  if(mapThumbs[id]) return mapThumbs[id];
+  var src=buildScreen(id).canvas, t=document.createElement('canvas');
+  t.width=72; t.height=48;
+  t.getContext('2d').drawImage(src,0,0,72,48);
+  mapThumbs[id]=t; return t;
+}
 var HERB_SPOTS={ north:[[300,205],[625,300],[480,455]], herb:[[250,180],[700,225],[400,425],[620,485]], fgrove:[[300,220],[640,300],[480,460]] };
 /* Thornwood helpers: a screen's realm (Meadowlands when unset) and whether a
    screen id is a save shrine (Meadow Shrine or Forest Shrine). */
@@ -2642,29 +2656,50 @@ function updateHUD(){
   $('questRow').textContent=qr;
 }
 function drawMinimap(){
-  var c=$('minimap').getContext('2d');
-  c.clearRect(0,0,118,118);
-  for(var col=0;col<3;col++) for(var row=0;row<4;row++){
-    var id=GRID[col+','+row], x=6+col*36, y=6+row*27;
-    if(id&&G&&G.visited[id]){ c.fillStyle= id===curScreen?'#ffd97a':'#4d7a44'; }
-    else c.fillStyle='rgba(120,130,150,.25)';
-    c.fillRect(x,y,32,23);
-    if(id===curScreen){ c.strokeStyle='#fff3c4'; c.strokeRect(x+.5,y+.5,31,22); }
+  var cv=$('minimap'), c=cv.getContext('2d'), Wd=cv.width, Ht=cv.height;
+  c.clearRect(0,0,Wd,Ht);
+  /* only the realm you are in, with its name at the top */
+  var realm=screenRealm(curScreen);
+  var rname={meadow:'Meadowlands',thornwood:'Thornwood'}[realm]||realm;
+  c.fillStyle='#ffd97a'; c.font='bold 11px Georgia'; c.textAlign='center';
+  c.fillText(rname,Wd/2,12);
+  /* that realm's screens, in their own col/row grid */
+  var cols=[], rows=[];
+  Object.keys(SCREENS).forEach(function(k){ var s=SCREENS[k];
+    if(screenRealm(k)!==realm) return;
+    if(cols.indexOf(s.col)<0) cols.push(s.col);
+    if(rows.indexOf(s.row)<0) rows.push(s.row); });
+  cols.sort(function(a,b){return a-b;}); rows.sort(function(a,b){return a-b;});
+  var pad=5, gap=2, top=16;
+  var cw=(Wd-pad*2-gap*(cols.length-1))/cols.length;
+  var ch=(Ht-top-pad-gap*(rows.length-1))/rows.length;
+  for(var ci=0;ci<cols.length;ci++) for(var ri=0;ri<rows.length;ri++){
+    var id=GRID[cols[ci]+','+rows[ri]], x=pad+ci*(cw+gap), y=top+ri*(ch+gap);
+    if(!id) continue;
+    if(G&&G.visited[id]){
+      c.drawImage(mapThumb(id),x,y,cw,ch);
+      if(id===curScreen){ c.strokeStyle='#ffd97a'; c.lineWidth=2; c.strokeRect(x+1,y+1,cw-2,ch-2); c.lineWidth=1; }
+    } else { c.fillStyle='rgba(120,130,150,.25)'; c.fillRect(x,y,cw,ch); }
   }
 }
 function drawBigMap(){
-  var c=$('bigMap').getContext('2d');
-  c.clearRect(0,0,430,430); c.textAlign='center';
-  for(var col=0;col<3;col++) for(var row=0;row<4;row++){
+  var cv=$('bigMap'), c=cv.getContext('2d'), Wd=cv.width, Ht=cv.height, pad=15, gap=8;
+  var cw=(Wd-pad*2-gap*(MAPB.cols-1))/MAPB.cols, ch=(Ht-pad*2-gap*(MAPB.rows-1))/MAPB.rows;
+  c.clearRect(0,0,Wd,Ht); c.textAlign='center';
+  for(var col=MAPB.minC;col<=MAPB.maxC;col++) for(var row=MAPB.minR;row<=MAPB.maxR;row++){
     var id=GRID[col+','+row]; if(!id) continue;
-    var x=15+col*138, y=15+row*102;
-    if(G.visited[id]){ c.fillStyle= id===curScreen?'#8a6d2f':'#2c4a2e'; c.fillRect(x,y,128,92);
-      c.fillStyle='#f2e8c9'; c.font='14px Georgia';
+    var x=pad+(col-MAPB.minC)*(cw+gap), y=pad+(row-MAPB.minR)*(ch+gap);
+    if(G.visited[id]){
+      c.drawImage(mapThumb(id),x,y,cw,ch);
+      /* name on a dark strip so it reads over the picture */
+      c.fillStyle='rgba(6,10,22,.72)'; c.fillRect(x,y+ch-30,cw,30);
+      c.fillStyle='#f2e8c9'; c.font='12px Georgia';
       var nm=SCREENS[id].name.split(' ');
-      c.fillText(nm[0],x+64,y+42); if(nm[1]) c.fillText(nm.slice(1).join(' '),x+64,y+60);
-      if(id===curScreen){ c.strokeStyle='#ffd97a'; c.lineWidth=2; c.strokeRect(x+1,y+1,126,90); c.lineWidth=1; }
-    } else { c.fillStyle='rgba(120,130,150,.18)'; c.fillRect(x,y,128,92);
-      c.fillStyle='rgba(200,210,230,.4)'; c.font='14px Georgia'; c.fillText('· · ·',x+64,y+50); }
+      if(nm.length>1){ c.fillText(nm[0],x+cw/2,y+ch-17); c.fillText(nm.slice(1).join(' '),x+cw/2,y+ch-4); }
+      else c.fillText(nm[0],x+cw/2,y+ch-11);
+      if(id===curScreen){ c.strokeStyle='#ffd97a'; c.lineWidth=2; c.strokeRect(x+1,y+1,cw-2,ch-2); c.lineWidth=1; }
+    } else { c.fillStyle='rgba(120,130,150,.18)'; c.fillRect(x,y,cw,ch);
+      c.fillStyle='rgba(200,210,230,.4)'; c.font='12px Georgia'; c.fillText('· · ·',x+cw/2,y+ch/2+4); }
   }
 }
 /* ================= PAUSE / OVERLAYS ================= */
