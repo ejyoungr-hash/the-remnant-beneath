@@ -178,7 +178,7 @@ The village girl follows you in the village and shows secret locations, 4 chests
 
 - Meadowlands: built and live (10 screens, herb quest, Grak, side quests, chests, charms, shops).
 - Thornwood slice 1: built and live (v17, Nov 26, 2026): the 10 forest screens, the forest look, entry narration, Forest Shrine, wisps and wolves, Thornwood melody, Mushroom Grove herbs.
-- Thornwood slices 2 and 3: approved, next. Joren's cabin and Lost Axe, Sable's camp and Wolf Pelts, the Thornwolf fight and Thorn Key, the Thorn Maze.
+- Thornwood slices 2 and 3: built and live (v18, Nov 26, 2026): Joren moved to Forest Edge with his cabin and the Lost Axe quest, Sable at the Wolf Den with Wolf Pelts, the Thornwolf boss fight and Thorn Key, the Thorn Maze minigame.
 - Dustfall, Whitepeak, Mistmire, The Remnant: designed, to be built realm by realm after Thornwood.
 - After the game is completed: a graphic novel version of the story.
 
@@ -219,7 +219,7 @@ Three copies, in order:
 2. Staged copy: `~/workspace/github/the-remnant-beneath/`. A fresh export is copied here, the view counter is re added, then it is pushed.
 3. Live site: GitHub Pages. After a push, check the Actions "pages build and deployment" run before calling it live, then check the live page itself.
 
-Versions are numbered v1, v2, and so on. The live site is always the latest pushed version. The current live version is v17 (Thornwood slice 1, pushed Nov 26, 2026).
+Versions are numbered v1, v2, and so on. The live site is always the latest pushed version. The current live version is v18 (Thornwood slices 2 and 3, pushed Nov 26, 2026).
 
 ### View counter
 
