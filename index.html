@@ -1315,13 +1315,13 @@ function renderSetup(){
   HEROES.forEach(function(h,i){
     var b=document.createElement('button');
     b.className='hero-card'+(i===selHero?' sel':'');
-    b.innerHTML='<span class="face">'+h.face+'</span>'+h.name;
+    b.innerHTML='<span class="face">'+h.face+'</span>'+h.names[selGender];
     b.addEventListener('click',function(){ selHero=i; SFX.select(); renderSetup(); });
     row.appendChild(b);
   });
   var h=HEROES[selHero];
   $('setupTitle').textContent='New Game — Slot '+(selSlot+1);
-  $('heroDesc').textContent=h.desc;
+  $('heroDesc').textContent=h.names[selGender]+' \u2014 '+h.name+'. '+h.story[selGender];
   var gp=$('genderPicks'); gp.innerHTML='';
   [['male','Male'],['female','Female']].forEach(function(g){
     var b=document.createElement('button'); b.className='pick'+(selGender===g[0]?' sel':''); b.textContent=g[1];
