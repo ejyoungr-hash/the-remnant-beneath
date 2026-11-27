@@ -1289,9 +1289,9 @@ function mapThumb(id){
 var HERB_SPOTS={ north:[[300,205],[625,300],[480,455]], herb:[[250,180],[700,225],[400,425],[620,485]], fgrove:[[300,220],[640,300],[480,460]] };
 var DIG_SPOTS={ dpit:[[300,220],[640,300],[480,460]] };
 var CRYSTAL_SPOTS={wlake:[[480,330]],wfield:[[300,300],[660,300]]};
-OIL_SPOTS={mcave:[[480,330]]};
-BLANKET_SPOTS={mdock:[[480,330]]};
-LIGHT_SPOTS={mmarsh:[[300,300],[480,330],[660,300]]};
+var OIL_SPOTS={mcave:[[480,330]]};
+var BLANKET_SPOTS={mdock:[[480,330]]};
+var LIGHT_SPOTS={mmarsh:[[300,300],[480,330],[660,300]]};
 /* Thornwood helpers: a screen's realm (Meadowlands when unset) and whether a
    screen id is a save shrine (Meadow Shrine or Forest Shrine). */
 function screenRealm(id){ var sc=SCREENS[id]; return (sc&&sc.realm)||'meadow'; }
@@ -1413,7 +1413,7 @@ var DUST_MELODY=[330,415,440,523,440,415,330,415, 349,415,440,494,440,415,349,33
 var DUST_BASS=[82,110,123,110, 82,110,98,110, 82,110,123,110, 87,98,110,98];
 var WHITE_MELODY=[440,0,523,0, 440,0,392,0, 349,0,392,0, 440,0,0,0, 392,0,349,0, 330,0,392,0, 440,0,523,0, 440,0,392,0];
 var WHITE_BASS=[110,0,98,0, 110,0,87,0, 110,0,98,0, 82,0,98,0];
-MIST_MELODY=[293,0,0,0, 349,0,0,0, 440,0,0,0, 349,0,0,0, 293,0,0,0, 262,0,0,0, 293,0,0,0, 0,0,0,0];
+var MIST_MELODY=[293,0,0,0, 349,0,0,0, 440,0,0,0, 349,0,0,0, 293,0,0,0, 262,0,0,0, 293,0,0,0, 0,0,0,0];
 var MIST_BASS=[73,0,0,0, 87,0,0,0, 73,0,0,0, 65,0,0,0];
 /* Remnant theme — slow, solemn, ancient machines: low D minor, sparse notes
    over a deep pulse. New for slice 1; Eric has not heard it yet. */
