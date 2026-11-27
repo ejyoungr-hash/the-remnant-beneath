@@ -94,7 +94,7 @@ The swamp south of the meadow. Dark wisps, shadow wolves, goblins. Hides the ent
 9. Old Ferry Dock — where the ferry used to run
 10. Swamp Shrine — save shrine
 
-### The Remnant (10) — slice 1 BUILT and live as v27 (The Gate, The Halls, Throne Room), slices 2–3 next
+### The Remnant (10) — slices 1–3 BUILT (slice 1 live as v27; slices 2–3 built, pending push as v28)
 The sealed fifth realm, underground, through the Sealed Door in Mistmire. The last of the old world's light still burns here. Stone golems, dark wisps, lesser shadow knights. The robots are shiny and well kept, not rusty. Entry narration (v27): "The old world's heart, still beating. Lights that should have died a thousand years ago burn on, waiting." / "Machines hum in the dark, and robots walk the halls, and the air itself tastes of metal and old lightning." / "This is what the world was, and what it could be again." / "And at its center, the Shadow Knight waits, as he has waited for a thousand years."
 
 1. The Gate — Unit-7 and Nix
@@ -107,6 +107,8 @@ The sealed fifth realm, underground, through the Sealed Door in Mistmire. The la
 8. Power Core — the Last Battery quest
 9. Machine Gardens — the old world's gardens, still growing
 10. Remnant Shrine — save shrine
+
+Quests: Old Terminal (Unit-7 — restart the terminal, his memory returns), Sleeping Robot + Broken Guardian (Nix — wake the robot, fetch a spare power cell from the Machine Gardens), Last Battery (Vendor-9 — bring the last battery from the Power Core; restarting him opens his Remnant tech-gear shop). Rewards are 50 coins each, like the other realm quests.
 
 ## Bosses and keys
 

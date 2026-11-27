@@ -446,6 +446,22 @@ var LINES={
  pellLightsDone:['Three bright lights! Look at them \u2014 they gather where the way lies. The fifth realm is below, friend, and the swamp hides its door. The Sealed Door, south of here \u2014 that is the way in. Here, take these coins.','@Below, not above. Thank you, Pell.'],
  mudfootFirst:['Herbs? Oh, I have herbs. The rarest in the realms, growing right here in the muck. Bring me something dry \u2014 socks, a blanket, anything \u2014 and we will trade.','@Something dry? What do you need?','A blanket, dry as a bone. The Old Ferry Dock, north of here \u2014 the ferry used to run there, and dry things were left behind. Bring me a blanket and I will give you medicine.','@A dry blanket from the Old Ferry Dock. I will bring it.'],
  mudfootRepeat:['The swamp gives to those who wade in. Mind the leeches. They give too.','@I am looking for a dry blanket, Mudfoot.'],
+unit7TerminalFirst:['THE TERMINAL. IT HOLDS EVERYTHING I WAS. MY NAME. MY PURPOSE. THE DAY THE SKY FELL.','@The Old Terminal, south of the Halls. I\u2019ll restart it for you.','HURRY. A THOUSAND YEARS IS A LONG TIME TO FORGET WHO YOU ARE.'],
+unit7TerminalWait:['THE TERMINAL. SOUTH OF THE HALLS. IT HOLDS EVERYTHING I WAS.'],
+unit7TerminalDone:['I REMEMBER. I REMEMBER THE FALL. THE SKY BURNING. THE LIGHT GOING OUT, ONE CITY AT A TIME.','AND I REMEMBER YOU, HERO. THE OLD WORLD CALLED PEOPLE LIKE YOU... FRIENDS.','@You remember. That is what matters.','THANK YOU. TAKE THESE COINS. THEY ARE ALL I HAVE, AND THEY ARE YOURS.'],
+unit7After:['MY MEMORY IS WHOLE AGAIN. ASK ME ANYTHING \u2014 I REMEMBER THE OLD WORLD NOW.'],
+nixRobotFirst:['There\u2019s a robot asleep in the bay, east of the Throne Room. Been asleep a thousand years, poor thing.','@A sleeping robot? What do you want me to do with it?','Wake it up, gentle-like. Talk to it. See what it remembers \u2014 and then come tell me. I collect old stories the way other folks collect coins.','@I\u2019ll wake it and bring back its story.'],
+nixRobotWait:['The robot in the bay, east of the Throne Room. Wake it gentle-like, and bring back its story.'],
+nixRobotDone:['It remembers the gardens? Oh, that\u2019s a good one. The old world grew flowers between the machines, did you know? Here \u2014 fifty coins for the story. Stories are worth more than scrap, most days.','@Fifty coins for a story. Fair trade, Nix.'],
+nixGuardianFirst:['The guardian in the chamber south of the Old Terminal has been down for a thousand years. Big old thing, black armor, built to guard the Remnant.','@Can it be fixed?','Its power cell is dead. The Machine Gardens grow spare parts among the flowers \u2014 go find a spare power cell there, and bring it back to me. I\u2019ll fix the old guardian myself.','@A spare power cell from the Machine Gardens. I\u2019ll find one.'],
+nixGuardianWait:['The Machine Gardens, south of the Robot Bay. Spare power cells grow among the flowers there.'],
+nixGuardianDone:['A spare power cell, good as new! Give me an hour with the old guardian and it\u2019ll stand watch again. Here \u2014 fifty coins for the fetching.','@Glad to help, Nix.'],
+nixAfter:['The guardian stands watch again, and the robot in the bay is awake. The Remnant feels almost alive these days.'],
+vendor9BatteryFirst:['GREETINGS, VALUED CUSTOMER. I MUST INFORM YOU: MY POWER CELL IS FAILING. THE POWER CORE HOLDS THE LAST BATTERY.','@The last battery? Where is the Power Core?','SOUTH OF THE THRONE ROOM. BRING ME THE LAST BATTERY AND I WILL SERVE YOU PROPERLY. MY SHELVES ARE FULL OF REMNANT TECH GEAR.','@I\u2019ll bring you the last battery.'],
+vendor9BatteryWait:['THE POWER CORE. SOUTH OF THE THRONE ROOM. THE LAST BATTERY IS THERE.'],
+vendor9BatteryDone:['THE LAST BATTERY. INSTALLED. SYSTEMS... ONLINE. THANK YOU, VALUED CUSTOMER. VENDOR-9 IS AT YOUR SERVICE.','TAKE THESE COINS. AND BROWSE MY SHELVES \u2014 REMNANT TECH GEAR, GUARANTEED, STILL UNDER WARRANTY.','@Good to have you back, Vendor-9.'],
+vendor9After:['GREETINGS, VALUED CUSTOMER. REMNANT TECH GEAR, GUARANTEED. BROWSE. BUY. BE SATISFIED.'],
+robotWake:['SYSTEMS... WAKING. OH. OH, HELLO.','I WAS DREAMING OF THE GARDENS. THE FLOWERS GREW BETWEEN THE MACHINES, AND THE LIGHT WAS GOLDEN.','THANK YOU FOR WAKING ME. TELL NIX... TELL HER THE GARDENS ARE STILL GROWING.','@The gardens are still growing. I\u2019ll tell her.'],
 nixFirst:['Careful where you step \u2014 some of this old-world junk still has a charge. I woke a robot once by accident. Poor thing has been asleep a thousand years and all it remembers is its name. Unit-7, it says. If you can get it talking, it knows things.'],
 nixRepeat:['One man\u2019s trash is another man\u2019s treasure. Out here, it\u2019s mostly just treasure.'],
 unit7First:['GREETING. I AM UNIT-7. MY MEMORY BANKS ARE... DAMAGED. I REMEMBER THE FALL. I REMEMBER THE LIGHT. THE TERMINAL IN THE REMNANT HOLDS THE REST. I CANNOT ACCESS IT ALONE.'],
@@ -593,7 +609,8 @@ var SHOPS={
  store:{title:'General Store',greet:'Welcome to the General Store! Healing herbs, potions, sturdy bags — and honest armor, all fair prices.'},
  mira:{title:"Mira's Healing",greet:'Sunleaf for cuts, moonpetal for fevers. Herbs are 15 coins, potions 40 — take what you need.'},
  renn:{title:"Renn's Armory",greet:'Steel for those who have earned a blade. A better weapon hits harder; good armor turns a harder blow.'},
- zeke:{title:"Zeke's Desert Gear",greet:'Desert gear for desert folk. Herbs and potions, fair prices — water is dear out here, but my shelves are full.'}};
+ zeke:{title:"Zeke's Desert Gear",greet:'Desert gear for desert folk. Herbs and potions, fair prices — water is dear out here, but my shelves are full.'},
+ vendor9:{title:"Vendor-9's Tech Gear",greet:'REMNANT TECH GEAR. GUARANTEED. STILL UNDER WARRANTY. ONE THOUSAND YEARS AND COUNTING.'}};
 var shopId=null, shopOpen=false;
 function shopItems(id){
   var out=[], wt=G.weapon?((G.weaponTier||1)):0, at=G.armorTier||0, bs=G.bagSize||12;
@@ -614,6 +631,14 @@ function shopItems(id){
   if(id==='zeke'){
     out.push({key:'herb',kind:'consumable',name:'Healing Herb (sunleaf)',price:15,desc:'Restores half an ember. Good to have in the desert.',glyph:'\u{1F33F}'});
     out.push({key:'potion',kind:'consumable',name:'Healing Potion',price:40,desc:'Restores a full ember. For when a herb will not do.',glyph:'\u{1F9EA}'});
+  }
+  if(id==='vendor9'){
+    out.push({key:'herb',kind:'consumable',name:'Healing Herb (sunleaf)',price:15,desc:'Restores half an ember. Old-world meds, still good.',glyph:'\u{1F33F}'});
+    out.push({key:'potion',kind:'consumable',name:'Healing Potion',price:40,desc:'Restores a full ember. For when a herb will not do.',glyph:'\u{1F9EA}'});
+    var wp=[0,150,300];
+    for(var t=wt+1;t<=3;t++) out.push({key:'weapon'+t,kind:'weapon',name:WEAPONS[HEROES[G.hero].id][t-1],price:wp[t-1],desc:t===2?'Sharper, stronger — a true fighting blade.':'Its edge burns with the old world\u2019s light.',img:WEAPON_IMG[HEROES[G.hero].id][t-1],tier:t});
+    var ap=[80,200,400];
+    for(var a=at+1;a<=3;a++) out.push({key:'armor'+a,kind:'armor',name:ARMOR_NAMES[a-1],price:ap[a-1],desc:ARMOR_DESC[a-1],img:ARMOR_IMG[a-1],tier:a});
   }
   return out;
 }
@@ -1173,7 +1198,14 @@ var SCREENS={
  mdoor:{name:'The Sealed Door',col:1,row:7,type:'swamp',realm:'mistmire',goblins:0,wisps:0,wolves:0},
 rgate:{name:'The Gate',col:1,row:8,type:'remnant',realm:'remnant',goblins:0,wisps:1,wolves:0,golems:0,knights:1},
 rhalls:{name:'The Halls',col:0,row:8,type:'remnant',realm:'remnant',goblins:0,wisps:0,wolves:0,golems:1,knights:1},
-rthrone:{name:'The Throne Room',col:1,row:9,type:'remnant',realm:'remnant',goblins:0,wisps:0,wolves:0,golems:0,knights:0}
+rthrone:{name:'The Throne Room',col:1,row:9,type:'remnant',realm:'remnant',goblins:0,wisps:0,wolves:0,golems:0,knights:0},
+rterminal:{name:'Old Terminal',col:0,row:9,type:'remnant',realm:'remnant',goblins:0,wisps:1,wolves:0,golems:0,knights:0},
+rshop:{name:"Vendor-9's Shop",col:2,row:8,type:'remnant',realm:'remnant',goblins:0,wisps:0,wolves:0,golems:0,knights:0},
+rrobot:{name:'Sleeping Robot Bay',col:2,row:9,type:'remnant',realm:'remnant',goblins:0,wisps:0,wolves:0,golems:0,knights:1},
+rguardian:{name:'Broken Guardian Chamber',col:0,row:10,type:'remnant',realm:'remnant',goblins:0,wisps:0,wolves:0,golems:1,knights:1},
+rcore:{name:'Power Core',col:1,row:10,type:'remnant',realm:'remnant',goblins:0,wisps:1,wolves:0,golems:1,knights:0},
+rgardens:{name:'Machine Gardens',col:2,row:10,type:'remnant',realm:'remnant',goblins:0,wisps:1,wolves:0,golems:0,knights:1},
+rshrine:{name:'Remnant Shrine',col:1,row:11,type:'remnant',realm:'remnant',goblins:0,wisps:0,wolves:0,golems:0,knights:0}
 };
 var GRID={}; Object.keys(SCREENS).forEach(function(k){ GRID[SCREENS[k].col+','+SCREENS[k].row]=k; });
 /* map bounds, from the screens themselves, so new realms widen the map */
@@ -1199,7 +1231,7 @@ LIGHT_SPOTS={mmarsh:[[300,300],[480,330],[660,300]]};
 /* Thornwood helpers: a screen's realm (Meadowlands when unset) and whether a
    screen id is a save shrine (Meadow Shrine or Forest Shrine). */
 function screenRealm(id){ var sc=SCREENS[id]; return (sc&&sc.realm)||'meadow'; }
-function isShrine(id){ return id==='shrine'||id==='fshrine'||id==='dshrine'||id==='wshrine'||id==='mshrine'; }
+function isShrine(id){ return id==='shrine'||id==='fshrine'||id==='dshrine'||id==='wshrine'||id==='mshrine'||id==='rshrine'; }
 var NPC_SPOTS={
  village:[
   {id:'bram',x:560,y:230},{id:'renn',x:290,y:250},{id:'mira',x:355,y:576},
@@ -1279,7 +1311,7 @@ var SFX={
   roar:function(){ if(AC){ var t=AC.currentTime; tone(90,t,.7,'sawtooth',.2,null,45); noiseBurst(t,.5,.2,500,120); } }
 };
 /* Spoken dialogue — browser speech. Profiles are [pitch,rate,gender]. */
-var VOICE={bram:[.55,.85,0],dell:[.9,.95,0],renn:[.75,1,0],mira:[1.25,1,1],joren:[.65,.9,0],sable:[1.35,1,1],girl:[1.7,1.15,1],grak:[.35,.8,0],narr:[.6,.85,0],zeke:[.8,.9,0],maren:[1.1,.8,1],colossus:[.3,.7,0],hilda:[1.2,.95,1],ivo:[.8,1,0],traveler:[.6,.85,0],wraith:[.25,.7,0], pell:[.5,.8,0], mudfoot:[.7,.9,0],nix:[1.15,.95,1],unit7:[.8,.85,0],vendor9:[1.05,.95,0],shadowknight:[.4,.75,0]};
+var VOICE={bram:[.55,.85,0],dell:[.9,.95,0],renn:[.75,1,0],mira:[1.25,1,1],joren:[.65,.9,0],sable:[1.35,1,1],girl:[1.7,1.15,1],grak:[.35,.8,0],narr:[.6,.85,0],zeke:[.8,.9,0],maren:[1.1,.8,1],colossus:[.3,.7,0],hilda:[1.2,.95,1],ivo:[.8,1,0],traveler:[.6,.85,0],wraith:[.25,.7,0], pell:[.5,.8,0], mudfoot:[.7,.9,0],nix:[1.15,.95,1],unit7:[.8,.85,0],vendor9:[1.05,.95,0],shadowknight:[.4,.75,0],robot:[.7,.8,0]};
 var VHER={swordsman:[.9,1],spear:[1,1],bow:[1.1,1.05],mage:[1.2,.95],guardian:[.7,.9]};
 var sayN=0;
 function vPick(f){try{var vs=speechSynthesis.getVoices().filter(v=>/^en/i.test(v.lang));if(!vs.length)return;var m=f?/female|zira|samantha|aria|jenny/i:/male|daniel|david|guy/i;return vs.find(v=>m.test(v.name))||(f?vs[vs.length-1]:vs[0])}catch(e){return}}
@@ -1352,7 +1384,7 @@ function newState(slot,heroIdx,gender,diff){
     lantern:'none', lights:'none', lightCount:0, lightsTaken:{}, medicine:'none', sunkenRelic:false, masterMade:false,
     visited:{village:true}, herbsTaken:{}, enemiesDown:{}, millChest:false, girlChest:false, girlChests:0,
     goat:'none', goatFollow:false, trouble:'none', goblinKills:0, charms:[], equipped:[],
-    talked:{}, rennAfter:false, girlMet:false, shrineSeen:false, playSec:0, thornSeen:false, dustSeen:false, whiteSeen:false, mistSeen:false, remnantSeen:false, shadowMet:false, shadowDown:false, doorOpen:false, lastShrine:'village' };
+    talked:{}, rennAfter:false, girlMet:false, shrineSeen:false, playSec:0, thornSeen:false, dustSeen:false, whiteSeen:false, mistSeen:false, remnantSeen:false, shadowMet:false, shadowDown:false, doorOpen:false, terminal:'none', robot:'none', guardian:'none', battery:'none', lastShrine:'village' };
 }
 var G=null; /* current game state */
 function persist(){
@@ -1368,6 +1400,10 @@ function persist(){
   if(G.shadowMet===undefined) G.shadowMet=false;
   if(G.shadowDown===undefined) G.shadowDown=false;
   if(G.doorOpen===undefined) G.doorOpen=false;
+  if(G.terminal===undefined) G.terminal='none';
+  if(G.robot===undefined) G.robot='none';
+  if(G.guardian===undefined) G.guardian='none';
+  if(G.battery===undefined) G.battery='none';
   if(G.masterMade===undefined) G.masterMade=false;
   if(G.pack===undefined) G.pack='none';
   if(G.crystals===undefined) G.crystals='none';
@@ -1770,12 +1806,9 @@ function startWhitepeakEntry(){
   var img=$('cutImg');img.src=WHITEPEAK_IMG;img.className='';
   var fx=$('cutFx');fx.className='fx';$('cutEmbers').style.display='none';
   who('THE OLD STORIES');
-  var i=0;
-  function next(){
-    if(i>=WHITEPEAK_ENTRY_PAGES.length){ cutDone(); return; }
-    say(WHITEPEAK_ENTRY_PAGES[i++],next);
-  }
-  next();
+  cutPages=WHITEPEAK_ENTRY_PAGES.slice();cutPage=0;
+  cutDone=function(){ showView('gameView'); };
+  cut0();
 }
 MISTMIRE_ENTRY_PAGES=[
  "The water is black and still, and the lights that drift over it are not stars.",
@@ -1789,12 +1822,9 @@ function startMistmireEntry(){
   var img=$('cutImg');img.src=MISTMIRE_IMG;img.className='';
   var fx=$('cutFx');fx.className='fx';$('cutEmbers').style.display='none';
   who('THE OLD STORIES');
-  var i=0;
-  function next(){
-    if(i>=MISTMIRE_ENTRY_PAGES.length){ cutDone(); return; }
-    say(MISTMIRE_ENTRY_PAGES[i++],next);
-  }
-  next();
+  cutPages=MISTMIRE_ENTRY_PAGES.slice();cutPage=0;
+  cutDone=function(){ showView('gameView'); };
+  cut0();
 }
 /* DRAFTED for slice 1 — no Remnant entry pages exist in fifth-realm-dialogue.md;
    these are in the other realms' style and need Eric's approval. */
@@ -2226,6 +2256,44 @@ function buildScreen(id){
       drawArtCenter(g,'shadow_knight',480,290,190,1);
       solids.push({x:400,y:200,w:160,h:130});
       g.fillStyle='#c8d2e0'; g.font='15px Georgia'; g.textAlign='center'; g.fillText('~ THE THRONE ROOM ~',480,580); }
+    else if(id==='rterminal'){
+      /* the Old Terminal: a tall old-world console, dark screen until it is restarted */
+      drawArtCenter(g,'old_terminal',480,270,170,1);
+      solids.push({x:400,y:180,w:160,h:130});
+      g.fillStyle='#c8d2e0'; g.font='15px Georgia'; g.textAlign='center'; g.fillText('~ OLD TERMINAL ~',480,580); }
+    else if(id==='rshop'){
+      /* Vendor-9's shop: shelves of Remnant tech gear along the top wall, a counter below */
+      for(var si=0;si<3;si++){ var sx=140+si*260;
+        g.fillStyle='#2c2f38'; rr(g,sx,60,180,110,6); g.fill();
+        g.fillStyle='#3a3f4a'; g.fillRect(sx+10,100,160,6); g.fillRect(sx+10,140,160,6);
+        g.fillStyle='#4a505c'; g.fillRect(sx+10,66,160,4); }
+      g.fillStyle='#2c2f38'; rr(g,380,380,200,60,6); g.fill();
+      g.fillStyle='#3a3f4a'; rr(g,380,380,200,14,6); g.fill();
+      solids.push({x:380,y:380,w:200,h:60});
+      g.fillStyle='#c8d2e0'; g.font='15px Georgia'; g.textAlign='center'; g.fillText('~ VENDOR-9\u2019S SHOP ~',480,580); }
+    else if(id==='rrobot'){
+      /* the Sleeping Robot Bay: the old robot lies asleep on the floor */
+      drawArtCenter(g,'sleeping_robot',480,300,420,1);
+      solids.push({x:280,y:250,w:400,h:90});
+      g.fillStyle='#c8d2e0'; g.font='15px Georgia'; g.textAlign='center'; g.fillText('~ SLEEPING ROBOT BAY ~',480,580); }
+    else if(id==='rguardian'){
+      /* the Broken Guardian Chamber: the old guardian slumps against the wall */
+      drawArtCenter(g,'broken_guardian',480,280,210,1);
+      solids.push({x:400,y:200,w:160,h:130});
+      g.fillStyle='#c8d2e0'; g.font='15px Georgia'; g.textAlign='center'; g.fillText('~ BROKEN GUARDIAN CHAMBER ~',480,580); }
+    else if(id==='rcore'){
+      /* the Power Core: a tall column of golden light */
+      drawArtCenter(g,'power_core',480,290,170,1);
+      solids.push({x:410,y:200,w:140,h:150});
+      g.fillStyle='#c8d2e0'; g.font='15px Georgia'; g.textAlign='center'; g.fillText('~ POWER CORE ~',480,580); }
+    else if(id==='rgardens'){
+      /* the Machine Gardens: the old world's gardens, still growing */
+      drawArtCenter(g,'machine_gardens',480,280,520,1);
+      g.fillStyle='#c8d2e0'; g.font='15px Georgia'; g.textAlign='center'; g.fillText('~ MACHINE GARDENS ~',480,580); }
+    else if(id==='rshrine'){
+      drawArtBottom(g,'shrine',480,297,120); solids.push({x:428,y:168,w:104,h:96});
+      g.fillStyle='#c8d2e0'; g.font='15px Georgia'; g.textAlign='center'; g.fillText('~ SHRINE OF THE EMBER ~',480,322);
+      [[330,240],[630,240],[360,300],[600,300]].forEach(function(p,i){ drawArtCFlip(g,'standing_stone',p[0],p[1]-12,22,i%2); }); }
   } else {
     for(var t5=0;t5<9;t5++){ var bx=70+rand()*820, by=60+rand()*120; drawArtBottom(g,t5%2?'tree_pine':'tree_oak',bx,by+16,72); }
     for(var t6=0;t6<7;t6++){ var bx2=70+rand()*820, by2=470+rand()*110; drawArtBottom(g,t6%2?'tree_pine':'tree_oak',bx2,by2+16,72); }
@@ -2301,6 +2369,8 @@ function spawnScreen(id){
   if(id==='mill'&&!G.millChest) pickups.push({kind:'chest',x:520,y:330});
   if(id==='fcave'&&G.axe!=='found'&&G.axe!=='done') pickups.push({kind:'axe',x:480,y:330});
   if(id==='dwell'&&G.water==='given') pickups.push({kind:'waterskin',x:480,y:330});
+  if(id==='rgardens'&&G.guardian==='given') pickups.push({kind:'cell',x:480,y:330});
+  if(id==='rcore'&&G.battery==='given') pickups.push({kind:'battery',x:480,y:480});
   if(id==='flower'&&G.goat==='active') goatHere={x:GOAT_SPOT.x,y:GOAT_SPOT.y};
   if(id==='village'){ chestVisible = G.girlMet && G.girlChests<4 && girlState==='atchest'; }
 }
@@ -2633,6 +2703,30 @@ function drawWorld(g,screenId,ox,oy,drawDynamics){
     g.fillStyle='#c9a86a'; g.beginPath(); g.ellipse(d.x,d.y-3,10,5,0,0,7); g.fill();
     g.fillStyle='#8a6f3f'; g.fillRect(d.x-2,d.y-8,4,4);
   });
+  /* the Old Terminal's screen, lit once Unit-7's memories are restored */
+  if(screenId==='rterminal'&&G&&(G.terminal==='found'||G.terminal==='done')){
+    var tg=.5+Math.sin(Date.now()/300)*.2;
+    g.fillStyle='rgba(120,220,255,'+tg*.5+')'; g.fillRect(420,115,120,155);
+    g.fillStyle='rgba(180,240,255,.85)'; g.fillRect(432,140,96,4); g.fillRect(432,165,70,4); g.fillRect(432,190,84,4);
+  }
+  /* the sleeping robot's eyes, glowing amber once it wakes */
+  if(screenId==='rrobot'&&G&&(G.robot==='woken'||G.robot==='done')){
+    var rg=.6+Math.sin(Date.now()/300)*.3;
+    g.fillStyle='rgba(255,190,80,'+rg+')'; g.beginPath(); g.arc(334,280,4,0,7); g.arc(372,280,4,0,7); g.fill();
+    g.fillStyle='rgba(255,190,80,'+(rg*.2)+')'; g.beginPath(); g.arc(334,280,10,0,7); g.arc(372,280,10,0,7); g.fill();
+  }
+  /* the broken guardian's eyes, glowing again once Nix fixes it */
+  if(screenId==='rguardian'&&G&&G.guardian==='done'){
+    var gg=.6+Math.sin(Date.now()/300)*.3;
+    g.fillStyle='rgba(255,190,80,'+gg+')'; g.beginPath(); g.arc(467,234,4,0,7); g.arc(495,231,4,0,7); g.fill();
+  }
+  /* Vendor-9's shelves, glowing with tech gear once he is restarted */
+  if(screenId==='rshop'&&G&&G.battery==='done'){
+    for(var sh=0;sh<3;sh++){ var shx=140+sh*260;
+      g.fillStyle='rgba(120,220,255,.85)'; g.fillRect(shx+22,82,14,10); g.fillRect(shx+52,82,14,10); g.fillRect(shx+82,82,14,10);
+      g.fillStyle='rgba(255,190,80,.85)'; g.fillRect(shx+112,82,14,10); g.fillRect(shx+142,82,14,10);
+      g.fillStyle='rgba(140,255,170,.85)'; g.fillRect(shx+22,122,14,10); g.fillRect(shx+82,122,14,10); g.fillRect(shx+142,122,14,10); }
+  }
   /* Old Maren's relic: a marked mound where the two dead palms lean, at Dead Palms */
   if(screenId==='ddead'&&G&&G.relic==='given'){
     g.fillStyle='rgba(255,200,80,'+(0.3+Math.sin(Date.now()/300)*0.15)+')'; g.beginPath(); g.arc(480,330,26,0,7); g.fill();
@@ -2702,6 +2796,16 @@ function drawWorld(g,screenId,ox,oy,drawDynamics){
       g.fillStyle='rgba(120,200,220,'+(0.3+Math.sin(Date.now()/300)*0.15)+')'; g.beginPath(); g.arc(p.x,p.y,24,0,7); g.fill();
       g.fillStyle='#4f9a8a'; g.beginPath(); g.ellipse(p.x,p.y,12,15,0,0,7); g.fill();
       g.fillStyle='#2a6a5e'; g.fillRect(p.x-3,p.y-18,6,6);
+    } else if(p.kind==='cell'){
+      /* the spare power cell in the Machine Gardens, glowing green among the flowers */
+      g.fillStyle='rgba(120,255,170,'+(0.3+Math.sin(Date.now()/300)*0.15)+')'; g.beginPath(); g.arc(p.x,p.y,24,0,7); g.fill();
+      g.fillStyle='#2a6a4a'; rr(g,p.x-12,p.y-9,24,18,3); g.fill();
+      g.fillStyle='#7dffaa'; g.fillRect(p.x-8,p.y-5,16,4); g.fillRect(p.x-8,p.y+2,10,4);
+    } else if(p.kind==='battery'){
+      /* the last battery in the Power Core, glowing gold */
+      g.fillStyle='rgba(255,190,80,'+(0.3+Math.sin(Date.now()/300)*0.15)+')'; g.beginPath(); g.arc(p.x,p.y,24,0,7); g.fill();
+      g.fillStyle='#8a6a2a'; rr(g,p.x-9,p.y-13,18,26,3); g.fill();
+      g.fillStyle='#ffd97a'; g.fillRect(p.x-5,p.y-8,10,6); g.fillRect(p.x-5,p.y+1,10,3);
     }
   });
   /* village girl chest */
@@ -2753,6 +2857,9 @@ function npcHasQuest(id){
   if(id==='traveler') return G.pack==='carrying';
   if(id==='pell') return G.lantern==='none'||G.lantern==='found'||(G.lantern==='done'&&G.lights==='none')||(G.lights==='given'&&(G.lightCount||0)>=3);
   if(id==='mudfoot') return G.medicine==='none'||G.medicine==='found';
+  if(id==='nix') return G.robot==='none'||G.robot==='woken'||G.guardian==='none'||G.guardian==='found';
+  if(id==='unit7') return G.terminal==='none'||G.terminal==='found';
+  if(id==='vendor9') return G.battery==='none'||G.battery==='found';
   return false;
 }
 </script>
@@ -2928,9 +3035,30 @@ function talkTo(npc){
     }
     else openDialogue('girl',LINES.girlRepeat);
   }
-  else if(id==='nix'){ openDialogue('nix',first?LINES.nixFirst:LINES.nixRepeat); }
-  else if(id==='unit7'){ openDialogue('unit7',first?LINES.unit7First:LINES.unit7Repeat); }
-  else if(id==='vendor9'){ openDialogue('vendor9',first?LINES.vendor9First:LINES.vendor9Repeat); }
+  else if(id==='nix'){
+    if(G.robot==='none'){ openDialogue('nix',LINES.nixRobotFirst,function(){ G.robot='given'; persist(); updateHUD(); toast('Quest: wake the sleeping robot in the Robot Bay \u2014 east of the Throne Room'); }); }
+    else if(G.robot==='woken'){ openDialogue('nix',LINES.nixRobotDone,function(){ G.robot='done'; G.coins+=50; persist(); updateHUD(); toast('Nix pays you 50 coins for the robot\u2019s story.'); }); }
+    else if(G.robot==='given') openDialogue('nix',LINES.nixRobotWait);
+    else if(G.guardian==='none'){ openDialogue('nix',LINES.nixGuardianFirst,function(){ G.guardian='given'; persist(); updateHUD(); toast('Quest: find a spare power cell in the Machine Gardens'); }); }
+    else if(G.guardian==='found'){ openDialogue('nix',LINES.nixGuardianDone,function(){ G.guardian='done'; G.coins+=50; persist(); updateHUD(); toast('Nix pays you 50 coins for the spare power cell.'); }); }
+    else if(G.guardian==='given') openDialogue('nix',LINES.nixGuardianWait);
+    else if(G.robot==='done'&&G.guardian==='done') openDialogue('nix',LINES.nixAfter);
+    else openDialogue('nix',first?LINES.nixFirst:LINES.nixRepeat);
+  }
+  else if(id==='unit7'){
+    if(G.terminal==='none'){ openDialogue('unit7',LINES.unit7TerminalFirst,function(){ G.terminal='given'; persist(); updateHUD(); toast('Quest: restart the Old Terminal \u2014 south of the Halls'); }); }
+    else if(G.terminal==='found'){ openDialogue('unit7',LINES.unit7TerminalDone,function(){ G.terminal='done'; G.coins+=50; persist(); updateHUD(); toast('Unit-7 pays you 50 coins for his memories.'); }); }
+    else if(G.terminal==='given') openDialogue('unit7',LINES.unit7TerminalWait);
+    else if(G.terminal==='done') openDialogue('unit7',LINES.unit7After);
+    else openDialogue('unit7',first?LINES.unit7First:LINES.unit7Repeat);
+  }
+  else if(id==='vendor9'){
+    if(G.battery==='none'){ openDialogue('vendor9',LINES.vendor9BatteryFirst,function(){ G.battery='given'; persist(); updateHUD(); toast('Quest: bring Vendor-9 the last battery from the Power Core'); }); }
+    else if(G.battery==='found'){ openDialogue('vendor9',LINES.vendor9BatteryDone,function(){ G.battery='done'; G.coins+=50; persist(); updateHUD(); toast('Vendor-9 pays you 50 coins \u2014 and his shop is open now!'); openShop('vendor9'); }); }
+    else if(G.battery==='given') openDialogue('vendor9',LINES.vendor9BatteryWait);
+    else if(G.battery==='done'){ openDialogue('vendor9',LINES.vendor9After,function(){ openShop('vendor9'); }); }
+    else openDialogue('vendor9',first?LINES.vendor9First:LINES.vendor9Repeat);
+  }
   updateHUD();
 }
 function sellPelts(){
@@ -2981,6 +3109,12 @@ function tryInteract(){
   for(i=0;i<pickups.length;i++){ if(pickups[i].kind==='waterskin'&&dist(player.x,player.y,pickups[i].x,pickups[i].y)<56){
     pickups.splice(i,1); G.water='skin'; SFX.chest(); persist(); updateHUD();
     toast('You found the empty waterskin! Fill it at the Oasis, then bring it back to Zeke.'); return; } }
+  for(i=0;i<pickups.length;i++){ if(pickups[i].kind==='cell'&&dist(player.x,player.y,pickups[i].x,pickups[i].y)<56){
+    pickups.splice(i,1); G.guardian='found'; SFX.chest(); persist(); updateHUD();
+    toast('You found a spare power cell! Bring it back to Nix at the Gate.'); return; } }
+  for(i=0;i<pickups.length;i++){ if(pickups[i].kind==='battery'&&dist(player.x,player.y,pickups[i].x,pickups[i].y)<56){
+    pickups.splice(i,1); G.battery='found'; SFX.chest(); persist(); updateHUD();
+    toast('You found the last battery! Bring it to Vendor-9 in the Halls.'); return; } }
   for(i=0;i<crystalsHere.length;i++){ if(dist(player.x,player.y,crystalsHere[i].x,crystalsHere[i].y)<56){ collectCrystal(i); return; } }
   for(i=0;i<oilHere.length;i++){ if(dist(player.x,player.y,oilHere[i].x,oilHere[i].y)<56){ collectOil(i); return; } }
   for(i=0;i<blanketHere.length;i++){ if(dist(player.x,player.y,blanketHere[i].x,blanketHere[i].y)<56){ collectBlanket(i); return; } }
@@ -2996,6 +3130,10 @@ function tryInteract(){
   for(i=0;i<herbsHere.length;i++){ if(dist(player.x,player.y,herbsHere[i].x,herbsHere[i].y)<46){ collectHerb(i); return; } }
   for(i=0;i<digHere.length;i++){ if(dist(player.x,player.y,digHere[i].x,digHere[i].y)<46){ collectDig(i); return; } }
   if(curScreen==='ddead'&&G.relic==='given'&&dist(player.x,player.y,480,330)<56){ collectRelic(); return; }
+  if(curScreen==='rterminal'&&dist(player.x,player.y,480,330)<70){ if(G.terminal==='given'){ G.terminal='found'; SFX.shrine(); persist(); updateHUD(); toast('The Old Terminal hums back to life! Unit-7\u2019s memories are restored \u2014 tell him at the Gate.'); } else if(G.terminal==='found'||G.terminal==='done') toast('The Old Terminal hums softly. Unit-7\u2019s memories live here now.'); else toast('The Old Terminal is dark. Its screen shows nothing.'); return; }
+  if(curScreen==='rrobot'&&dist(player.x,player.y,480,420)<70){ if(G.robot==='given'){ openDialogue('robot',LINES.robotWake,function(){ G.robot='woken'; persist(); updateHUD(); toast('The sleeping robot is awake! Tell Nix at the Gate what it remembers.'); }); } else if(G.robot==='none') toast('A robot sleeps here, its eyes dark. It has slept a thousand years.'); else toast('The robot hums softly, dreaming of the gardens.'); return; }
+  if(curScreen==='rguardian'&&dist(player.x,player.y,480,330)<70){ if(G.guardian==='done') toast('The guardian stands watch again, its eyes glowing softly.'); else toast('The broken guardian slumps against the wall. Its power cell is dead.'); return; }
+  if(curScreen==='rshop'&&dist(player.x,player.y,480,330)<70){ if(G.battery==='done'){ openShop('vendor9'); } else toast('The shop is dark. Vendor-9 has not been restarted yet.'); return; }
 }
 function collectHerb(i){
   var h=herbsHere[i]; herbsHere.splice(i,1);
@@ -3479,7 +3617,7 @@ function drawMinimap(){
   c.clearRect(0,0,Wd,Ht);
   /* only the realm you are in, with its name at the top */
   var realm=screenRealm(curScreen);
-  var rname={meadow:'Meadowlands',thornwood:'Thornwood',dustfall:'Dustfall',whitepeak:'Whitepeak',mistmire:'Mistmire'}[realm]||realm;
+  var rname={meadow:'Meadowlands',thornwood:'Thornwood',dustfall:'Dustfall',whitepeak:'Whitepeak',mistmire:'Mistmire',remnant:'The Remnant'}[realm]||realm;
   c.fillStyle='#ffd97a'; c.font='bold 11px Georgia'; c.textAlign='center';
   c.fillText(rname,Wd/2,12);
   /* that realm's screens, in their own col/row grid */
@@ -3687,6 +3825,10 @@ function enterGame(fromCutscene){
   if(G.shadowMet===undefined) G.shadowMet=false;
   if(G.shadowDown===undefined) G.shadowDown=false;
   if(G.doorOpen===undefined) G.doorOpen=false;
+  if(G.terminal===undefined) G.terminal='none';
+  if(G.robot===undefined) G.robot='none';
+  if(G.guardian===undefined) G.guardian='none';
+  if(G.battery===undefined) G.battery='none';
   if(G.masterMade===undefined) G.masterMade=false;
   if(G.pack===undefined) G.pack='none';
   if(G.crystals===undefined) G.crystals='none';
