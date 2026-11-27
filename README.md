@@ -52,8 +52,8 @@ The dark forest west of the meadow. Dense trees at the edges, open middle, firef
 9. Thorn Maze — a minigame gate (slice 3)
 10. Forest Shrine — save shrine
 
-### Dustfall (10) — designed, not built yet
-The desert east of the meadow. Dark wisps and stone golems.
+### Dustfall (10) — slice 1 built Nov 26 (not yet pushed; awaiting Eric's go-ahead)
+The desert east of the meadow. Dark wisps and stone golems. Slice 1: all 10 screens, desert look, entry narration, Desert Shrine, golems + wisps, desert melody, Sand Pit dig spots. Slices 2–3 (Zeke/Maren, Water Run, Buried Relic, Dune Colossus boss) not built yet.
 
 1. The Dunes — Zeke's camp
 2. The Oasis — water for the Water Run
