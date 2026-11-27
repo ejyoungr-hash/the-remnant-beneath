@@ -52,7 +52,7 @@ The dark forest west of the meadow. Dense trees at the edges, open middle, firef
 9. Thorn Maze — a minigame gate (slice 3)
 10. Forest Shrine — save shrine
 
-### Dustfall (10) — slice 1 built Nov 26 (not yet pushed; awaiting Eric's go-ahead)
+### Dustfall (10) — slices 1–2 built and live as v20 (slice 1) and v22 (slices 2–3, Nov 26)
 The desert east of the meadow. Dark wisps and stone golems. Slice 1: all 10 screens, desert look, entry narration, Desert Shrine, golems + wisps, desert melody, Sand Pit dig spots. Slices 2–3 (Zeke/Maren, Water Run, Buried Relic, Dune Colossus boss) not built yet.
 
 1. The Dunes — Zeke's camp
@@ -220,7 +220,7 @@ Three copies, in order:
 2. Staged copy: `~/workspace/github/the-remnant-beneath/`. A fresh export is copied here, the view counter is re added, then it is pushed.
 3. Live site: GitHub Pages. After a push, check the Actions "pages build and deployment" run before calling it live, then check the live page itself.
 
-Versions are numbered v1, v2, and so on. The live site is always the latest pushed version. The current live version is v19 (minimap fix, pushed Nov 26, 2026).
+Versions are numbered v1, v2, and so on. The live site is always the latest pushed version. The current live version is v22 (Dustfall slices 2–3, pushed Nov 26, 2026).
 
 ### View counter
 

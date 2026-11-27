@@ -427,6 +427,16 @@ var LINES={
  marenRepeat:['The two dead palms, leaning together. Dig there. The sand remembers, but so do I.','@I\u2019m on my way, Maren.'],
  marenRelicDone:['You found it. My relic. Oh, I was young and foolish \u2014 but I was also right to bury it. Take these coins, and my thanks. The sand remembers you kindly now.','@It belongs with you, Maren. Thank you.'],
  marenAfter:['The sand remembers you kindly now. You\u2019re a friend of Dustfall, child.','@Thank you, Maren.'],
+ hildaFirst:['Welcome to the inn, traveler! Warm bed, hot stew, and no goblins under the floorboards \u2014 I checked this morning.','A traveler came through here half-frozen, heading for Whitepeak. He left his pack behind. If you\u2019re going that way, take it to him?','@I\u2019ll take his pack. Where did he go?','The Frozen Traveler\u2019s Camp, north of here. His pack is right here by the door \u2014 take it, and mind the cold.'],
+ hildaRepeat:['The traveler\u2019s pack is right here by the door. He\u2019s at the Frozen Traveler\u2019s Camp, north of here.','@I\u2019m on my way, Hilda.'],
+ hildaAfter:['The stew is always on, and the stories are always free.','@I\u2019ll take a bowl of stew, Hilda.'],
+ ivoFirst:['Storm crystals! You have seen them? They hold light from a sky no one alive has seen. Bring me three and I will tell you what the old writing says about the fifth realm.','@Three storm crystals. Where do I find them?','The Frozen Lake and the Crystal Field \u2014 they grow where the storm touches the ground. Bring me three.','@Three crystals. I\u2019ll bring them to you.'],
+ ivoRepeat:['The old world\u2019s writing is not dead, only sleeping. I am learning to wake it.','@I\u2019m looking for the crystals, Ivo.'],
+ ivoCrystalsDone:['Three storm crystals! Look at them \u2014 light from a sky no one alive has seen. The old writing speaks of the fifth realm, and now I can read it. Here, take these coins \u2014 and listen: the fifth realm is below, not above. The swamp hides its door.','@Below, not above. Thank you, Ivo.'],
+ ivoAfter:['The old world\u2019s writing is not dead, only sleeping. I am learning to wake it.','@I\u2019ll remember what you told me, Ivo.'],
+ travelerWait:['My pack... I left it at Hilda\u2019s inn. If you\u2019re going that way, I\u2019d owe you.','@I\u2019ll bring your pack. Stay warm.'],
+ travelerPackDone:['You... you brought my pack? I thought the storm had taken it. Thank you, friend. Here, take these coins \u2014 the mountain owes you a warm fire.','@You look half-frozen. Get to the inn before the storm catches you again.'],
+ travelerAfter:['The inn, then. Hilda\u2019s stew is the best thing in Whitepeak.','@Safe travels, friend.'],
  jorenAxeDone:['My axe... you found it. Twenty years, and it comes home.','@It belongs with you, Joren. Your father would want it cutting wood, not sitting in a goblin den.','Then I owe you, and I pay my debts. Take this, and my thanks.','@Thank you, Joren. Keep the trees waiting.'],
  jorenAfter:['An axe is a woodcutter\u2019s soul. You gave mine back to me.','@Glad it\u2019s home, Joren.'],
  girlFirst:['Hi! Hi! You\u2019re the one with the ember!','@That\u2019s me. And you must be the one who knows all the secrets.','I know all the secret places in the village. Follow me, I\u2019ll show you one! There\u2019s a chest, and it\u2019s got something shiny in it!','@Lead the way, then. I like shiny.'],
@@ -485,6 +495,18 @@ var COLOSSUS_AFTER_PAGES=[
  "North lies Whitepeak, where the storm never sleeps. The Peak Key waits there."
 ];
 var COLOSSUS_KEY_WORDS="You got the Dust Key! Three of four. When all four are yours, they become the master key.";
+var WRAITH_MEET_PAGES=[
+ "The blizzard takes shape before your eyes, snow and wind twisting into something with arms and a face and a scream.",
+ "The Storm Wraith shrieks with the voice of the mountain itself, and the cold cuts deeper than any blade.",
+ "It was born from the worst storm Whitepeak ever saw, and it has been waiting for someone foolish enough to climb this high."
+];
+var WRAITH_AFTER_PAGES=[
+ "The Storm Wraith dissolves into embers, and the blizzard lets go of the mountain. The snow falls soft and quiet.",
+ "The fourth key is yours. All four keys are yours now, and they stir in your pack, reaching for one another.",
+ "South lies Mistmire, where the swamp hides the door to the fifth realm. The master key will open it."
+];
+var WRAITH_KEY_WORDS="You got the Peak Key! Four of four. When all four are yours, they become the master key.";
+function wraithStats(){ return G.diff==='Easy'?{hp:12,dmg:1}:G.diff==='Hard'?{hp:20,dmg:3}:{hp:16,dmg:2}; }
 /* ================= CHARMS ================= */
 var CHARM_NAMES={seeker:'Seeker Charm',lucky:'Lucky Charm',guardian:'Guardian Charm',ember:'Ember Charm'};
 var CHARM_DESC={seeker:'Reveals hidden secrets nearby',lucky:'Enemies drop more coins',guardian:'You take less damage',ember:'Your health slowly comes back'};
@@ -641,7 +663,7 @@ function completeTrouble(){
 var KEY_NAMES={meadow:'Meadow Key',thorn:'Thorn Key',dust:'Dust Key',peak:'Peak Key'};
 var grakImg=new Image(); grakImg.src=GRAK_SPRITE;
 /* SPRITE_DATA lives in data/sprites.js */
-var SPRITE_ASPECT={ hero_swordsman_male:0.585, hero_swordsman_female:0.69, hero_spear_male:0.645, hero_spear_female:0.59, hero_bow_male:0.78, hero_bow_female:1.13, hero_mage_male:0.83, hero_mage_female:0.86, hero_guardian_male:1.375, hero_guardian_female:1.07, npc_bram:0.8, npc_dell:0.6071, npc_renn:0.78, npc_mira:0.51, npc_joren:0.865, npc_girl:0.8929, goblin:0.89,hero_swordsman_male_sb:0.863,hero_swordsman_male_ea:0.863,hero_swordsman_male_eb:0.863,hero_swordsman_male_na:0.863,hero_swordsman_male_nb:0.863,hero_swordsman_female_sb:0.85,hero_swordsman_female_ea:0.85,hero_swordsman_female_eb:0.85,hero_swordsman_female_na:0.85,hero_swordsman_female_nb:0.85,hero_spear_male_sb:0.775,hero_spear_male_ea:0.775,hero_spear_male_eb:0.775,hero_spear_male_na:0.775,hero_spear_male_nb:0.775,hero_spear_female_sb:0.8,hero_spear_female_ea:0.8,hero_spear_female_eb:0.8,hero_spear_female_na:0.8,hero_spear_female_nb:0.8,hero_bow_male_sb:0.975,hero_bow_male_ea:0.975,hero_bow_male_eb:0.975,hero_bow_male_na:0.975,hero_bow_male_nb:0.975,hero_bow_female_sb:1.1625,hero_bow_female_ea:1.163,hero_bow_female_eb:1.163,hero_bow_female_na:1.163,hero_bow_female_nb:1.163,hero_mage_male_sb:0.925,hero_mage_male_ea:0.925,hero_mage_male_eb:0.925,hero_mage_male_na:0.925,hero_mage_male_nb:0.925,hero_mage_female_sb:0.938,hero_mage_female_ea:0.938,hero_mage_female_eb:0.938,hero_mage_female_na:0.938,hero_mage_female_nb:0.938,hero_guardian_male_sb:1.375, hero_guardian_male_sa:1.375,hero_guardian_male_ea:1.375,hero_guardian_male_eb:1.375,hero_guardian_male_na:1.375,hero_guardian_male_nb:1.375,hero_guardian_female_sb:1.2,hero_guardian_female_ea:1.2,hero_guardian_female_eb:1.2,hero_guardian_female_na:1.2,hero_guardian_female_nb:1.2,goat_ea:1.156,goat_eb:1.156,goblin_sb:1.2,goblin_ea:1.2,goblin_eb:1.2,goblin_na:1.2,goblin_nb:1.2,girl_sb:0.8929,girl_ea:0.8929,girl_eb:0.8929,girl_na:0.8929,girl_nb:0.8929,grak_sa:0.871,grak_sb:0.879,grak_ea:0.879,grak_eb:0.879,grak_na:0.879,grak_nb:0.879,hero_mage_male_sa:0.925,hero_mage_female_sa:0.938,hero_guardian_female_sa:1.2,hero_atk_swordsman_a:1.3,hero_atk_swordsman_b:1.3,hero_atk_swordsman_c:1.3,hero_atk_spear_a:1.5,hero_atk_spear_b:1.5,hero_atk_spear_c:1.5,hero_atk_bow_a:0.988,hero_atk_bow_b:0.988,hero_atk_bow_c:0.988,hero_atk_mage_a:1.312,hero_atk_mage_b:1.312,hero_atk_mage_c:1.312,hero_atk_guardian_a:0.9,hero_atk_guardian_b:0.9,hero_atk_guardian_c:0.9,hero_swordsman_male_nw:1.0156,hero_swordsman_male_nw_sb:1.0156,hero_swordsman_male_nw_ea:1.0156,hero_swordsman_male_nw_eb:1.0156,hero_swordsman_male_nw_na:1.0156,hero_swordsman_male_nw_nb:1.0156,hero_swordsman_female_nw:0.8438,hero_swordsman_female_nw_sb:0.8438,hero_swordsman_female_nw_ea:0.8438,hero_swordsman_female_nw_eb:0.8438,hero_swordsman_female_nw_na:0.8438,hero_swordsman_female_nw_nb:0.8438,hero_spear_male_nw:0.9531,hero_spear_male_nw_sb:0.9531,hero_spear_male_nw_ea:0.9531,hero_spear_male_nw_eb:0.9531,hero_spear_male_nw_na:0.9531,hero_spear_male_nw_nb:0.9531,hero_spear_female_nw:0.9375,hero_spear_female_nw_sb:0.9375,hero_spear_female_nw_ea:0.9375,hero_spear_female_nw_eb:0.9375,hero_spear_female_nw_na:0.9375,hero_spear_female_nw_nb:0.9375,hero_bow_male_nw:1.0469,hero_bow_male_nw_sb:1.0469,hero_bow_male_nw_ea:1.0469,hero_bow_male_nw_eb:1.0469,hero_bow_male_nw_na:1.0469,hero_bow_male_nw_nb:1.0469,hero_bow_female_nw:1.1562,hero_bow_female_nw_sb:1.1562,hero_bow_female_nw_ea:1.1562,hero_bow_female_nw_eb:1.1562,hero_bow_female_nw_na:1.1562,hero_bow_female_nw_nb:1.1562,hero_mage_male_nw:1.0312,hero_mage_male_nw_sb:1.0312,hero_mage_male_nw_ea:1.0312,hero_mage_male_nw_eb:1.0312,hero_mage_male_nw_na:1.0312,hero_mage_male_nw_nb:1.0312,hero_mage_female_nw:1.0469,hero_mage_female_nw_sb:1.0469,hero_mage_female_nw_ea:1.0469,hero_mage_female_nw_eb:1.0469,hero_mage_female_nw_na:1.0469,hero_mage_female_nw_nb:1.0469,hero_guardian_male_nw:1.375,hero_guardian_male_nw_sb:1.375,hero_guardian_male_nw_ea:1.375,hero_guardian_male_nw_eb:1.375,hero_guardian_male_nw_na:1.375,hero_guardian_male_nw_nb:1.375,hero_guardian_female_nw:1.2031,hero_guardian_female_nw_sb:1.2031,hero_guardian_female_nw_ea:1.2031,hero_guardian_female_nw_eb:1.2031,hero_guardian_female_nw_na:1.2031,hero_guardian_female_nw_nb:1.2031,hero_atk_swordsman_female_a:1.175,hero_atk_swordsman_female_b:1.175,hero_atk_swordsman_female_c:1.175,hero_atk_spear_female_a:1.225,hero_atk_spear_female_b:1.225,hero_atk_spear_female_c:1.225,hero_atk_bow_female_a:1.45,hero_atk_bow_female_b:1.45,hero_atk_bow_female_c:1.45,hero_atk_mage_female_a:1.4875,hero_atk_mage_female_b:1.4875,hero_atk_mage_female_c:1.4875,hero_atk_guardian_female_a:1.3125,hero_atk_guardian_female_b:1.3125,hero_atk_guardian_female_c:1.3125,wpon_sword:0.3438,wpon_spear:0.1667,wpon_bow:0.2188,wpon_mage:0.2292,wpon_guardian:0.7812,wpon_dagger:0.4,wolf:0.7083,wolf_sb:0.7083,wolf_na:1.0972,wolf_nb:1.0972,wolf_ea:1.3333,wolf_eb:1.4394,wisp:0.6806,wisp_ea:0.6806,wisp_na:0.6806,wisp_sb:0.7639,wisp_eb:0.7639,wisp_nb:0.7639,npc_sable:0.4107,npc_zeke:0.655,npc_maren:0.5375,golem:0.607,golem_ea:0.607,golem_eb:0.911,golem_sb:0.607,golem_na:0.607,golem_nb:0.911,colossus:1.27};
+var SPRITE_ASPECT={ hero_swordsman_male:0.585, hero_swordsman_female:0.69, hero_spear_male:0.645, hero_spear_female:0.59, hero_bow_male:0.78, hero_bow_female:1.13, hero_mage_male:0.83, hero_mage_female:0.86, hero_guardian_male:1.375, hero_guardian_female:1.07, npc_bram:0.8, npc_dell:0.6071, npc_renn:0.78, npc_mira:0.51, npc_joren:0.865, npc_girl:0.8929, goblin:0.89,hero_swordsman_male_sb:0.863,hero_swordsman_male_ea:0.863,hero_swordsman_male_eb:0.863,hero_swordsman_male_na:0.863,hero_swordsman_male_nb:0.863,hero_swordsman_female_sb:0.85,hero_swordsman_female_ea:0.85,hero_swordsman_female_eb:0.85,hero_swordsman_female_na:0.85,hero_swordsman_female_nb:0.85,hero_spear_male_sb:0.775,hero_spear_male_ea:0.775,hero_spear_male_eb:0.775,hero_spear_male_na:0.775,hero_spear_male_nb:0.775,hero_spear_female_sb:0.8,hero_spear_female_ea:0.8,hero_spear_female_eb:0.8,hero_spear_female_na:0.8,hero_spear_female_nb:0.8,hero_bow_male_sb:0.975,hero_bow_male_ea:0.975,hero_bow_male_eb:0.975,hero_bow_male_na:0.975,hero_bow_male_nb:0.975,hero_bow_female_sb:1.1625,hero_bow_female_ea:1.163,hero_bow_female_eb:1.163,hero_bow_female_na:1.163,hero_bow_female_nb:1.163,hero_mage_male_sb:0.925,hero_mage_male_ea:0.925,hero_mage_male_eb:0.925,hero_mage_male_na:0.925,hero_mage_male_nb:0.925,hero_mage_female_sb:0.938,hero_mage_female_ea:0.938,hero_mage_female_eb:0.938,hero_mage_female_na:0.938,hero_mage_female_nb:0.938,hero_guardian_male_sb:1.375, hero_guardian_male_sa:1.375,hero_guardian_male_ea:1.375,hero_guardian_male_eb:1.375,hero_guardian_male_na:1.375,hero_guardian_male_nb:1.375,hero_guardian_female_sb:1.2,hero_guardian_female_ea:1.2,hero_guardian_female_eb:1.2,hero_guardian_female_na:1.2,hero_guardian_female_nb:1.2,goat_ea:1.156,goat_eb:1.156,goblin_sb:1.2,goblin_ea:1.2,goblin_eb:1.2,goblin_na:1.2,goblin_nb:1.2,girl_sb:0.8929,girl_ea:0.8929,girl_eb:0.8929,girl_na:0.8929,girl_nb:0.8929,grak_sa:0.871,grak_sb:0.879,grak_ea:0.879,grak_eb:0.879,grak_na:0.879,grak_nb:0.879,hero_mage_male_sa:0.925,hero_mage_female_sa:0.938,hero_guardian_female_sa:1.2,hero_atk_swordsman_a:1.3,hero_atk_swordsman_b:1.3,hero_atk_swordsman_c:1.3,hero_atk_spear_a:1.5,hero_atk_spear_b:1.5,hero_atk_spear_c:1.5,hero_atk_bow_a:0.988,hero_atk_bow_b:0.988,hero_atk_bow_c:0.988,hero_atk_mage_a:1.312,hero_atk_mage_b:1.312,hero_atk_mage_c:1.312,hero_atk_guardian_a:0.9,hero_atk_guardian_b:0.9,hero_atk_guardian_c:0.9,hero_swordsman_male_nw:1.0156,hero_swordsman_male_nw_sb:1.0156,hero_swordsman_male_nw_ea:1.0156,hero_swordsman_male_nw_eb:1.0156,hero_swordsman_male_nw_na:1.0156,hero_swordsman_male_nw_nb:1.0156,hero_swordsman_female_nw:0.8438,hero_swordsman_female_nw_sb:0.8438,hero_swordsman_female_nw_ea:0.8438,hero_swordsman_female_nw_eb:0.8438,hero_swordsman_female_nw_na:0.8438,hero_swordsman_female_nw_nb:0.8438,hero_spear_male_nw:0.9531,hero_spear_male_nw_sb:0.9531,hero_spear_male_nw_ea:0.9531,hero_spear_male_nw_eb:0.9531,hero_spear_male_nw_na:0.9531,hero_spear_male_nw_nb:0.9531,hero_spear_female_nw:0.9375,hero_spear_female_nw_sb:0.9375,hero_spear_female_nw_ea:0.9375,hero_spear_female_nw_eb:0.9375,hero_spear_female_nw_na:0.9375,hero_spear_female_nw_nb:0.9375,hero_bow_male_nw:1.0469,hero_bow_male_nw_sb:1.0469,hero_bow_male_nw_ea:1.0469,hero_bow_male_nw_eb:1.0469,hero_bow_male_nw_na:1.0469,hero_bow_male_nw_nb:1.0469,hero_bow_female_nw:1.1562,hero_bow_female_nw_sb:1.1562,hero_bow_female_nw_ea:1.1562,hero_bow_female_nw_eb:1.1562,hero_bow_female_nw_na:1.1562,hero_bow_female_nw_nb:1.1562,hero_mage_male_nw:1.0312,hero_mage_male_nw_sb:1.0312,hero_mage_male_nw_ea:1.0312,hero_mage_male_nw_eb:1.0312,hero_mage_male_nw_na:1.0312,hero_mage_male_nw_nb:1.0312,hero_mage_female_nw:1.0469,hero_mage_female_nw_sb:1.0469,hero_mage_female_nw_ea:1.0469,hero_mage_female_nw_eb:1.0469,hero_mage_female_nw_na:1.0469,hero_mage_female_nw_nb:1.0469,hero_guardian_male_nw:1.375,hero_guardian_male_nw_sb:1.375,hero_guardian_male_nw_ea:1.375,hero_guardian_male_nw_eb:1.375,hero_guardian_male_nw_na:1.375,hero_guardian_male_nw_nb:1.375,hero_guardian_female_nw:1.2031,hero_guardian_female_nw_sb:1.2031,hero_guardian_female_nw_ea:1.2031,hero_guardian_female_nw_eb:1.2031,hero_guardian_female_nw_na:1.2031,hero_guardian_female_nw_nb:1.2031,hero_atk_swordsman_female_a:1.175,hero_atk_swordsman_female_b:1.175,hero_atk_swordsman_female_c:1.175,hero_atk_spear_female_a:1.225,hero_atk_spear_female_b:1.225,hero_atk_spear_female_c:1.225,hero_atk_bow_female_a:1.45,hero_atk_bow_female_b:1.45,hero_atk_bow_female_c:1.45,hero_atk_mage_female_a:1.4875,hero_atk_mage_female_b:1.4875,hero_atk_mage_female_c:1.4875,hero_atk_guardian_female_a:1.3125,hero_atk_guardian_female_b:1.3125,hero_atk_guardian_female_c:1.3125,wpon_sword:0.3438,wpon_spear:0.1667,wpon_bow:0.2188,wpon_mage:0.2292,wpon_guardian:0.7812,wpon_dagger:0.4,wolf:0.7083,wolf_sb:0.7083,wolf_na:1.0972,wolf_nb:1.0972,wolf_ea:1.3333,wolf_eb:1.4394,wisp:0.6806,wisp_ea:0.6806,wisp_na:0.6806,wisp_sb:0.7639,wisp_eb:0.7639,wisp_nb:0.7639,npc_sable:0.4107,npc_zeke:0.655,npc_maren:0.5375,golem:0.607,golem_ea:0.607,golem_eb:0.911,golem_sb:0.607,golem_na:0.607,golem_nb:0.911,colossus:1.27,npc_hilda:0.74,npc_ivo:0.775,npc_traveler:0.525,wraith:0.9475};
 var spriteImgs={};
 Object.keys(SPRITE_DATA).forEach(function(k){ var im=new Image(); im.src=SPRITE_DATA[k]; spriteImgs[k]=im; });
 /* ================= SCENERY ART (real artwork, Meadowlands) ================= */
@@ -721,6 +743,7 @@ function wornTrack(g,vertical,fixed,from,to,seed,type){
   var pr=rng(seed), pts=[], c=fixed, d;
   var pal=type==='den'?{dirt:[96,76,52],dark:[70,54,38],light:[120,96,66],tuft:['rgba(52,70,44,.5)','rgba(44,60,38,.5)','rgba(60,74,48,.5)'],speck:['rgba(150,128,96,.4)','rgba(60,46,32,.4)']}
     :type==='desert'?{dirt:[190,160,105],dark:[160,130,80],light:[215,185,130],tuft:['rgba(150,120,70,.5)','rgba(130,100,60,.5)','rgba(170,140,85,.5)'],speck:['rgba(230,205,150,.5)','rgba(120,95,55,.5)']}
+    :type==='snow'?{dirt:[200,214,234],dark:[168,188,214],light:[226,236,246],tuft:['rgba(178,198,224,.5)','rgba(160,182,210,.5)','rgba(196,212,232,.5)'],speck:['rgba(255,255,255,.5)','rgba(158,178,206,.4)']}
     :{dirt:[150,124,82],dark:[118,92,58],light:[178,148,100],tuft:['rgba(58,96,46,.7)','rgba(74,116,54,.7)','rgba(46,82,40,.7)'],speck:['rgba(214,186,136,.5)','rgba(90,70,40,.5)']};
   for(d=from-20; d<=to+20; d+=14){
     c+=Math.floor(pr()*21)-10;
@@ -1107,7 +1130,17 @@ var SCREENS={
  dpit:{name:'Sand Pit',col:3,row:2,type:'desert',realm:'dustfall',goblins:0,wisps:1,golems:1},
  dwell:{name:'Old Well',col:4,row:2,type:'desert',realm:'dustfall',goblins:0,wisps:1,golems:0},
  ddead:{name:'Dead Palms',col:5,row:2,type:'desert',realm:'dustfall',goblins:0,wisps:0,golems:2},
- dshrine:{name:'Desert Shrine',col:4,row:3,type:'desert',realm:'dustfall',goblins:0,wisps:0,golems:0}
+ dshrine:{name:'Desert Shrine',col:4,row:3,type:'desert',realm:'dustfall',goblins:0,wisps:0,golems:0},
+ wpath:{name:'Mountain Path',col:1,row:-1,type:'snow',realm:'whitepeak',goblins:0,wisps:0,wolves:1,golems:0},
+ winn:{name:"Hilda's Inn",col:0,row:-1,type:'snow',realm:'whitepeak',goblins:0,wisps:0,wolves:0,golems:0},
+ wlake:{name:'Frozen Lake',col:2,row:-1,type:'snow',realm:'whitepeak',goblins:0,wisps:0,wolves:1,golems:1},
+ wpass:{name:'Blizzard Pass',col:1,row:-2,type:'snow',realm:'whitepeak',goblins:0,wisps:0,wolves:2,golems:2},
+ wcamp:{name:"Frozen Traveler's Camp",col:0,row:-2,type:'snow',realm:'whitepeak',goblins:0,wisps:0,wolves:1,golems:0},
+ wfield:{name:'Crystal Field',col:2,row:-2,type:'snow',realm:'whitepeak',goblins:0,wisps:0,wolves:1,golems:1},
+ wpeak:{name:'Storm Wraith Peak',col:1,row:-3,type:'snow',realm:'whitepeak',goblins:0,wisps:0,wolves:0,golems:0},
+ wcave:{name:'Ice Caves',col:0,row:-3,type:'snow',realm:'whitepeak',goblins:0,wisps:0,wolves:0,golems:2},
+ wridge:{name:'Snowy Ridge',col:2,row:-3,type:'snow',realm:'whitepeak',goblins:0,wisps:0,wolves:2,golems:1},
+ wshrine:{name:'Mountain Shrine',col:2,row:-4,type:'snow',realm:'whitepeak',goblins:0,wisps:0,wolves:0,golems:0}
 };
 var GRID={}; Object.keys(SCREENS).forEach(function(k){ GRID[SCREENS[k].col+','+SCREENS[k].row]=k; });
 /* map bounds, from the screens themselves, so new realms widen the map */
@@ -1126,10 +1159,11 @@ function mapThumb(id){
 }
 var HERB_SPOTS={ north:[[300,205],[625,300],[480,455]], herb:[[250,180],[700,225],[400,425],[620,485]], fgrove:[[300,220],[640,300],[480,460]] };
 var DIG_SPOTS={ dpit:[[300,220],[640,300],[480,460]] };
+var CRYSTAL_SPOTS={wlake:[[480,330]],wfield:[[300,300],[660,300]]};
 /* Thornwood helpers: a screen's realm (Meadowlands when unset) and whether a
    screen id is a save shrine (Meadow Shrine or Forest Shrine). */
 function screenRealm(id){ var sc=SCREENS[id]; return (sc&&sc.realm)||'meadow'; }
-function isShrine(id){ return id==='shrine'||id==='fshrine'||id==='dshrine'; }
+function isShrine(id){ return id==='shrine'||id==='fshrine'||id==='dshrine'||id==='wshrine'; }
 var NPC_SPOTS={
  village:[
   {id:'bram',x:560,y:230},{id:'renn',x:290,y:250},{id:'mira',x:355,y:576},
@@ -1137,7 +1171,10 @@ var NPC_SPOTS={
  ],
  fedge:[{id:'joren',x:200,y:260}],
  fden:[{id:'sable',x:480,y:300}],
- ddunes:[{id:'zeke',x:480,y:320}]};
+ ddunes:[{id:'zeke',x:480,y:320}],
+ winn:[{id:'hilda',x:480,y:320}],
+ wfield:[{id:'ivo',x:480,y:320}],
+ wcamp:[{id:'traveler',x:480,y:320}]};
 var CHEST_SPOTS=[{x:852,y:118},{x:60,y:545},{x:60,y:60},{x:905,y:545}];
 var CHEST_PRIZES=['shard','coins','seeker','hidden'];
 var CHARM_SPOTS={east:[{id:'lucky',x:905,y:300}],north:[{id:'guardian',x:480,y:60}],west:[{id:'ember',x:55,y:300}]};
@@ -1201,7 +1238,7 @@ var SFX={
   roar:function(){ if(AC){ var t=AC.currentTime; tone(90,t,.7,'sawtooth',.2,null,45); noiseBurst(t,.5,.2,500,120); } }
 };
 /* Spoken dialogue — browser speech. Profiles are [pitch,rate,gender]. */
-var VOICE={bram:[.55,.85,0],dell:[.9,.95,0],renn:[.75,1,0],mira:[1.25,1,1],joren:[.65,.9,0],sable:[1.35,1,1],girl:[1.7,1.15,1],grak:[.35,.8,0],narr:[.6,.85,0],zeke:[.8,.9,0],maren:[1.1,.8,1],colossus:[.3,.7,0]};
+var VOICE={bram:[.55,.85,0],dell:[.9,.95,0],renn:[.75,1,0],mira:[1.25,1,1],joren:[.65,.9,0],sable:[1.35,1,1],girl:[1.7,1.15,1],grak:[.35,.8,0],narr:[.6,.85,0],zeke:[.8,.9,0],maren:[1.1,.8,1],colossus:[.3,.7,0],hilda:[1.2,.95,1],ivo:[.8,1,0],traveler:[.6,.85,0],wraith:[.25,.7,0]};
 var VHER={swordsman:[.9,1],spear:[1,1],bow:[1.1,1.05],mage:[1.2,.95],guardian:[.7,.9]};
 var sayN=0;
 function vPick(f){try{var vs=speechSynthesis.getVoices().filter(v=>/^en/i.test(v.lang));if(!vs.length)return;var m=f?/female|zira|samantha|aria|jenny/i:/male|daniel|david|guy/i;return vs.find(v=>m.test(v.name))||(f?vs[vs.length-1]:vs[0])}catch(e){return}}
@@ -1232,12 +1269,14 @@ var THORN_BASS=[110,131,98,110, 87,110,98,131, 110,131,98,110, 87,98,110,98];
    feels hot and ancient the moment you walk in. */
 var DUST_MELODY=[330,415,440,523,440,415,330,415, 349,415,440,494,440,415,349,330, 415,440,523,659,523,440,415,440, 349,330,294,330,349,415,0,0];
 var DUST_BASS=[82,110,123,110, 82,110,98,110, 82,110,123,110, 87,98,110,98];
+var WHITE_MELODY=[440,0,523,0, 440,0,392,0, 349,0,392,0, 440,0,0,0, 392,0,349,0, 330,0,392,0, 440,0,523,0, 440,0,392,0];
+var WHITE_BASS=[110,0,98,0, 110,0,87,0, 110,0,98,0, 82,0,98,0];
 function startMusic(){
   if(musicTimer||!AC) return;
   musicTimer=setInterval(function(){
     if(!AC||document.hidden) return;
     var realm=screenRealm(curScreen);
-    var MEL=realm==='thornwood'?THORN_MELODY:(realm==='dustfall'?DUST_MELODY:MELODY), BAS=realm==='thornwood'?THORN_BASS:(realm==='dustfall'?DUST_BASS:BASSN);
+    var MEL=realm==='thornwood'?THORN_MELODY:(realm==='dustfall'?DUST_MELODY:(realm==='whitepeak'?WHITE_MELODY:MELODY)), BAS=realm==='thornwood'?THORN_BASS:(realm==='dustfall'?DUST_BASS:(realm==='whitepeak'?WHITE_BASS:BASSN));
     var t=AC.currentTime+.05, i=musicStep%MEL.length, f=MEL[i];
     if(bossMusic){
       /* Boss theme: the realm's own melody, kept recognizable, made dangerous — short sharp notes, low drone, tritone bass hits, drum thump on every beat */
@@ -1262,9 +1301,10 @@ function newState(slot,heroIdx,gender,diff){
   return { slot:slot, hero:heroIdx, gender:gender, diff:diff, screen:'village', x:480, y:520,
     hp:6, maxEmbers:3, coins:0, herbs:0, weapon:false, potions:0, weaponTier:0, armorTier:0, bagSize:12, quest:'none', keys:[], grakDown:false, grakMet:false,
     pelts:0, axe:'none', thornMet:false, thornDown:false, mazeDone:false, water:'none', relic:'none', colossusMet:false, colossusDown:false,
+    pack:'none', crystals:'none', crystalCount:0, crystalsTaken:{}, wraithMet:false, wraithDown:false,
     visited:{village:true}, herbsTaken:{}, enemiesDown:{}, millChest:false, girlChest:false, girlChests:0,
     goat:'none', goatFollow:false, trouble:'none', goblinKills:0, charms:[], equipped:[],
-    talked:{}, rennAfter:false, girlMet:false, shrineSeen:false, playSec:0, thornSeen:false, dustSeen:false, lastShrine:'village' };
+    talked:{}, rennAfter:false, girlMet:false, shrineSeen:false, playSec:0, thornSeen:false, dustSeen:false, whiteSeen:false, lastShrine:'village' };
 }
 var G=null; /* current game state */
 function persist(){
@@ -1274,6 +1314,13 @@ function persist(){
   if(G.grakMet===undefined) G.grakMet=false;
   if(G.thornSeen===undefined) G.thornSeen=false;
   if(G.dustSeen===undefined) G.dustSeen=false;
+  if(G.whiteSeen===undefined) G.whiteSeen=false;
+  if(G.pack===undefined) G.pack='none';
+  if(G.crystals===undefined) G.crystals='none';
+  if(G.crystalCount===undefined) G.crystalCount=0;
+  if(G.crystalsTaken===undefined) G.crystalsTaken={};
+  if(G.wraithMet===undefined) G.wraithMet=false;
+  if(G.wraithDown===undefined) G.wraithDown=false;
   if(G.pelts===undefined) G.pelts=0;
   if(G.axe===undefined) G.axe='none';
   if(G.thornMet===undefined) G.thornMet=false;
@@ -1416,11 +1463,11 @@ function advanceCutscene(){
   SFX.select();
   cutPage++;
   if(cutPage<cutPages.length){ var pg=cutPages[cutPage],sp=pg[0]==='@'?'grak':'narr',b=bossMeetActive&&sp!==cutSp; $('cutText').textContent=pg.replace(/^@/,'');if(b)who(sp==='grak'?'GRAK, THE GOBLIN KING':'THE OLD STORIES');sp==='grak'?bossMeetActive&&say('grak',pg.slice(1),b):say('narr',pg,b);cutSp=sp;return;}
-  if(bossMeetActive){ if(bossMeetId==='thornwolf') endThornMeeting(); else if(bossMeetId==='colossus') endColossusMeeting(); else endBossMeeting(); return; }
+  if(bossMeetActive){ if(bossMeetId==='thornwolf') endThornMeeting(); else if(bossMeetId==='colossus') endColossusMeeting(); else if(bossMeetId==='wraith') endWraithMeeting(); else endBossMeeting(); return; }
   if(cutStandalone){ endCutscene(); return; }
   cutPanel++; showPanel(cutPanel);
 }
-function endCutscene(){ if(!cutActive) return; if(bossMeetActive){ if(bossMeetId==='thornwolf') endThornMeeting(); else if(bossMeetId==='colossus') endColossusMeeting(); else endBossMeeting(); return; } cutActive=false; cutStandalone=false; if(cutDone) cutDone(); }
+function endCutscene(){ if(!cutActive) return; if(bossMeetActive){ if(bossMeetId==='thornwolf') endThornMeeting(); else if(bossMeetId==='colossus') endColossusMeeting(); else if(bossMeetId==='wraith') endWraithMeeting(); else endBossMeeting(); return; } cutActive=false; cutStandalone=false; if(cutDone) cutDone(); }
 function startBossMeeting(){
   bossMeetId='grak';
   bossMeetActive=true;cutActive=true;cutStandalone=false;
@@ -1502,6 +1549,33 @@ function startColossusAfter(){
   who('THE OLD STORIES');
   cutPages=COLOSSUS_AFTER_PAGES.slice();cutPage=0;
   cutDone=function(){ showView('gameView'); };
+}
+function startWraithMeeting(){
+  bossMeetId='wraith';
+  bossMeetActive=true;cutActive=true;cutStandalone=false;
+  showView('cutView');
+  var img=$('cutImg');img.src=WRAITH_CLOSEUP;img.className='';
+  var fx=$('cutFx');fx.className='fx';$('cutEmbers').style.display='none';
+  who('THE OLD STORIES');
+  cutPages=WRAITH_MEET_PAGES.slice(); cutPage=0;
+  cut0();
+  bossMusic=true;SFX.roar();
+}
+function endWraithMeeting(){
+  bossMeetActive=false;cutActive=false;stopVoice();
+  who('THE OLD STORIES');
+  showView('gameView');
+  toast('The fight begins \u2014 defeat the Storm Wraith, guardian of the Peak Key!');
+}
+function startWraithAfter(){
+  bossMeetActive=false;cutStandalone=true;cutActive=true;
+  showView('cutView');
+  var img=$('cutImg');img.src=PEAK_KEY_IMG;img.className='';
+  var fx=$('cutFx');fx.className='fx';$('cutEmbers').style.display='none';
+  who('THE OLD STORIES');
+  cutPages=WRAITH_AFTER_PAGES.slice();cutPage=0;
+  cutDone=function(){ showView('gameView'); };
+  cut0();
 }
 /* ================= THORN MAZE ================= */
 /* A small grid maze on the Thorn Maze screen: guide the ember to the bright
@@ -1593,6 +1667,25 @@ var DUST_ENTRY_PAGES=[
  "Water is worth more than gold in Dustfall, and the traders know it.",
  "The Dune Colossus sleeps beneath the sand, and it has slept for a thousand years."
 ];
+var WHITEPEAK_ENTRY_PAGES=[
+ "The cold bites through every layer, and the mountain hums with a song only the storm knows.",
+ "The snow never melts here, and the crystals that grow in the ice hold light from a sky no one alive has seen.",
+ "Climbers say the blizzard has a voice, and it calls your name.",
+ "The Storm Wraith is the blizzard, and it does not forgive trespassers."
+];
+function startWhitepeakEntry(){
+  bossMeetActive=false;cutStandalone=true;cutActive=true;
+  showView('cutView');
+  var img=$('cutImg');img.src=WHITEPEAK_IMG;img.className='';
+  var fx=$('cutFx');fx.className='fx';$('cutEmbers').style.display='none';
+  who('THE OLD STORIES');
+  var i=0;
+  function next(){
+    if(i>=WHITEPEAK_ENTRY_PAGES.length){ cutDone(); return; }
+    say(WHITEPEAK_ENTRY_PAGES[i++],next);
+  }
+  next();
+}
 function startDustfallEntry(){
   bossMeetActive=false;cutStandalone=true;cutActive=true;
   showView('cutView');
@@ -1669,12 +1762,12 @@ function buildScreen(id){
   if(bgCache[id]) return bgCache[id];
   var sc=SCREENS[id], c=document.createElement('canvas'); c.width=W; c.height=H;
   var g=c.getContext('2d'), rand=rng(id.length*777+sc.col*131+sc.row*17+5), solids=[];
-  var grass={village:'#7aa75c',meadow:'#83b364',east:'#a9a05e',west:'#5f8a4e',pond:'#7aa75c',herb:'#86b364',den:'#8a7a52',mill:'#94a95e',flower:'#7fb45e',shrine:'#6f9a58',forest:'#4f6b3a',desert:'#d9b96a'}[sc.type];
+  var grass={village:'#7aa75c',meadow:'#83b364',east:'#a9a05e',west:'#5f8a4e',pond:'#7aa75c',herb:'#86b364',den:'#8a7a52',mill:'#94a95e',flower:'#7fb45e',shrine:'#6f9a58',forest:'#4f6b3a',desert:'#d9b96a',snow:'#e8f0f8'}[sc.type];
   /* The old speckle/flower/blade ground loops are gone (the ground is a real
      art tile now), but they consumed 1442 rand() calls; burn the same count
      so every later random placement lands in exactly the same spot. */
   for(var bi=0;bi<1442;bi++) rand();
-  var groundTiles={village:['ground_grass'],meadow:['ground_grass'],east:['ground_grass'],west:['ground_grass'],pond:['ground_grass'],herb:['ground_grass'],mill:['ground_grass'],flower:['ground_flowers'],shrine:['ground_grass'],den:['ground_den','ground_den_b'],forest:['ground_grass'],desert:['ground_sand']}[sc.type];
+  var groundTiles={village:['ground_grass'],meadow:['ground_grass'],east:['ground_grass'],west:['ground_grass'],pond:['ground_grass'],herb:['ground_grass'],mill:['ground_grass'],flower:['ground_flowers'],shrine:['ground_grass'],den:['ground_den','ground_den_b'],forest:['ground_grass'],desert:['ground_sand'],snow:['ground_snow']}[sc.type];
   tileGround(g,groundTiles,grass,id.length*313+sc.col*57+sc.row*11+3);
   /* worn dirt paths, not hard rectangles */
   if(GRID[sc.col+','+(sc.row-1)]) wornTrack(g,true,480,0,320,id.length*911+sc.col*31+sc.row*13+1,sc.type);
@@ -1682,8 +1775,8 @@ function buildScreen(id){
   if(GRID[(sc.col-1)+','+sc.row]) wornTrack(g,false,320,0,480,id.length*911+sc.col*31+sc.row*13+3,sc.type);
   if(GRID[(sc.col+1)+','+sc.row]) wornTrack(g,false,320,480,960,id.length*911+sc.col*31+sc.row*13+4,sc.type);
   for(var pb=0;pb<180;pb++) rand(); /* the old path-pebble loops used 180 calls */
-  function borderTrees(step,skip){
-    var pine=sceneryImgs['tree_pine'];
+  function borderTrees(step,skip,treeKey){
+    var pine=sceneryImgs[treeKey||'tree_pine'];
     if(!pine||!pine.complete||!pine.naturalWidth) return;
     var pw=pine.naturalWidth, sh=pine.naturalHeight*0.78;
     function edgeTree(cx,by){ g.drawImage(pine,0,0,pw,sh,cx-29,by-61,58,61); }
@@ -1907,6 +2000,18 @@ function buildScreen(id){
     if(id==='dwell'){ g.fillStyle='#8a7a5e'; g.fillRect(450,280,60,50); g.fillStyle='#3a2f22'; g.fillRect(462,292,36,26); }
     if(id==='dbridge'){ g.fillStyle='#8a7a5e'; g.fillRect(200,300,560,40); g.fillStyle='#d9b96a'; g.fillRect(440,300,80,40); }
     if(id==='dshrine'){ drawArtBottom(g,'shrine',480,297,120); solids.push({x:428,y:168,w:104,h:96}); g.fillStyle='#e8e2d2'; g.font='15px Georgia'; g.textAlign='center'; g.fillText('~ SHRINE OF THE EMBER ~',480,322); [[330,240],[630,240],[360,300],[600,300]].forEach(function(p,i){ drawArtCFlip(g,'standing_stone',p[0],p[1]-12,22,i%2); }); }
+  } else if(sc.type==='snow'){
+    /* Whitepeak: snow-dusted pines and bushes, pale drifts, open middle */
+    for(var t5=0;t5<9;t5++){ var bx=70+rand()*820, by=60+rand()*120; drawArtBottom(g,'tree_pine_snow',bx,by+16,72); }
+    for(var t6=0;t6<7;t6++){ var bx2=70+rand()*820, by2=470+rand()*110; drawArtBottom(g,'tree_pine_snow',bx2,by2+16,72); }
+    for(var bu=0;bu<8;bu++){ var bx3=60+rand()*840, by3=140+rand()*360;
+      drawArtCFlip(g,'bush_snow',bx3,by3,44+(bu%3)*4,bu%2);
+      for(var bub=0;bub<42;bub++) rand(); }
+    borderTrees(130,true,'tree_pine_snow');
+    g.fillStyle='rgba(255,255,255,.10)';
+    for(var du=0;du<6;du++){ g.beginPath(); g.ellipse(140+rand()*680,120+rand()*400,90+rand()*60,18+rand()*10,0,0,7); g.fill(); }
+    if(id==='wlake'){ g.fillStyle='#7fb2d8'; g.beginPath(); g.ellipse(480,330,150,70,0,0,7); g.fill(); g.fillStyle='#a8cfe8'; g.beginPath(); g.ellipse(480,330,120,52,0,0,7); g.fill(); g.fillStyle='rgba(255,255,255,.55)'; g.beginPath(); g.ellipse(480,318,70,18,0,0,7); g.fill(); }
+    if(id==='wshrine'){ drawArtBottom(g,'shrine',480,297,120); solids.push({x:428,y:168,w:104,h:96}); g.fillStyle='#e8e2d2'; g.font='15px Georgia'; g.textAlign='center'; g.fillText('~ SHRINE OF THE EMBER ~',480,322); [[330,240],[630,240],[360,300],[600,300]].forEach(function(p,i){ drawArtCFlip(g,'standing_stone',p[0],p[1]-12,22,i%2); }); }
   } else {
     for(var t5=0;t5<9;t5++){ var bx=70+rand()*820, by=60+rand()*120; drawArtBottom(g,t5%2?'tree_pine':'tree_oak',bx,by+16,72); }
     for(var t6=0;t6<7;t6++){ var bx2=70+rand()*820, by2=470+rand()*110; drawArtBottom(g,t6%2?'tree_pine':'tree_oak',bx2,by2+16,72); }
@@ -1921,7 +2026,7 @@ function buildScreen(id){
 }
 /* ================= RUNTIME ================= */
 var player={x:480,y:520,dir:'down',atkT:0,invuln:0,moving:false};
-var enemies=[], pickups=[], particles=[], npcs=[], herbsHere=[], digHere=[];
+var enemies=[], pickups=[], particles=[], npcs=[], herbsHere=[], digHere=[], crystalsHere=[];
 var goatHere=null, goat={x:0,y:0};
 var curScreen='village', trans=null, inGame=false, paused=false;
 var dlgOpen=false, dlgT=0, itemOpen=false, girlState='idle', chestVisible=false, lastShrine='village';
@@ -1935,7 +2040,7 @@ function diffCounts(base){
 }
 function spawnScreen(id){
   var sc=SCREENS[id];
-  enemies=[]; pickups=[]; npcs=[]; herbsHere=[]; digHere=[];
+  enemies=[]; pickups=[]; npcs=[]; herbsHere=[]; digHere=[]; crystalsHere=[];
   goatHere=null;
   var rand=rng(id.length*31+7), eidx=0;
   var spots=[[240,180],[700,200],[300,440],[720,430],[480,160],[180,320],[780,320],[560,480]];
@@ -1967,8 +2072,13 @@ function spawnScreen(id){
     var cs=colossusStats();
     enemies.push({x:480,y:220,hp:cs.hp,maxhp:cs.hp,t:0,idx:99,hitT:0,boss:true,bossId:'colossus',dmg:cs.dmg,dying:false,dieT:0});
   }
+  if(id==='wpeak'&&!G.wraithDown){
+    var ws=wraithStats();
+    enemies.push({x:480,y:220,hp:ws.hp,maxhp:ws.hp,t:0,idx:99,hitT:0,boss:true,bossId:'wraith',dmg:ws.dmg,dying:false,dieT:0});
+  }
   (HERB_SPOTS[id]||[]).forEach(function(hs,hi){ if(!G.herbsTaken[id+':'+hi]) herbsHere.push({x:hs[0],y:hs[1],idx:hi}); });
   (DIG_SPOTS[id]||[]).forEach(function(ds,di){ if(!G.digsTaken||!G.digsTaken[id+':'+di]) digHere.push({x:ds[0],y:ds[1],idx:di}); });
+  (CRYSTAL_SPOTS[id]||[]).forEach(function(cs,ci){ if(G.crystals==='given'&&!G.crystalsTaken[id+':'+ci]) crystalsHere.push({x:cs[0],y:cs[1],idx:ci}); });
   (NPC_SPOTS[id]||[]).forEach(function(ns){ npcs.push({id:ns.id,x:ns.x,y:ns.y,homeX:ns.x,homeY:ns.y}); });
   if(id==='mill'&&!G.millChest) pickups.push({kind:'chest',x:520,y:330});
   if(id==='fcave'&&G.axe!=='found'&&G.axe!=='done') pickups.push({kind:'axe',x:480,y:330});
@@ -1988,10 +2098,14 @@ function enterScreen(id,fromDir){
   } else if(id==='darena'&&G&&!G.colossusDown){
     bossMusic=true;
     if(!G.colossusMet){ G.colossusMet=true; persist(); startColossusMeeting(); }
+  } else if(id==='wpeak'&&G&&!G.wraithDown){
+    bossMusic=true;
+    if(!G.wraithMet){ G.wraithMet=true; persist(); startWraithMeeting(); }
   } else bossMusic=false;
   if(isShrine(id)){ lastShrine=id; G.lastShrine=id; }
   if(id==='fedge'&&G&&!G.thornSeen){ G.thornSeen=true; persist(); startThornwoodEntry(); }
   if(id==='ddunes'&&G&&!G.dustSeen){ G.dustSeen=true; persist(); startDustfallEntry(); }
+  if(id==='wpath'&&G&&!G.whiteSeen){ G.whiteSeen=true; persist(); startWhitepeakEntry(); }
   if(G.goatFollow){ goat.x=player.x+30; goat.y=player.y+30; }
   G.x=Math.round(player.x); G.y=Math.round(player.y); persist();
   flashName(SCREENS[id].name);
@@ -2179,8 +2293,21 @@ function drawColossus(g,e){
   g.strokeStyle='#ffd97a'; g.lineWidth=1; g.strokeRect(e.x-60.5,e.y-162.5,121,9);
   g.fillStyle='#ffd97a'; g.font='bold 12px Georgia'; g.textAlign='center'; g.fillText('DUNE COLOSSUS, ANCIENT SANDSTONE GOLEM',e.x,e.y-170);
 }
+function drawWraith(g,e){
+  var h=140, alpha=1;
+  if(e.dying){ var k=Math.max(0,e.dieT/1.8); alpha=k; h=140*(0.7+0.3*k); }
+  g.save(); g.globalAlpha=alpha;
+  var ok=drawSpriteFig(g,e.x,e.y,'wraith',h,false,e.hitT>0);
+  if(!ok){
+    if(e.hitT>0) g.filter='brightness(1.8)';
+    g.fillStyle='#7a9ab8'; g.beginPath(); g.ellipse(e.x,e.y-10,h*0.35,h*0.28,0,0,7); g.fill();
+    g.fillStyle='#b8d8ff'; g.beginPath(); g.arc(e.x-12,e.y-22,3,0,7); g.arc(e.x+12,e.y-22,3,0,7); g.fill();
+  }
+  g.restore();
+  if(!e.dying){ g.fillStyle='rgba(255,255,255,.9)'; g.font='bold 12px Georgia'; g.textAlign='center'; g.fillText('STORM WRAITH, VOICE OF THE MOUNTAIN',e.x,e.y-170); }
+}
 function drawEnemy(g,e){
-  if(e.boss){ if(e.bossId==='thornwolf') drawThornwolf(g,e); else if(e.bossId==='colossus') drawColossus(g,e); else drawGrak(g,e); return; }
+  if(e.boss){ if(e.bossId==='thornwolf') drawThornwolf(g,e); else if(e.bossId==='colossus') drawColossus(g,e); else if(e.bossId==='wraith') drawWraith(g,e); else drawGrak(g,e); return; }
   var phase=(e.moving)?(Math.floor((e.walkT||0)*8)%2):0;
   var fk='goblin', flip=false, h=46, wy=e.y;
   if(e.kind==='wolf'){
@@ -2276,6 +2403,13 @@ function drawWorld(g,screenId,ox,oy,drawDynamics){
     g.fillStyle='#a88a4f'; g.beginPath(); g.ellipse(480,330,15,8,0,0,7); g.fill();
     g.fillStyle='#c9a86a'; g.beginPath(); g.ellipse(480,330-3,10,5,0,0,7); g.fill();
   }
+  /* storm crystals: glowing shards where the storm touches the ground */
+  crystalsHere.forEach(function(c){
+    var img=spriteImgs['storm_crystal_sprite'];
+    g.fillStyle='rgba(120,200,255,'+(0.3+Math.sin(Date.now()/300)*0.15)+')'; g.beginPath(); g.arc(c.x,c.y,24,0,7); g.fill();
+    if(img&&img.complete&&img.naturalWidth){ g.drawImage(img,c.x-14,c.y-18,28,28); }
+    else { g.fillStyle='#7ab8ff'; g.beginPath(); g.moveTo(c.x,c.y-16); g.lineTo(c.x+10,c.y+8); g.lineTo(c.x-10,c.y+8); g.closePath(); g.fill(); }
+  });
   /* herbs */
   herbsHere.forEach(function(h){
     g.fillStyle='#4d7a33'; g.beginPath(); g.ellipse(h.x,h.y,13,7,0,0,7); g.fill();
@@ -2358,6 +2492,9 @@ function npcHasQuest(id){
   if(id==='sable') return (G.pelts||0)>0;
   if(id==='zeke') return G.water==='none'||G.water==='full';
   if(id==='maren') return G.relic==='none'||G.relic==='found';
+  if(id==='hilda') return G.pack==='none';
+  if(id==='ivo') return G.crystals==='none'||(G.crystals==='given'&&(G.crystalCount||0)>=3);
+  if(id==='traveler') return G.pack==='carrying';
   return false;
 }
 </script>
@@ -2486,6 +2623,22 @@ function talkTo(npc){
     else if(G.relic==='done') openDialogue('maren',LINES.marenAfter);
     else openDialogue('maren',LINES.marenRepeat);
   }
+  else if(id==='hilda'){
+    if(G.pack==='none'){ openDialogue('hilda',LINES.hildaFirst,function(){ G.pack='carrying'; persist(); updateHUD(); toast('Quest: take the traveler\u2019s pack to the Frozen Traveler\u2019s Camp'); }); }
+    else if(G.pack==='done') openDialogue('hilda',LINES.hildaAfter);
+    else openDialogue('hilda',LINES.hildaRepeat);
+  }
+  else if(id==='ivo'){
+    if(G.crystals==='none'){ openDialogue('ivo',LINES.ivoFirst,function(){ G.crystals='given'; persist(); updateHUD(); toast('Quest: bring Scholar Ivo three storm crystals \u2014 Frozen Lake and Crystal Field'); }); }
+    else if(G.crystals==='given'&&(G.crystalCount||0)>=3){ openDialogue('ivo',LINES.ivoCrystalsDone,function(){ G.crystals='done'; G.coins+=50; persist(); updateHUD(); toast('Scholar Ivo pays you 50 coins for the storm crystals.'); }); }
+    else if(G.crystals==='done') openDialogue('ivo',LINES.ivoAfter);
+    else openDialogue('ivo',LINES.ivoRepeat);
+  }
+  else if(id==='traveler'){
+    if(G.pack==='carrying'){ openDialogue('traveler',LINES.travelerPackDone,function(){ G.pack='done'; G.coins+=40; persist(); updateHUD(); toast('The Frozen Traveler pays you 40 coins for his pack.'); }); }
+    else if(G.pack==='done') openDialogue('traveler',LINES.travelerAfter);
+    else openDialogue('traveler',LINES.travelerWait);
+  }
   else if(id==='sable'){
     /* Sable buys every wolf pelt the hero carries, 5 coins apiece, once her lines are done. */
     if(first) openDialogue('sable',LINES.sableFirst,function(){ sellPelts(); });
@@ -2549,6 +2702,7 @@ function tryInteract(){
   for(i=0;i<pickups.length;i++){ if(pickups[i].kind==='waterskin'&&dist(player.x,player.y,pickups[i].x,pickups[i].y)<56){
     pickups.splice(i,1); G.water='skin'; SFX.chest(); persist(); updateHUD();
     toast('You found the empty waterskin! Fill it at the Oasis, then bring it back to Zeke.'); return; } }
+  for(i=0;i<crystalsHere.length;i++){ if(dist(player.x,player.y,crystalsHere[i].x,crystalsHere[i].y)<56){ collectCrystal(i); return; } }
   if(curScreen==='fmaze'&&!G.mazeDone&&dist(player.x,player.y,480,320)<56){ openMaze(); return; }
   if(curScreen==='doasis'&&G.water==='skin'&&dist(player.x,player.y,480,330)<70){ fillWaterskin(); return; }
   if(isShrine(curScreen)&&dist(player.x,player.y,480,240)<84){
@@ -2586,6 +2740,13 @@ function collectRelic(){
   G.relic='found'; SFX.chest(); persist(); updateHUD();
   toast('You dug up Old Maren\u2019s relic! Bring it back to her in the village.');
 }
+function collectCrystal(i){
+  var c=crystalsHere[i]; crystalsHere.splice(i,1);
+  if(!G.crystalsTaken) G.crystalsTaken={}; G.crystalsTaken[curScreen+':'+c.idx]=true;
+  G.crystalCount=(G.crystalCount||0)+1; SFX.coin(); burst(c.x,c.y,8,['#7ab8ff','#b8d8ff','#e8f4ff']); persist(); updateHUD();
+  if(G.crystalCount>=3) toast('You have all three storm crystals! Bring them to Scholar Ivo at the Crystal Field.');
+  else toast('You found a storm crystal! '+(G.crystalCount)+' of 3.');
+}
 function doAttack(){
   if(!inGame||dlgOpen||itemOpen||paused||trans||shopOpen) return;
   audioInit();
@@ -2608,7 +2769,7 @@ function doAttack(){
   });
 }
 function killEnemy(e){
-  if(e.boss){ if(e.bossId==='thornwolf') killThornwolf(e); else if(e.bossId==='colossus') killColossus(e); else killGrak(e); return; }
+  if(e.boss){ if(e.bossId==='thornwolf') killThornwolf(e); else if(e.bossId==='colossus') killColossus(e); else if(e.bossId==='wraith') killWraith(e); else killGrak(e); return; }
   enemies.splice(enemies.indexOf(e),1);
   G.enemiesDown[curScreen+':'+e.idx]=true;
   if(e.kind==='goblin') G.goblinKills=(G.goblinKills||0)+1;
@@ -2668,6 +2829,20 @@ function finishColossus(e){
   persist(); updateHUD();
   showItemFind(DUST_KEY_IMG,COLOSSUS_KEY_WORDS,function(){ toast('The Dune Colossus dropped 50 coins — and the Dust Key is yours (3 of 4).'); startColossusAfter(); });
 }
+function killWraith(e){
+  e.dying=true; e.dieT=1.8; e.hp=0;
+  SFX.defeat(); SFX.roar();
+  burst(e.x,e.y,26,['#b8d8ff','#7a9ab8','#e8f4ff','#ffffff']);
+}
+function finishWraith(e){
+  var i=enemies.indexOf(e); if(i>=0) enemies.splice(i,1);
+  G.enemiesDown['wpeak:wraith']=true; G.wraithDown=true;
+  G.coins+=50;
+  if(!hasKey('peak')) G.keys.push('peak');
+  bossMusic=false;
+  persist(); updateHUD();
+  showItemFind(PEAK_KEY_IMG,WRAITH_KEY_WORDS,function(){ toast('The Storm Wraith dropped 50 coins \u2014 and the Peak Key is yours (4 of 4).'); startWraithAfter(); });
+}
 /* ================= UPDATE LOOP ================= */
 var lastTs=0;
 var regenT=0, lastSeekerToast=0;
@@ -2724,7 +2899,7 @@ function update(dt){
       if(e.boss&&e.dying){
         e.dieT-=dt;
         if(Math.random()<.5) burst(e.x+(Math.random()*80-40),e.y+(Math.random()*60-30),2,['#ffb347','#e25822','#ffd97a']);
-        if(e.dieT<=0){ if(e.bossId==='thornwolf') finishThornwolf(e); else if(e.bossId==='colossus') finishColossus(e); else finishGrak(e); }
+        if(e.dieT<=0){ if(e.bossId==='thornwolf') finishThornwolf(e); else if(e.bossId==='colossus') finishColossus(e); else if(e.bossId==='wraith') finishWraith(e); else finishGrak(e); }
       }
     });
     particles.forEach(function(p){ p.life-=dt; p.x+=p.vx*dt; p.y+=p.vy*dt; p.vy-=26*dt; });
@@ -2888,7 +3063,7 @@ function drawMinimap(){
   c.clearRect(0,0,Wd,Ht);
   /* only the realm you are in, with its name at the top */
   var realm=screenRealm(curScreen);
-  var rname={meadow:'Meadowlands',thornwood:'Thornwood'}[realm]||realm;
+  var rname={meadow:'Meadowlands',thornwood:'Thornwood',dustfall:'Dustfall',whitepeak:'Whitepeak'}[realm]||realm;
   c.fillStyle='#ffd97a'; c.font='bold 11px Georgia'; c.textAlign='center';
   c.fillText(rname,Wd/2,12);
   /* that realm's screens, in their own col/row grid */
@@ -3023,6 +3198,7 @@ function openBag(){
   if(hasKey('meadow')) $('bagList').innerHTML+='<div style="text-align:center;margin-top:10px"><img src="'+MEADOW_KEY_SPRITE+'" alt="Meadow Key" style="width:72px;filter:drop-shadow(0 0 12px rgba(255,200,80,.6))"><div style="color:#ffd97a;font-size:13px;margin-top:4px">Meadow Key — rides on your key ring</div></div>';
   if(hasKey('thorn')) $('bagList').innerHTML+='<div style="text-align:center;margin-top:10px"><img src="'+THORN_KEY_SPRITE+'" alt="Thorn Key" style="width:72px;filter:drop-shadow(0 0 12px rgba(120,200,255,.6))"><div style="color:#9fd8ff;font-size:13px;margin-top:4px">Thorn Key — rides on your key ring</div></div>';
   if(hasKey('dust')) $('bagList').innerHTML+='<div style="text-align:center;margin-top:10px"><img src="'+DUST_KEY_SPRITE+'" alt="Dust Key" style="width:72px;filter:drop-shadow(0 0 12px rgba(255,190,100,.6))"><div style="color:#ffcf8a;font-size:13px;margin-top:4px">Dust Key — rides on your key ring</div></div>';
+  if(hasKey('peak')) $('bagList').innerHTML+='<div style="text-align:center;margin-top:10px"><img src="'+PEAK_KEY_SPRITE+'" alt="Peak Key" style="width:72px;filter:drop-shadow(0 0 12px rgba(150,200,255,.6))"><div style="color:#a8d0f0;font-size:13px;margin-top:4px">Peak Key — rides on your key ring</div></div>';
   var btns=$('bagList').querySelectorAll('.charm-btn');
   btns.forEach(function(b){ b.addEventListener('click',function(){ toggleCharm(b.getAttribute('data-charm')); }); });
   var ubtns=$('bagList').querySelectorAll('.use-btn');
@@ -3087,6 +3263,13 @@ function enterGame(fromCutscene){
   if(G.grakMet===undefined) G.grakMet=false;
   if(G.thornSeen===undefined) G.thornSeen=false;
   if(G.dustSeen===undefined) G.dustSeen=false;
+  if(G.whiteSeen===undefined) G.whiteSeen=false;
+  if(G.pack===undefined) G.pack='none';
+  if(G.crystals===undefined) G.crystals='none';
+  if(G.crystalCount===undefined) G.crystalCount=0;
+  if(G.crystalsTaken===undefined) G.crystalsTaken={};
+  if(G.wraithMet===undefined) G.wraithMet=false;
+  if(G.wraithDown===undefined) G.wraithDown=false;
   if(G.pelts===undefined) G.pelts=0;
   if(G.axe===undefined) G.axe='none';
   if(G.thornMet===undefined) G.thornMet=false;
