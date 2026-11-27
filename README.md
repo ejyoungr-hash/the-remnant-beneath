@@ -120,9 +120,12 @@ One boss per realm. Each drops a key. The four keys combine into one Master Key 
 | Thornwolf, alpha of the shadow wolves | Thornwood | Thorn Key | Slice 3, next |
 | Korvath, the Dune Colossus, ancient sandstone golem | Dustfall | Dust Key | Designed |
 | Storm Wraith, ice spirit | Whitepeak | Peak Key | Designed |
-| Shadow Knight | The Remnant | Final boss | Designed |
+| Shadow Knight | The Remnant | No key — the ending | Built (v29): Easy 14 HP/1 dmg, Medium 18/2, Hard 22/3; dissolves into embers over 2.4s; +50 coins |
 
 Boss deaths dissolve into embers, bigger and slower than regular enemies. No blood.
+
+## The ending (v29)
+Defeating the Shadow Knight plays "The Light Returns": a 5-panel ending sequence (the knight dissolves into embers; the hero climbs out into the morning; the swordsman, spear wanderer, and bow scout greet the hero in the village; the mage lights the lamps while the guardian laughs by the fire; all ten heroes stand together in the square), then an epilogue screen with the journey's stats and two buttons: Keep Exploring (back to the world, the knight gone) and Start Quest Over (back to the title). The final scene shows all ten heroes: all five types, male and female.
 
 ## NPCs and quests
 

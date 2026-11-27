@@ -149,9 +149,9 @@
   .shop-item .pr { color:#ffd97a; white-space:nowrap; }
   .shop-item img { width:36px; height:36px; object-fit:contain; flex:0 0 auto; }
   /* death */
-  #deathView { background:radial-gradient(700px 400px at 50% 70%, rgba(255,120,30,.12), transparent), #05070d; text-align:center; }
-  #deathView h1 { color:#ffd97a; font-size:clamp(30px,6vw,46px); letter-spacing:.08em; text-shadow:0 0 26px rgba(255,140,40,.5); margin:10px 0 6px; font-weight:normal;}
-  #deathView p { color:#b9c6de; font-size:17px; max-width:520px; line-height:1.6; }
+  #deathView, #endingView { background:radial-gradient(700px 400px at 50% 70%, rgba(255,120,30,.12), transparent), #05070d; text-align:center; }
+  #deathView h1, #endingView h1 { color:#ffd97a; font-size:clamp(30px,6vw,46px); letter-spacing:.08em; text-shadow:0 0 26px rgba(255,140,40,.5); margin:10px 0 6px; font-weight:normal;}
+  #deathView p, #endingView p { color:#b9c6de; font-size:17px; max-width:520px; line-height:1.6; }
   /* touch controls */
   #touchUI { position:absolute; inset:auto 0 0 0; z-index:25; display:none; justify-content:space-between; align-items:flex-end; padding:0 12px max(12px, env(safe-area-inset-bottom)); pointer-events:none; }
   body.phone #touchUI { display:flex; }
@@ -349,6 +349,17 @@
       <button class="btn" id="deathTitleBtn">Return to Title</button>
     </div>
   </section>
+
+  <!-- ENDING / EPILOGUE -->
+  <section id="endingView" class="view">
+    <div class="rising-embers" id="endingEmbers" style="position:relative;height:120px;width:300px"></div>
+    <h1>The Light Returns</h1>
+    <p id="endingStats"></p>
+    <div class="title-btns">
+      <button class="btn gold" id="exploreBtn">Keep Exploring</button>
+      <button class="btn" id="questOverBtn">Start Quest Over</button>
+    </div>
+  </section>
 <!-- options -->
       <div class="overlay" id="optOverlay">
         <div class="panel modal-panel">
@@ -540,6 +551,7 @@ var WRAITH_AFTER_PAGES=[
 ];
 var WRAITH_KEY_WORDS="You got the Peak Key! Four of four. When all four are yours, they become the master key.";
 function wraithStats(){ return G.diff==='Easy'?{hp:12,dmg:1}:G.diff==='Hard'?{hp:20,dmg:3}:{hp:16,dmg:2}; }
+function shadowStats(){ return G.diff==='Easy'?{hp:14,dmg:1}:G.diff==='Hard'?{hp:22,dmg:3}:{hp:18,dmg:2}; }
 /* ================= CHARMS ================= */
 var CHARM_NAMES={seeker:'Seeker Charm',lucky:'Lucky Charm',guardian:'Guardian Charm',ember:'Ember Charm'};
 var CHARM_DESC={seeker:'Reveals hidden secrets nearby',lucky:'Enemies drop more coins',guardian:'You take less damage',ember:'Your health slowly comes back'};
@@ -1437,7 +1449,7 @@ function persist(){
 <script>
 /* ================= VIEWS ================= */
 function showView(id){
-  ['splashView','titleView','cutView','gameView','deathView'].forEach(function(v){ $(v).classList.toggle('active', v===id); });
+  ['splashView','titleView','cutView','gameView','deathView','endingView'].forEach(function(v){ $(v).classList.toggle('active', v===id); });
 }
 var selSlot=0, selHero=0, selGender='male', selDiff='Medium', pendingConfirm=null;
 function renderSlots(){
@@ -1526,7 +1538,7 @@ $('howBtn').addEventListener('click',function(){ audioInit(); SFX.select(); $('h
 $('storyBtn').addEventListener('click',function(){ $('synopsis').classList.toggle('open'); SFX.select(); });
 $('howClose').addEventListener('click',function(){ $('howOverlay').classList.remove('open'); });
 /* ================= CUTSCENE ================= */
-var cutPanel=0, cutPages=[], cutPage=0, cutActive=false, cutDone=null, cutSp='narr', cutStandalone=false;
+var cutPanel=0, cutPages=[], cutPage=0, cutActive=false, cutDone=null, cutSp='narr', cutStandalone=false, cutPanels=null;
 function fillEmbers(el,n){
   el.innerHTML='';
   for(var i=0;i<n;i++){ var s=document.createElement('i');
@@ -1534,13 +1546,32 @@ function fillEmbers(el,n){
     s.style.animationDelay=(Math.random()*1.6)+'s'; el.appendChild(s); }
 }
 function startCutscene(){
-  showView('cutView'); cutActive=true; cutPanel=0; cutStandalone=false;
+  showView('cutView'); cutActive=true; cutPanel=0; cutStandalone=false; cutPanels=PANELS;
   cutDone=function(){ enterGame(true); };
   showPanel(0);
 }
+/* The Light Returns: the ending sequence, played after the Shadow Knight falls.
+   Same machinery as the opening cutscene, with ENDING_PANELS instead of PANELS;
+   when the last panel ends, the epilogue shows the journey's stats. */
+function startEnding(){
+  bossMusic=false;
+  showView('cutView'); cutActive=true; cutPanel=0; cutStandalone=false; cutPanels=ENDING_PANELS;
+  who('THE OLD STORIES');
+  cutDone=function(){ showEndingView(); };
+  showPanel(0);
+}
+function showEndingView(){
+  bossMusic=false;
+  var hn=HEROES[G.hero].names[G.gender]+', '+HEROES[G.hero].name;
+  var bosses=[G.grakDown,G.thornDown,G.colossusDown,G.wraithDown,G.shadowDown].filter(function(b){ return b; }).length;
+  var mins=Math.floor((G.playSec||0)/60);
+  $('endingStats').innerHTML='<b>'+hn+'</b> &middot; '+G.diff+' journey<br>'+bosses+' of 5 bosses defeated &middot; '+G.coins+' coins &middot; '+(G.goblinKills||0)+' goblins defeated &middot; '+mins+' minutes played<br>The Master Key turned, the Shadow Knight is gone, and the light has returned.';
+  fillEmbers($('endingEmbers'),16);
+  inGame=false; showView('endingView');
+}
 function cut0(){cutSp='narr';$('cutText').textContent=cutPages[0];say('narr',cutPages[0])}
 function showPanel(i){
-  var p=PANELS[i]; if(!p){ endCutscene(); return; }
+  var p=(cutPanels||PANELS)[i]; if(!p){ endCutscene(); return; }
   var img=$('cutImg'); img.src=p.img; img.className='';
   var fx=$('cutFx'); fx.className='fx'; $('cutEmbers').style.display='none';
   if(p.fx==='flicker') fx.classList.add('fx-flicker');
@@ -1667,9 +1698,8 @@ function endWraithMeeting(){
   showView('gameView');
   toast('The fight begins \u2014 defeat the Storm Wraith, guardian of the Peak Key!');
 }
-/* The Shadow Knight meeting: his words are from fifth-realm-dialogue.md;
-   the fight and the ending come in a later slice, so this meeting ends with
-   the boss music off and the Remnant theme back on. */
+/* The Shadow Knight meeting: his words are from fifth-realm-dialogue.md.
+   When the meeting ends the fight begins, like the other boss meetings. */
 var SHADOW_MEET_PAGES=[
  "The hall is dark except for one light, and the Shadow Knight stands in it, armor black as the space between stars, his sword resting on the stone.",
  "@A thousand years I have waited.",
@@ -1691,8 +1721,8 @@ function startShadowMeeting(){
 function endShadowMeeting(){
   bossMeetActive=false;cutActive=false;stopVoice();
   who('THE OLD STORIES');
-  bossMusic=false;showView('gameView');
-  toast('The Shadow Knight lowers his blade. \u201cNot yet,\u201d he says. \u201cGrow stronger, and return.\u201d');
+  showView('gameView');
+  toast('The fight begins \u2014 defeat the Shadow Knight!');
 }
 function startWraithAfter(){
   bossMeetActive=false;cutStandalone=true;cutActive=true;
@@ -2253,7 +2283,9 @@ function buildScreen(id){
       g.beginPath(); g.moveTo(420,40); g.lineTo(540,40); g.lineTo(620,420); g.lineTo(340,420); g.closePath(); g.fill();
       g.fillStyle='#2c2f38'; rr(g,360,380,240,60,8); g.fill();
       g.fillStyle='#3a3f4a'; rr(g,360,380,240,12,8); g.fill();
-      drawArtCenter(g,'shadow_knight',480,290,190,1);
+      /* the knight himself is the boss enemy while he lives; the still figure
+         on the dais is only drawn when he is not there to fight */
+      if((!G||!G.shadowDown)&&!enemies.some(function(e){ return e.boss&&e.bossId==='shadowknight'; })) drawArtCenter(g,'shadow_knight',480,290,190,1);
       solids.push({x:400,y:200,w:160,h:130});
       g.fillStyle='#c8d2e0'; g.font='15px Georgia'; g.textAlign='center'; g.fillText('~ THE THRONE ROOM ~',480,580); }
     else if(id==='rterminal'){
@@ -2359,6 +2391,10 @@ function spawnScreen(id){
     var ws=wraithStats();
     enemies.push({x:480,y:220,hp:ws.hp,maxhp:ws.hp,t:0,idx:99,hitT:0,boss:true,bossId:'wraith',dmg:ws.dmg,dying:false,dieT:0});
   }
+  if(id==='rthrone'&&!G.shadowDown){
+    var ss=shadowStats();
+    enemies.push({x:480,y:380,hp:ss.hp,maxhp:ss.hp,t:0,idx:99,hitT:0,boss:true,bossId:'shadowknight',dmg:ss.dmg,dying:false,dieT:0});
+  }
   (HERB_SPOTS[id]||[]).forEach(function(hs,hi){ if(!G.herbsTaken[id+':'+hi]) herbsHere.push({x:hs[0],y:hs[1],idx:hi}); });
   (DIG_SPOTS[id]||[]).forEach(function(ds,di){ if(!G.digsTaken||!G.digsTaken[id+':'+di]) digHere.push({x:ds[0],y:ds[1],idx:di}); });
   (CRYSTAL_SPOTS[id]||[]).forEach(function(cs,ci){ if(G.crystals==='given'&&!G.crystalsTaken[id+':'+ci]) crystalsHere.push({x:cs[0],y:cs[1],idx:ci}); });
@@ -2389,6 +2425,9 @@ function enterScreen(id,fromDir){
   } else if(id==='wpeak'&&G&&!G.wraithDown){
     bossMusic=true;
     if(!G.wraithMet){ G.wraithMet=true; persist(); startWraithMeeting(); }
+  } else if(id==='rthrone'&&G&&!G.shadowDown){
+    bossMusic=true;
+    if(!G.shadowMet){ G.shadowMet=true; persist(); startShadowMeeting(); }
   } else bossMusic=false;
   if(isShrine(id)){ lastShrine=id; G.lastShrine=id; }
   if(id==='fedge'&&G&&!G.thornSeen){ G.thornSeen=true; persist(); startThornwoodEntry(); }
@@ -2396,7 +2435,6 @@ function enterScreen(id,fromDir){
   if(id==='wpath'&&G&&!G.whiteSeen){ G.whiteSeen=true; persist(); startWhitepeakEntry(); }
   if(id==='medge'&&G&&!G.mistSeen){ G.mistSeen=true; persist(); startMistmireEntry(); }
   if(id==='rgate'&&G&&!G.remnantSeen){ G.remnantSeen=true; persist(); startRemnantEntry(); }
-  if(id==='rthrone'&&G&&!G.shadowMet){ G.shadowMet=true; persist(); startShadowMeeting(); }
   if(G.goatFollow){ goat.x=player.x+30; goat.y=player.y+30; }
   G.x=Math.round(player.x); G.y=Math.round(player.y); persist();
   flashName(SCREENS[id].name);
@@ -2597,8 +2635,26 @@ function drawWraith(g,e){
   g.restore();
   if(!e.dying){ g.fillStyle='rgba(255,255,255,.9)'; g.font='bold 12px Georgia'; g.textAlign='center'; g.fillText('STORM WRAITH, VOICE OF THE MOUNTAIN',e.x,e.y-170); }
 }
+function drawShadow(g,e){
+  var h=150, alpha=1;
+  if(e.dying){ var k=Math.max(0,e.dieT/2.4); alpha=k; h=150*(0.7+0.3*k); }
+  var w=h*1.012;
+  g.save(); g.globalAlpha=alpha;
+  if(e.hitT>0) g.filter='brightness(1.8)';
+  /* the art is centered on (x,y), so anchor its bottom at the boss's feet */
+  var ok=drawArtCenter(g,'shadow_knight',e.x,e.y-h/2,w);
+  if(!ok){
+    g.fillStyle='#14141f'; g.beginPath(); g.ellipse(e.x,e.y-10,h*0.35,h*0.28,0,0,7); g.fill();
+    g.fillStyle='#ffd97a'; g.beginPath(); g.arc(e.x-12,e.y-22,3,0,7); g.arc(e.x+12,e.y-22,3,0,7); g.fill();
+  }
+  g.restore();
+  g.fillStyle='rgba(0,0,0,.55)'; g.fillRect(e.x-60,e.y-172,120,8);
+  g.fillStyle='#e25822'; g.fillRect(e.x-60,e.y-172,120*Math.max(0,e.hp/e.maxhp),8);
+  g.strokeStyle='#ffd97a'; g.lineWidth=1; g.strokeRect(e.x-60.5,e.y-172.5,121,9);
+  g.fillStyle='#ffd97a'; g.font='bold 12px Georgia'; g.textAlign='center'; g.fillText('THE SHADOW KNIGHT',e.x,e.y-180);
+}
 function drawEnemy(g,e){
-  if(e.boss){ if(e.bossId==='thornwolf') drawThornwolf(g,e); else if(e.bossId==='colossus') drawColossus(g,e); else if(e.bossId==='wraith') drawWraith(g,e); else drawGrak(g,e); return; }
+  if(e.boss){ if(e.bossId==='thornwolf') drawThornwolf(g,e); else if(e.bossId==='colossus') drawColossus(g,e); else if(e.bossId==='wraith') drawWraith(g,e); else if(e.bossId==='shadowknight') drawShadow(g,e); else drawGrak(g,e); return; }
   var phase=(e.moving)?(Math.floor((e.walkT||0)*8)%2):0;
   var fk='goblin', flip=false, h=46, wy=e.y;
   if(e.kind==='wolf'){
@@ -3206,7 +3262,7 @@ function doAttack(){
   });
 }
 function killEnemy(e){
-  if(e.boss){ if(e.bossId==='thornwolf') killThornwolf(e); else if(e.bossId==='colossus') killColossus(e); else if(e.bossId==='wraith') killWraith(e); else killGrak(e); return; }
+  if(e.boss){ if(e.bossId==='thornwolf') killThornwolf(e); else if(e.bossId==='colossus') killColossus(e); else if(e.bossId==='wraith') killWraith(e); else if(e.bossId==='shadowknight') killShadow(e); else killGrak(e); return; }
   enemies.splice(enemies.indexOf(e),1);
   G.enemiesDown[curScreen+':'+e.idx]=true;
   if(e.kind==='goblin') G.goblinKills=(G.goblinKills||0)+1;
@@ -3279,6 +3335,22 @@ function finishWraith(e){
   bossMusic=false;
   persist(); updateHUD();
   showItemFind(PEAK_KEY_IMG,WRAITH_KEY_WORDS,function(){ toast('The Storm Wraith dropped 50 coins \u2014 and the Peak Key is yours (4 of 4).'); startWraithAfter(); });
+}
+function killShadow(e){
+  /* the final boss dissolves bigger and slower: 2.4s of embers, then he is gone */
+  e.dying=true; e.dieT=2.4; e.hp=0;
+  SFX.defeat(); SFX.roar();
+  burst(e.x,e.y,40,['#ffb347','#e25822','#ffd97a','#fff3c4','#8a7cff']);
+}
+function finishShadow(e){
+  var i=enemies.indexOf(e); if(i>=0) enemies.splice(i,1);
+  G.enemiesDown['rthrone:shadowknight']=true; G.shadowDown=true;
+  G.coins+=50;
+  bossMusic=false;
+  persist(); updateHUD();
+  /* no key: all four realm keys are already combined into the Master Key.
+     The reward is the ending itself. */
+  startEnding();
 }
 /* ================= MASTER KEY COMBINE ================= */
 /* When all four realm keys are collected, they fly together, spin, flash,
@@ -3453,7 +3525,7 @@ function update(dt){
       if(e.boss&&e.dying){
         e.dieT-=dt;
         if(Math.random()<.5) burst(e.x+(Math.random()*80-40),e.y+(Math.random()*60-30),2,['#ffb347','#e25822','#ffd97a']);
-        if(e.dieT<=0){ if(e.bossId==='thornwolf') finishThornwolf(e); else if(e.bossId==='colossus') finishColossus(e); else if(e.bossId==='wraith') finishWraith(e); else finishGrak(e); }
+        if(e.dieT<=0){ if(e.bossId==='thornwolf') finishThornwolf(e); else if(e.bossId==='colossus') finishColossus(e); else if(e.bossId==='wraith') finishWraith(e); else if(e.bossId==='shadowknight') finishShadow(e); else finishGrak(e); }
       }
     });
     particles.forEach(function(p){ p.life-=dt; p.x+=p.vx*dt; p.y+=p.vy*dt; p.vy-=26*dt; });
@@ -3589,6 +3661,10 @@ $('wakeBtn').addEventListener('click',function(){
   inGame=true; showView('gameView'); enterScreen(dest); updateHUD();
 });
 $('deathTitleBtn').addEventListener('click',function(){ inGame=false; G=null; showView('titleView'); renderSlots(); });
+$('exploreBtn').addEventListener('click',function(){
+  inGame=true; showView('gameView'); updateHUD(); drawMinimap();
+});
+$('questOverBtn').addEventListener('click',function(){ inGame=false; G=null; showView('titleView'); renderSlots(); });
 /* ================= HUD ================= */
 function updateHUD(){
   if(!G) return;
