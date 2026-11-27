@@ -146,7 +146,7 @@ NPCs stand in place. Walk up and press E to talk. A "!" shows when they have a q
 
 5 playable heroes, male and female (10 total): swordsman, spear wanderer, bow scout, mage, guardian. The starting look is the base form before upgrades. Armor and weapons change how the hero looks.
 
-You start with NO weapons. The first weapon is tier 1, earned by collecting herbs for Mira, then Captain Renn awards it. A second, long range weapon comes from a second, harder Renn quest, or it can be bought at Renn's Armory. The mage's staff does both, so no second weapon is needed.
+You start with NO weapons. The first weapon is tier 1, earned by collecting herbs for Mira, then Captain Renn awards it. A second, long range weapon (v30): after Goblin Trouble is done, Renn gives the "Shadow wolves" quest — defeat 4 shadow wolves in the Thornwood or Whitepeak — or the sidearm can be bought at Renn's Armory for 60 coins. One fixed sidearm per hero: swordsman Short Bow, spear wanderer Throwing Javelins, guardian Throwing Axes. The bow scout is mirrored: her bow IS her long range weapon, so her second weapon to acquire is the Hunter's Bow (the tier 2 bow, 150 coins at the Armory, or the hunt quest reward, which also raises her melee to tier 2). The mage's staff does both, so no second weapon is needed. Ranged attack: K key or the SHOOT touch button, fires in the direction faced, visible projectile (arrow, javelin, axe), 0.45 s cooldown. Ranged damage is one tier below the hero's current melee tier (minimum 1). Ammo: Easy unlimited, Medium quiver of 12 refills at any shrine, Hard quiver of 12, buy a bundle of 12 for 10 coins at the Armory. The ammo count shows in the HUD by the coins. The sidearm lives in the bag like other gear.
 
 - Weapons: 3 tiers per hero. Prices 60, 150, 300 coins.
 - Armor: 3 tiers (Leather, Chainmail, Emberplate). Prices 80, 200, 400 coins.
@@ -173,10 +173,10 @@ The village girl follows you in the village and shows secret locations, 4 chests
 - Victory: defeating the Shadow Knight shows "The Light Returns" epilogue with stats, Keep Exploring, and Start Quest Over.
 - Map: toggleable, only visited areas revealed. Minimap always in the corner.
 - Pause menu: Resume, How to Play, Music and Sound effects toggles with volume sliders, Voices toggle, Save game, Screen mode, Quit to title.
-- Controls: WASD or arrows to move, Space or J to attack, E to interact, M for map, I for bag, Esc or P to pause. Touch joystick and buttons on phone. Desktop first with fullscreen, plus a vertical phone mode that switches automatically.
+- Controls: WASD or arrows to move, Space or J to attack, K or the SHOOT button for the ranged sidearm, E to interact, M for map, I for bag, Esc or P to pause. Touch joystick and buttons on phone. Desktop first with fullscreen, plus a vertical phone mode that switches automatically.
 - Cutscenes: still image panels with story text and fades, plus scripted in engine moments. Not video. Boss meetings use a full close up portrait. Item finds animate: the item rises glowing, sparkles burst, a shine sweeps across, then words in a slim text box.
 - Music: softer fantasy, made in code, no audio files. One theme per realm plus a tenser boss version of each. 20 code made sound effects.
-- Minigames: rune sequence, sliding tiles, connect the flow, torch order, target practice, unscramble ancient word, find hidden rune, cup game, guide ember through maze.
+- Minigames (v30, one time reward each, replayable for fun): Rune Sequence at the Meadow Shrine (30 coins), Sliding Tiles at the Old Oak (ember shard), Connect the Flow at the Desert Oasis (40 coins), Torch Order at Whitepeak Pass (30 coins), Target Practice at Hunter Sable's Den (40 coins), Unscramble Ancient Word at Whitepeak Field (30 coins), Find Hidden Rune at the Sunken Shrine (30 coins), Cup Game at the Old Mill (40 coins). The Thorn Maze (Thornwood) came earlier. Each is a glowing stone on its screen; press E near it to play. Keyboard and touch, under a minute each.
 - Art rule: all characters, enemies, NPCs and creatures are chunky 16 bit pixel art matching the hero sprites, few flat colors, thick dark outline, simple shapes, 2 frame walk cycle facing the direction of movement. Portraits and scenery are the exception (portraits are painterly, scenery can be real art). Scenes stay open and less cluttered.
 
 ## Build status
@@ -186,6 +186,8 @@ The village girl follows you in the village and shows secret locations, 4 chests
 - Thornwood slices 2 and 3: built and live (v18, Nov 26, 2026): Joren moved to Forest Edge with his cabin and the Lost Axe quest, Sable at the Wolf Den with Wolf Pelts, the Thornwolf boss fight and Thorn Key, the Thorn Maze minigame.
 - Minimap fix (v19, Nov 26, 2026): the minimap and the big map now cover the whole world instead of only the Meadowlands, and every discovered screen shows a small picture of its own scene.
 - Dustfall, Whitepeak, Mistmire, The Remnant: designed, to be built realm by realm after Thornwood.
+- v29 (Nov 27, 2026): the Shadow Knight final boss fight and "The Light Returns" ending — the game is complete: 60 screens, 5 bosses, 16 quests.
+- v30 (Nov 27, 2026, awaiting Eric's go-ahead to push): long-range second weapons (Renn's "Shadow wolves" quest, Armory price 60 coins, K / SHOOT, ammo by difficulty) and the 8 minigames listed above.
 - After the game is completed: a graphic novel version of the story.
 
 ## Where it lives on GitHub

@@ -255,7 +255,7 @@
         <div id="stick"><div id="stickKnob"></div></div>
         <div id="touchBtns">
           <button class="tbtn" id="tbInteract">TALK</button>
-          <button class="tbtn atk" id="tbAttack">ATTACK</button>
+          <button class="tbtn atk" id="tbAttack">ATTACK</button> <button class="tbtn atk" id="tbRanged">SHOOT</button>
         </div>
       </div>
       <!-- dialogue -->
@@ -336,6 +336,15 @@
           <button class="menu-btn" id="mazeClose">Leave the maze</button>
         </div>
       </div>
+      <div class="overlay" id="gameOverlay">
+        <div class="panel modal-panel">
+          <h2 id="gameTitle">Minigame</h2>
+          <p id="gameInstr" style="color:#b9c6de;font-size:14px;line-height:1.5;margin:0 0 8px"></p>
+          <canvas id="mgCanvas" width="360" height="300" style="display:block;margin:0 auto 8px;background:#0d1a2a;border:1px solid #3a5484"></canvas>
+          <p id="gameMsg" style="color:#ffd97a;font-size:14px;min-height:20px;margin:0 0 6px"></p>
+          <button class="menu-btn" id="gameClose">Leave</button>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -382,6 +391,7 @@
       <div class="howto-txt">
         <p><b>Move</b> — WASD or arrow keys · left stick on touch</p>
         <p><b>Attack</b> — Space or J · ATTACK button (you start with no weapon — earn one first)</p>
+        <p><b>Ranged</b> — K · SHOOT button (once you earn a long-range weapon from Renn)</p>
         <p><b>Talk / Use</b> — E · TALK button. Walk up to a villager, a chest, the shrine, or the General Store.</p>
         <p><b>Pause</b> — Esc or P &nbsp;·&nbsp; <b>Bag</b> — I &nbsp;·&nbsp; <b>Map</b> — M</p>
         <p>Walk off the edge of a screen to enter the next one. Your <b>embers</b> are your health — a weak hit takes half an ember. Rest at the <b>Meadow Shrine</b> (far south) to heal and save. The game also saves when you enter a new screen.</p>
@@ -491,7 +501,11 @@ vendor9Repeat:['GREETINGS, VALUED CUSTOMER! EVERYTHING IS STILL UNDER WARRANTY. 
  dellGoatDone:['Bessie! Oh, you found her, you wonderful soul!','@She followed me all the way from the Flower Field. She has a mind of her own.','Thirty coins, as promised \u2014 and take this ember shard. The meadow provides, and so do I.','@Thank you, Dell. Take good care of her.'],
  rennTrouble:['The goblins are getting bold \u2014 they press right up to the village fences now.','@Six goblins? I\u2019ve been waiting for a real fight.','Thin them out for me. Six of the beasts down, and I\u2019ll pay you fifty coins for the trouble.','@Fifty coins. Done \u2014 I\u2019ll thin them out.'],
  rennTroubleWait:['Six goblins, that is the count.','@I\u2019m working on it. Six it is.','Keep at it \u2014 the den and the meadows are crawling with them.'],
- rennTroubleDone:['Six down, and the village can breathe again. Fifty coins, as promised.','@Glad to help. The fences should hold for a while now.','You are becoming someone this village can count on.','@I\u2019m just getting started.']
+ rennTroubleDone:['Six down, and the village can breathe again. Fifty coins, as promised.','@Glad to help. The fences should hold for a while now.','You are becoming someone this village can count on.','@I\u2019m just getting started.'],
+ rennHunt:['The shadow wolves press in from the Thornwood, bold as brass \u2014 and the packs in the Whitepeak are no better.','@What do you need from me, Captain?','Bring down four of the beasts. Four pelts\u2019 worth of proof, and I\u2019ll see you armed for distance.','@Four shadow wolves. Consider it done.'],
+ rennHuntWait:['Four shadow wolves. The Thornwood and the Whitepeak are thick with them.','@I\u2019m hunting. Four it is.'],
+ rennHuntDone:['Four down. The packs will think twice now. Here \u2014 your long arm.','@A long-range weapon at last. I can fight from a distance now.','Use it well. A hunter who cannot reach is just a target.'],
+ rennStaff:['Your staff strikes near and far both \u2014 you need no second weapon from me.','@The staff does both. Fair enough, Captain.','Spend your coins on a sharper staff instead.'],
 };
 /* ================= GRAK, THE GOBLIN KING ================= */
 /* GRAK_CLOSEUP lives in data/grak.js */
@@ -599,11 +613,35 @@ var ARMOR_FIND=[
 /* ARMOR_IMG lives in data/items.js */
 /* WEAPON_IMG lives in data/items.js */
 function weaponName(){ return WEAPONS[HEROES[G.hero].id][(G.weaponTier||1)-1]; }
+/* ================= SECOND WEAPONS (long-range sidearms) ================= */
+/* One fixed sidearm per hero. The mage's staff does both, so she/he has none.
+   The bow scout is mirrored: her bow IS her long-range weapon (her first
+   weapon is the Old Bow), so her sidearm is the Hunter's Bow. */
+var SIDEARMS={
+ swordsman:{name:'Short Bow',proj:'arrow',ammo:'Arrows'},
+ spear:{name:'Throwing Javelins',proj:'javelin',ammo:'Javelins'},
+ bow:{name:"Hunter's Bow",proj:'arrow',ammo:'Arrows'},
+ guardian:{name:'Throwing Axes',proj:'axe',ammo:'Throwing Axes'}};
+function sidearmOf(){ var h=HEROES[G.hero]; return SIDEARMS[h.id]||null; }
+function sidearmImg(){ var h=HEROES[G.hero].id;
+  if(h==='swordsman'||h==='bow') return WEAPON_IMG.bow[1];
+  if(h==='spear') return WEAPON_IMG.spear[1];
+  if(h==='guardian') return AXE_IMG;
+  return null; }
+function sidearmAmmoText(){ if(!G.sidearm) return ''; var sa=sidearmOf(); if(G.sidearmAmmo===null||G.sidearmAmmo===undefined) return ' \u00b7 '+sa.name+' (\u221e '+sa.ammo+')'; return ' \u00b7 '+sa.name+' ('+G.sidearmAmmo+' '+sa.ammo+')'; }
+function grantSidearm(){
+  G.sidearm=true; G.sidearmQuest='done';
+  G.sidearmAmmo=(G.diff==='Easy')?null:12;
+  if(HEROES[G.hero].id==='bow'&&G.weaponTier<2){ G.weaponTier=2; }
+  persist(); updateHUD();
+  var sa=sidearmOf();
+  showItemFind(sidearmImg(),'You got the '+sa.name+'! Now you can fight from a distance too.',function(){ toast('Press K or SHOOT to fire from a distance.'); });
+}
 function bagUsed(){
   var n=0;
   if(G.herbs>0) n++;
   if((G.potions||0)>0) n++;
-  if(G.weapon) n++;
+  if(G.weapon) n++; if(G.sidearm) n++;
   if((G.armorTier||0)>0) n++;
   (G.charms||[]).forEach(function(){ n++; });
   return n;
@@ -638,7 +676,18 @@ function shopItems(id){
   }
   if(id==='renn'){
     var wp=[0,150,300];
-    for(var t=wt+1;t<=3;t++) out.push({key:'weapon'+t,kind:'weapon',name:WEAPONS[HEROES[G.hero].id][t-1],price:wp[t-1],desc:t===2?'Sharper, stronger — a true fighting blade.':'Its edge burns with the old world\u2019s light.',img:WEAPON_IMG[HEROES[G.hero].id][t-1],tier:t});
+    for(var t=wt+1;t<=3;t++){
+      if(HEROES[G.hero].id==='bow'&&t===2&&G.sidearm) continue; /* her bow IS the sidearm \u2014 she already owns it */
+      out.push({key:'weapon'+t,kind:'weapon',name:WEAPONS[HEROES[G.hero].id][t-1],price:wp[t-1],desc:t===2?'Sharper, stronger \u2014 a true fighting blade.':'Its edge burns with the old world\u2019s light.',img:WEAPON_IMG[HEROES[G.hero].id][t-1],tier:t});
+    }
+    if(G.weapon&&!G.sidearm&&HEROES[G.hero].id!=='mage'&&HEROES[G.hero].id!=='bow'){
+      var sa=sidearmOf();
+      out.push({key:'sidearm',kind:'sidearm',name:sa.name,price:60,desc:'A long-range weapon \u2014 fight from a distance. Captain Renn\u2019s second quest earns it free.',img:sidearmImg()});
+    }
+    if(G.sidearm&&G.diff==='Hard'){
+      var sa2=sidearmOf();
+      out.push({key:'ammo',kind:'ammo',name:sa2.ammo+' (bundle of 12)',price:10,desc:'Twelve more '+sa2.ammo.toLowerCase()+' for your '+sa2.name+'.',glyph:'\u{1F3F9}'});
+    }
   }
   if(id==='zeke'){
     out.push({key:'herb',kind:'consumable',name:'Healing Herb (sunleaf)',price:15,desc:'Restores half an ember. Good to have in the desert.',glyph:'\u{1F33F}'});
@@ -686,13 +735,16 @@ function buyItem(key){
   else if(key==='potion'){ G.potions=(G.potions||0)+1; }
   else if(key==='bag20'){ G.bagSize=20; }
   else if(key==='bag30'){ G.bagSize=30; }
-  else if(item.kind==='weapon'){ G.weaponTier=item.tier; G.weapon=true; }
+  else if(item.kind==='sidearm'){ grantSidearm(); }
+  else if(item.kind==='ammo'){ G.sidearmAmmo=(G.sidearmAmmo||0)+12; }
+  else if(item.kind==='weapon'){ G.weaponTier=item.tier; G.weapon=true; if(HEROES[G.hero].id==='bow'&&item.tier===2&&!G.sidearm){ G.sidearm=true; G.sidearmQuest='done'; G.sidearmAmmo=(G.diff==='Easy')?null:12; } }
   else if(item.kind==='armor'){ G.armorTier=item.tier; }
   SFX.coin(); persist(); updateHUD();
   if(item.kind==='weapon'){
     closeShop();
-    showItemFind(item.img,'You got the '+item.name+'! '+(item.tier===2?'Stronger and truer — it feels right in your hand.':'It burns with the old world\u2019s light.'));
-  } else if(item.kind==='armor'){
+    showItemFind(item.img,'You got the '+item.name+'! '+(item.tier===2?'Stronger and truer — it feels right in your hand.':'It burns with the old world\u2019s light.'),function(){ updateHUD(); if(HEROES[G.hero].id==='bow'&&item.tier===2) toast('Your bow is also your long-range weapon — press K or SHOOT to fire!'); });
+  } else if(item.kind==='sidearm'){ closeShop(); /* grantSidearm already showed the award */ }
+  else if(item.kind==='armor'){
     closeShop();
     showItemFind(item.img,ARMOR_FIND[item.tier-1]);
   } else {
@@ -1082,7 +1134,7 @@ function drawHeroSprite(g,hx,hy){
      quest or the Armory). The game tracks no second-weapon state yet, so her
      carried bow must not show — she walks/stands on the weaponless body
      until second-weapon ownership exists. Other heroes are unaffected. */
-  var bkWalk=(h.id==='bow')?hk+'_nw':bk;
+  var bkWalk=(h.id==='bow')?(G.sidearm?hk:hk+'_nw'):bk;
   var phase=(player.moving&&player.walkT!==undefined)?(Math.floor(player.walkT*8)%2):0;
   var fk=bkWalk, flip=false;
   if(player.dir==='up'){ fk=bkWalk+(phase?'_nb':'_na'); }
@@ -1311,7 +1363,8 @@ function noiseBurst(t0,dur,vol,fFrom,fTo){
 }
 var SFX={
   select:function(){ if(AC) tone(660,AC.currentTime,.09,'sine',.15); },
-  swing:function(){ if(AC) noiseBurst(AC.currentTime,.14,.25,1800,300); },
+  swing:function(){ if(AC){ var t=AC.currentTime; tone(660,t,.09,'sine',.15); } },
+  shoot:function(){ if(AC){ var t=AC.currentTime; tone(1200,t,.08,'sine',.14,null,500); noiseBurst(t,.06,.12,3000,800);} },
   hit:function(){ if(AC){ tone(160,AC.currentTime,.12,'square',.18); noiseBurst(AC.currentTime,.08,.15,900,200);} },
   hurt:function(){ if(AC) tone(220,AC.currentTime,.2,'sawtooth',.12,null,110); },
   coin:function(){ if(AC){ var t=AC.currentTime; tone(988,t,.08,'sine',.16); tone(1319,t+.07,.16,'sine',.16);} },
@@ -1395,7 +1448,7 @@ function newState(slot,heroIdx,gender,diff){
     pack:'none', crystals:'none', crystalCount:0, crystalsTaken:{}, wraithMet:false, wraithDown:false,
     lantern:'none', lights:'none', lightCount:0, lightsTaken:{}, medicine:'none', sunkenRelic:false, masterMade:false,
     visited:{village:true}, herbsTaken:{}, enemiesDown:{}, millChest:false, girlChest:false, girlChests:0,
-    goat:'none', goatFollow:false, trouble:'none', goblinKills:0, charms:[], equipped:[],
+    goat:'none', goatFollow:false, trouble:'none', goblinKills:0, sidearm:false, sidearmQuest:'none', wolfKills:0, sidearmAmmo:0, mgDone:{}, mgSeen:{}, charms:[], equipped:[],
     talked:{}, rennAfter:false, girlMet:false, shrineSeen:false, playSec:0, thornSeen:false, dustSeen:false, whiteSeen:false, mistSeen:false, remnantSeen:false, shadowMet:false, shadowDown:false, doorOpen:false, terminal:'none', robot:'none', guardian:'none', battery:'none', lastShrine:'village' };
 }
 var G=null; /* current game state */
@@ -1443,6 +1496,12 @@ function persist(){
   if(G.weaponTier===undefined) G.weaponTier=G.weapon?1:0;
   if(G.armorTier===undefined) G.armorTier=0;
   if(G.bagSize===undefined) G.bagSize=12;
+  if(G.sidearm===undefined) G.sidearm=false;
+  if(G.sidearmQuest===undefined) G.sidearmQuest='none';
+  if(G.wolfKills===undefined) G.wolfKills=0;
+  if(G.sidearmAmmo===undefined) G.sidearmAmmo=0;
+  if(!G.mgDone) G.mgDone={};
+  if(!G.mgSeen) G.mgSeen={};
   var slots=loadSlots(); slots[(G.slot!=null?G.slot:G.hero)]=G; storeSlots(slots);
 }
 </script>
@@ -1798,6 +1857,454 @@ function closeMaze(){
   mazeOpen=false; $('mazeOverlay').classList.remove('open');
 }
 $('mazeClose').addEventListener('click',function(){ closeMaze(); });
+/* ================= MINIGAMES (8, one per game stone) ================= */
+/* Each game lives on a stone in the world: press E near it to play. Rewards
+   are one-time; a solved game can still be replayed for fun. */
+var MINIGAMES={
+ runes:{title:'The Shrine Runes',screen:'shrine',x:480,y:330,reward:'coins',val:30,instr:'Watch the runes light up, then tap them back in the same order.'},
+ tiles:{title:'Sliding Tiles',screen:'foak',x:480,y:330,reward:'shard',val:0,instr:'Slide the tiles into order, 1 to 8. Tap a tile next to the empty space.'},
+ flow:{title:'Connect the Flow',screen:'doasis',x:240,y:180,reward:'coins',val:40,instr:'Tap a pipe to turn it. Join the spring on the left to the pool on the right.'},
+ torches:{title:'Torch Order',screen:'wpass',x:480,y:330,reward:'coins',val:30,instr:'Watch the torches light, then light them in the same order.'},
+ targets:{title:'Target Practice',screen:'fden',x:700,y:200,reward:'coins',val:40,instr:'Hit the lit target — 7 of 10 to win. Tap it, or move with the arrow keys and press Space.'},
+ word:{title:'The Ancient Word',screen:'wfield',x:240,y:180,reward:'coins',val:30,instr:'Unscramble the old word. Tap the letters in order, or type them.'},
+ hidden:{title:'The Hidden Rune',screen:'msunk',x:240,y:180,reward:'coins',val:30,instr:'A rune hides under one stone. You have 5 taps — warm means close.'},
+ cups:{title:'The Cup Game',screen:'mill',x:240,y:180,reward:'coins',val:40,instr:'Watch the ember, watch the cups — then pick the cup hiding it.'}
+};
+var gameOpen=false, gameId=null, gameState=null, gameTimer=null, gameCursor={x:0,y:0};
+function mgCanvas(){ return $('mgCanvas'); }
+function gameMsg(t){ $('gameMsg').textContent=t; }
+function initGame(id){
+  if(id==='runes'||id==='torches'){
+    var s={kind:id,phase:'watch',seq:[],shown:0,input:0,lit:-1};
+    for(var i=0;i<4;i++) s.seq.push(Math.floor(Math.random()*4));
+    return s;
+  }
+  if(id==='tiles'){
+    var b=[1,2,3,4,5,6,7,8,0], blank=8;
+    for(var k=0;k<26;k++){
+      var opts=[];
+      if(blank%3>0) opts.push(blank-1);
+      if(blank%3<2) opts.push(blank+1);
+      if(blank>=3) opts.push(blank-3);
+      if(blank<6) opts.push(blank+3);
+      var pick=opts[Math.floor(Math.random()*opts.length)];
+      b[blank]=b[pick]; b[pick]=0; blank=pick;
+    }
+    return {board:b,blank:blank};
+  }
+  if(id==='flow'){
+    /* Solved masks for the snake path (1,0)->(0,0)->(0,1)->(0,2)->(1,2)->sink.
+       Off-path cells are straight pipes. N=1 E=2 S=4 W=8 */
+    var masks=[[6,10,12],[9,5,3],[5,10,5]];
+    var rot=[];
+    for(var r=0;r<3;r++){ rot.push([]); for(var c=0;c<3;c++) rot[r].push(Math.floor(Math.random()*4)); }
+    return {masks:masks,rot:rot};
+  }
+  if(id==='targets') return {round:0,hits:0,lit:-1,phase:'play'};
+  if(id==='word'){
+    var words=['EMBER','LIGHT','RELIC','FLAME'];
+    var w=words[Math.floor(Math.random()*words.length)];
+    var letters=w.split('');
+    for(var i2=letters.length-1;i2>0;i2--){ var j2=Math.floor(Math.random()*(i2+1)); var tmp=letters[i2]; letters[i2]=letters[j2]; letters[j2]=tmp; }
+    if(letters.join('')===w){ var t0=letters[0]; letters[0]=letters[1]; letters[1]=t0; }
+    return {word:w,letters:letters,answer:[],used:[false,false,false,false,false]};
+  }
+  if(id==='hidden') return {rune:{x:Math.floor(Math.random()*4),y:Math.floor(Math.random()*4)},taps:5,found:{}};
+  if(id==='cups') return {phase:'show',order:[1,2,0],steps:0};
+  return {};
+}
+function openMinigame(id){
+  gameId=id; gameState=initGame(id); gameCursor={x:0,y:0};
+  gameOpen=true;
+  $('gameTitle').textContent=MINIGAMES[id].title;
+  $('gameInstr').textContent=MINIGAMES[id].instr+(G.mgDone[id]?' (Solved already — playing for fun.)':'');
+  gameMsg('');
+  $('gameOverlay').classList.add('open');
+  drawGame();
+  if(id==='runes'||id==='torches') seqPlay();
+  else if(id==='targets') targetsStart();
+  else if(id==='cups') cupsStart();
+  else if(id==='hidden') gameMsg('Taps left: 5');
+}
+function closeMinigame(){
+  gameOpen=false; gameId=null; gameState=null;
+  if(gameTimer){ clearTimeout(gameTimer); gameTimer=null; }
+  $('gameOverlay').classList.remove('open');
+}
+$('gameClose').addEventListener('click',function(){ closeMinigame(); });
+$('mgCanvas').addEventListener('pointerdown',function(e){
+  var r=mgCanvas().getBoundingClientRect();
+  var x=(e.clientX-r.left)*(360/r.width), y=(e.clientY-r.top)*(300/r.height);
+  gameTap(x,y);
+});
+function winMinigame(){
+  var mg=MINIGAMES[gameId];
+  if(gameState) gameState.phase='won';
+  if(!G.mgDone[gameId]){
+    G.mgDone[gameId]=true;
+    if(mg.reward==='shard'){ G.maxEmbers+=1; G.hp=G.maxEmbers*2; gameMsg('Solved! You gained an ember shard — your health grows.'); }
+    else { G.coins+=mg.val; gameMsg('Solved! +'+mg.val+' coins.'); }
+    SFX.fanfare(); persist(); updateHUD();
+    gameTimer=setTimeout(function(){ closeMinigame(); toast(mg.title+' solved! '+(mg.reward==='shard'?'You gained an ember shard!':'You won '+mg.val+' coins.')); },1400);
+  } else {
+    gameMsg('Solved again — no prize this time, but well played.');
+    SFX.fanfare();
+  }
+  drawGame();
+}
+/* ---- sequence games: runes + torches ---- */
+function seqPlay(){
+  var s=gameState;
+  if(!s) return;
+  s.phase='watch'; s.shown=0; s.input=0; s.lit=-1;
+  gameMsg('Watch carefully…');
+  var step=function(){
+    if(!gameOpen||!gameState||gameState!==s) return;
+    if(s.shown>=s.seq.length){ s.phase='play'; s.lit=-1; gameMsg('Your turn — tap them back in order.'); drawGame(); return; }
+    s.lit=s.seq[s.shown]; drawGame(); SFX.select();
+    gameTimer=setTimeout(function(){
+      s.lit=-1; drawGame();
+      gameTimer=setTimeout(function(){ s.shown++; step(); },220);
+    },480);
+  };
+  step();
+}
+function seqTap(idx){
+  var s=gameState;
+  if(!s||s.phase!=='play') return;
+  if(idx===s.seq[s.input]){
+    s.lit=idx; s.input++; SFX.select(); drawGame();
+    if(s.input>=s.seq.length){ s.phase='won'; winMinigame(); return; }
+    setTimeout(function(){ if(gameOpen&&gameId&&gameState===s){ s.lit=-1; drawGame(); } },220);
+  } else {
+    gameMsg('The '+(gameId==='runes'?'runes':'torches')+' fade — watch again.');
+    SFX.bad();
+    seqPlay();
+  }
+}
+/* ---- sliding tiles ---- */
+function tilesSlide(c,r){
+  var s=gameState, b=s.board, i=r*3+c, bl=s.blank;
+  var adj=(Math.abs(bl-i)===3)||(Math.abs(bl-i)===1&&Math.floor(bl/3)===Math.floor(i/3));
+  if(!adj) return;
+  b[bl]=b[i]; b[i]=0; s.blank=i; SFX.select(); drawGame();
+  var win=true;
+  for(var k=0;k<8;k++){ if(b[k]!==k+1) win=false; }
+  if(win) winMinigame();
+}
+/* ---- connect the flow ---- */
+function rotMask(m,r){ for(var i=0;i<r;i++) m=((m<<1)&0xF)|((m>>3)&1); return m; }
+function flowSolved(){
+  var s=gameState;
+  if(!(rotMask(s.masks[1][0],s.rot[1][0])&8)) return false;
+  var seen=[[false,false,false],[false,false,false],[false,false,false]];
+  var q=[[1,0]]; seen[1][0]=true;
+  var dirs=[[-1,0,1,4],[0,1,2,8],[1,0,4,1],[0,-1,8,2]];
+  while(q.length){
+    var cur=q.shift(), r=cur[0], c=cur[1];
+    var m=rotMask(s.masks[r][c],s.rot[r][c]);
+    for(var d=0;d<4;d++){
+      var dr=dirs[d][0], dc=dirs[d][1], bit=dirs[d][2], opp=dirs[d][3];
+      if(!(m&bit)) continue;
+      var nr=r+dr, nc=c+dc;
+      if(nr<0||nr>2||nc<0||nc>2) continue;
+      var nm=rotMask(s.masks[nr][nc],s.rot[nr][nc]);
+      if(!(nm&opp)) continue;
+      if(!seen[nr][nc]){ seen[nr][nc]=true; q.push([nr,nc]); }
+    }
+  }
+  if(!seen[1][2]) return false;
+  return !!(rotMask(s.masks[1][2],s.rot[1][2])&2);
+}
+/* ---- target practice ---- */
+function targetsStart(){
+  var s=gameState;
+  s.round=0; s.hits=0; s.lit=-1; s.phase='play';
+  targetsRound();
+}
+function targetsRound(){
+  var s=gameState;
+  if(!gameOpen||gameId!=='targets'||!s||s.phase!=='play') return;
+  if(s.round>=10){
+    s.phase='done';
+    if(s.hits>=7){ gameMsg('7 or more — fine shooting!'); winMinigame(); }
+    else { gameMsg('Only '+s.hits+' of 10 — the targets reset. Try again.'); SFX.bad();
+      gameTimer=setTimeout(function(){ if(gameOpen&&gameId==='targets') targetsStart(); },1200); }
+    drawGame(); return;
+  }
+  s.lit=Math.floor(Math.random()*9);
+  gameMsg('Round '+(s.round+1)+' of 10 — hits: '+s.hits);
+  drawGame();
+  gameTimer=setTimeout(function(){
+    if(!gameOpen||gameId!=='targets'||!s||s.phase!=='play') return;
+    s.round++; s.lit=-1; targetsRound();
+  },900);
+}
+function targetsHit(c,r){
+  var s=gameState;
+  if(!s||s.phase!=='play'||s.lit<0) return;
+  if(r*3+c===s.lit){
+    s.hits++; s.lit=-1; SFX.hit(); drawGame();
+    gameMsg('Hit! Round '+(s.round+1)+' of 10 — hits: '+s.hits);
+  }
+}
+/* ---- ancient word ---- */
+function wordTap(i){
+  var s=gameState;
+  if(s.used[i]) return;
+  s.used[i]=true; s.answer.push(s.letters[i]); SFX.select(); drawGame();
+  if(s.answer.length===5){
+    if(s.answer.join('')===s.word){ winMinigame(); }
+    else { gameMsg('Not quite — the letters scatter and settle again.'); SFX.bad();
+      s.answer=[]; s.used=[false,false,false,false,false]; drawGame(); }
+  }
+}
+function wordRemove(ai){
+  var s=gameState;
+  var L=s.answer[ai];
+  if(L===undefined) return;
+  s.answer.splice(ai,1);
+  for(var i=0;i<5;i++){ if(s.letters[i]===L&&s.used[i]){ s.used[i]=false; break; } }
+  SFX.select(); drawGame();
+}
+/* ---- hidden rune ---- */
+function hiddenTap(c,r){
+  var s=gameState;
+  if(!s||s.phase==='won') return;
+  var key=c+','+r;
+  if(s.found[key]) return;
+  if(s.taps<=0) return;
+  s.taps--;
+  if(c===s.rune.x&&r===s.rune.y){
+    s.found[key]='rune'; SFX.fanfare(); drawGame();
+    winMinigame(); return;
+  }
+  var d=Math.max(Math.abs(c-s.rune.x),Math.abs(r-s.rune.y));
+  s.found[key]=d<=1?'warm':'cold';
+  SFX.select(); drawGame();
+  if(s.taps<=0){ gameMsg('The rune slips away — the stones shuffle. Try again.'); SFX.bad();
+    gameTimer=setTimeout(function(){ if(gameOpen&&gameId==='hidden'){ gameState=initGame('hidden'); gameMsg('Taps left: 5'); drawGame(); } },1400); }
+  else gameMsg(d<=1?'Warm — very close!':'Cold — far away. Taps left: '+s.taps);
+}
+/* ---- cup game ---- */
+function cupsStart(){
+  var s=gameState;
+  s.phase='show'; s.steps=0;
+  gameMsg('Watch the ember — the middle cup hides it.');
+  drawGame();
+  gameTimer=setTimeout(function(){ if(gameOpen&&gameId==='cups') cupsShuffle(); },1600);
+}
+function cupsShuffle(){
+  var s=gameState;
+  s.phase='shuffle';
+  var step=function(){
+    if(!gameOpen||gameId!=='cups'||!gameState) return;
+    if(s.steps>=5){ s.phase='pick'; gameMsg('Pick a cup — where is the ember?'); drawGame(); return; }
+    var a=Math.floor(Math.random()*3), b=Math.floor(Math.random()*3);
+    if(a===b){ step(); return; }
+    var tmp=s.order[a]; s.order[a]=s.order[b]; s.order[b]=tmp;
+    s.steps++; SFX.select(); drawGame();
+    gameTimer=setTimeout(step,420);
+  };
+  step();
+}
+function cupsPick(i){
+  var s=gameState;
+  if(!s||s.phase!=='pick') return;
+  if(s.order[i]===0){ winMinigame(); }
+  else { gameMsg('Empty — the cups shuffle again.'); SFX.bad(); s.steps=0; drawGame(); gameTimer=setTimeout(function(){ if(gameOpen&&gameId==='cups') cupsShuffle(); },900); }
+}
+/* ---- input routing ---- */
+function gameTap(x,y){
+  if(!gameOpen||!gameState) return;
+  if(gameId==='runes'||gameId==='torches'){
+    var idx=Math.max(0,Math.min(3,Math.floor(x/90)));
+    seqTap(idx); return;
+  }
+  if(gameId==='tiles'||gameId==='flow'||gameId==='targets'){
+    var c=Math.floor((x-45)/90), r=Math.floor((y-15)/90);
+    if(c<0||c>2||r<0||r>2) return;
+    gameCursor={x:c,y:r};
+    gameAct(); return;
+  }
+  if(gameId==='word'){
+    if(y>160&&y<230){ var li=Math.floor((x-33)/60); if(li>=0&&li<5) wordTap(li); }
+    else if(y>40&&y<100){ var ai=Math.floor((x-33)/60); if(ai>=0&&ai<5&&gameState.answer[ai]!==undefined) wordRemove(ai); }
+    return;
+  }
+  if(gameId==='hidden'){
+    var hc=Math.floor((x-52)/64), hr=Math.floor((y-22)/64);
+    if(hc<0||hc>3||hr<0||hr>3) return;
+    gameCursor={x:hc,y:hr};
+    hiddenTap(hc,hr); return;
+  }
+  if(gameId==='cups'){
+    var ci=x<120?0:(x<240?1:2);
+    gameCursor={x:ci,y:0};
+    cupsPick(ci); return;
+  }
+}
+function gameAct(){
+  if(!gameOpen||!gameState) return;
+  var s=gameState;
+  if(gameId==='runes'||gameId==='torches'){ seqTap(gameCursor.x); return; }
+  if(gameId==='tiles'){ tilesSlide(gameCursor.x,gameCursor.y); return; }
+  if(gameId==='flow'){ s.rot[gameCursor.y][gameCursor.x]=(s.rot[gameCursor.y][gameCursor.x]+1)%4; SFX.select(); drawGame(); if(flowSolved()) winMinigame(); return; }
+  if(gameId==='targets'){ targetsHit(gameCursor.x,gameCursor.y); return; }
+  if(gameId==='word'){ wordTap(gameCursor.x); return; }
+  if(gameId==='hidden'){ hiddenTap(gameCursor.x,gameCursor.y); return; }
+  if(gameId==='cups'){ cupsPick(gameCursor.x); return; }
+}
+function gameMove(dx,dy){
+  if(!gameOpen) return;
+  var max={runes:[3,0],torches:[3,0],tiles:[2,2],flow:[2,2],targets:[2,2],word:[4,0],hidden:[3,3],cups:[2,0]}[gameId];
+  gameCursor.x=Math.max(0,Math.min(max[0],gameCursor.x+dx));
+  gameCursor.y=Math.max(0,Math.min(max[1],gameCursor.y+dy));
+  drawGame();
+}
+function gameType(k){
+  if(gameId!=='word') return;
+  var s=gameState, L=k.toUpperCase();
+  for(var i=0;i<5;i++){ if(s.letters[i]===L&&!s.used[i]){ wordTap(i); return; } }
+}
+/* ---- drawing ---- */
+function drawGame(){
+  var cv=mgCanvas(), g=cv.getContext('2d');
+  if(!gameOpen||!gameState) return;
+  var s=gameState;
+  g.clearRect(0,0,360,300);
+  g.fillStyle='#0d1a2a'; g.fillRect(0,0,360,300);
+  g.textAlign='center'; g.textBaseline='middle';
+  if(gameId==='runes'||gameId==='torches'){
+    var cols=['#ffd97a','#7ac8ff','#ff9a7a','#b4ff9a'];
+    var syms=['✦','◆','●','▲'];
+    for(var i=0;i<4;i++){
+      var cx=45+i*90;
+      if(gameId==='runes'){
+        g.save();
+        if(s.lit===i){ g.shadowColor=cols[i]; g.shadowBlur=26; g.fillStyle=cols[i]; }
+        else g.fillStyle='#22354f';
+        g.beginPath(); g.arc(cx,150,36,0,Math.PI*2); g.fill();
+        g.restore();
+        g.strokeStyle=cols[i]; g.lineWidth=3; g.beginPath(); g.arc(cx,150,36,0,Math.PI*2); g.stroke();
+        g.fillStyle=s.lit===i?'#10202f':'#cfe0f4'; g.font='bold 26px Georgia'; g.fillText(syms[i],cx,150);
+      } else {
+        g.fillStyle='#6b4a2f'; g.fillRect(cx-4,150,8,90);
+        g.fillStyle='#8a6d2f'; g.fillRect(cx-14,138,28,14);
+        if(s.lit===i){
+          g.save(); g.shadowColor='#ff9a2a'; g.shadowBlur=26;
+          g.fillStyle='#ffb347'; g.beginPath(); g.ellipse(cx,118,14,22,0,0,Math.PI*2); g.fill();
+          g.fillStyle='#ffe08a'; g.beginPath(); g.ellipse(cx,124,8,12,0,0,Math.PI*2); g.fill();
+          g.restore();
+        } else {
+          g.fillStyle='#3a3f4a'; g.beginPath(); g.ellipse(cx,122,9,13,0,0,Math.PI*2); g.fill();
+        }
+      }
+      if(s.phase==='play'&&gameCursor.x===i){
+        g.strokeStyle='#ffd97a'; g.lineWidth=3;
+        if(gameId==='runes'){ g.beginPath(); g.arc(cx,150,44,0,Math.PI*2); g.stroke(); }
+        else g.strokeRect(cx-24,96,48,150);
+      }
+    }
+    g.fillStyle='#b9c6de'; g.font='14px Georgia';
+    g.fillText(s.phase==='watch'?'Watch…':(s.phase==='play'?'Your turn — '+s.input+' of 4':'Solved!'),180,270);
+    return;
+  }
+  if(gameId==='tiles'){
+    for(var r=0;r<3;r++) for(var c=0;c<3;c++){
+      var v=s.board[r*3+c], x=45+c*90, y=15+r*90;
+      if(v===0){ g.fillStyle='#101c2c'; g.fillRect(x+3,y+3,84,84); continue; }
+      g.fillStyle='#2a4a6b'; g.fillRect(x+3,y+3,84,84);
+      g.strokeStyle='#5a7aa8'; g.lineWidth=2; g.strokeRect(x+3,y+3,84,84);
+      g.fillStyle='#fff'; g.font='bold 34px Georgia'; g.fillText(v,x+45,y+45);
+    }
+    g.strokeStyle='#ffd97a'; g.lineWidth=3; g.strokeRect(45+gameCursor.x*90+3,15+gameCursor.y*90+3,84,84);
+    return;
+  }
+  if(gameId==='flow'){
+    g.fillStyle='#4a90d9'; g.beginPath(); g.arc(28,150,12,0,Math.PI*2); g.fill();
+    g.fillStyle='#bfe0ff'; g.font='bold 14px Georgia'; g.fillText('~',28,150);
+    g.fillStyle='#4a90d9'; g.beginPath(); g.arc(332,150,12,0,Math.PI*2); g.fill();
+    for(var fr=0;fr<3;fr++) for(var fc=0;fc<3;fc++){
+      var fx=45+fc*90, fy=15+fr*90;
+      g.fillStyle='#16283e'; g.fillRect(fx+3,fy+3,84,84);
+      g.strokeStyle='#2a4a6b'; g.lineWidth=1; g.strokeRect(fx+3,fy+3,84,84);
+      var m=rotMask(s.masks[fr][fc],s.rot[fr][fc]);
+      g.strokeStyle='#d8a84a'; g.lineWidth=10; g.lineCap='round';
+      var pcx=fx+45, pcy=fy+45;
+      if(m&1){ g.beginPath(); g.moveTo(pcx,pcy); g.lineTo(pcx,fy+3); g.stroke(); }
+      if(m&2){ g.beginPath(); g.moveTo(pcx,pcy); g.lineTo(fx+87,pcy); g.stroke(); }
+      if(m&4){ g.beginPath(); g.moveTo(pcx,pcy); g.lineTo(pcx,fy+87); g.stroke(); }
+      if(m&8){ g.beginPath(); g.moveTo(pcx,pcy); g.lineTo(fx+3,pcy); g.stroke(); }
+      g.fillStyle='#d8a84a'; g.beginPath(); g.arc(pcx,pcy,6,0,Math.PI*2); g.fill();
+    }
+    g.strokeStyle='#ffd97a'; g.lineWidth=3; g.strokeRect(45+gameCursor.x*90+3,15+gameCursor.y*90+3,84,84);
+    return;
+  }
+  if(gameId==='targets'){
+    for(var tr=0;tr<3;tr++) for(var tc=0;tc<3;tc++){
+      var tx=45+tc*90+45, ty=15+tr*90+45, idx=tr*3+tc;
+      g.fillStyle='#e8e8e8'; g.beginPath(); g.arc(tx,ty,30,0,Math.PI*2); g.fill();
+      g.fillStyle='#c0392b'; g.beginPath(); g.arc(tx,ty,20,0,Math.PI*2); g.fill();
+      g.fillStyle='#e8e8e8'; g.beginPath(); g.arc(tx,ty,11,0,Math.PI*2); g.fill();
+      g.fillStyle='#c0392b'; g.beginPath(); g.arc(tx,ty,5,0,Math.PI*2); g.fill();
+      if(s.lit===idx){
+        g.save(); g.shadowColor='#ffd97a'; g.shadowBlur=20;
+        g.strokeStyle='#ffd97a'; g.lineWidth=4; g.beginPath(); g.arc(tx,ty,36,0,Math.PI*2); g.stroke(); g.restore();
+      }
+    }
+    g.strokeStyle='#ffd97a'; g.lineWidth=3; g.strokeRect(45+gameCursor.x*90+3,15+gameCursor.y*90+3,84,84);
+    return;
+  }
+  if(gameId==='word'){
+    g.fillStyle='#b9c6de'; g.font='14px Georgia'; g.fillText('The word has 5 letters.',180,24);
+    for(var wi=0;wi<5;wi++){
+      var ax=33+wi*60;
+      g.fillStyle='#22354f'; g.fillRect(ax,40,54,60);
+      g.strokeStyle='#5a7aa8'; g.lineWidth=2; g.strokeRect(ax,40,54,60);
+      if(s.answer[wi]){ g.fillStyle='#ffd97a'; g.font='bold 30px Georgia'; g.fillText(s.answer[wi],ax+27,70); }
+    }
+    for(var li=0;li<5;li++){
+      var lx=33+li*60;
+      g.fillStyle=s.used[li]?'#16202f':'#2a4a6b'; g.fillRect(lx,170,54,60);
+      g.strokeStyle=s.used[li]?'#2a3a50':'#5a7aa8'; g.lineWidth=2; g.strokeRect(lx,170,54,60);
+      g.fillStyle=s.used[li]?'#4a5a70':'#fff'; g.font='bold 30px Georgia'; g.fillText(s.letters[li],lx+27,200);
+      if(gameCursor.x===li){ g.strokeStyle='#ffd97a'; g.lineWidth=3; g.strokeRect(lx-3,167,60,66); }
+    }
+    return;
+  }
+  if(gameId==='hidden'){
+    for(var hr=0;hr<4;hr++) for(var hc=0;hc<4;hc++){
+      var hx=52+hc*64, hy=22+hr*64, hk=hc+','+hr;
+      g.fillStyle='#3a4a5a'; g.fillRect(hx+3,hy+3,58,58);
+      g.strokeStyle='#5a6a7a'; g.lineWidth=2; g.strokeRect(hx+3,hy+3,58,58);
+      if(s.found[hk]==='warm'){ g.fillStyle='#ff9a2a'; g.beginPath(); g.arc(hx+32,hy+32,10,0,Math.PI*2); g.fill(); }
+      else if(s.found[hk]==='cold'){ g.fillStyle='#4a90d9'; g.beginPath(); g.arc(hx+32,hy+32,10,0,Math.PI*2); g.fill(); }
+      else if(s.found[hk]==='rune'){ g.fillStyle='#ffd97a'; g.font='bold 28px Georgia'; g.fillText('✦',hx+32,hy+32); }
+    }
+    g.strokeStyle='#ffd97a'; g.lineWidth=3; g.strokeRect(52+gameCursor.x*64+3,22+gameCursor.y*64+3,58,58);
+    return;
+  }
+  if(gameId==='cups'){
+    var syms2=['✦','◆','●'];
+    for(var cp=0;cp<3;cp++){
+      var ccx=60+cp*120, raised=(s.phase==='show'&&cp===1);
+      var cy0=raised?205:245, top=raised?120:160;
+      if(raised){
+        g.save(); g.shadowColor='#ff9a2a'; g.shadowBlur=22;
+        g.fillStyle='#ffb347'; g.beginPath(); g.arc(ccx,240,16,0,Math.PI*2); g.fill(); g.restore();
+      }
+      g.fillStyle='#7a2e2e';
+      g.beginPath(); g.moveTo(ccx-28,top); g.lineTo(ccx+28,top); g.lineTo(ccx+40,cy0); g.lineTo(ccx-40,cy0); g.closePath(); g.fill();
+      g.strokeStyle='#d8a84a'; g.lineWidth=3; g.stroke();
+      g.fillStyle='#ffd97a'; g.font='bold 18px Georgia'; g.fillText(syms2[s.order[cp]],ccx,(top+cy0)/2+2);
+      if(gameCursor.x===cp&&s.phase==='pick'){
+        g.strokeStyle='#ffd97a'; g.lineWidth=3; g.beginPath(); g.ellipse(ccx,cy0+8,48,10,0,0,Math.PI*2); g.stroke();
+      }
+    }
+    return;
+  }
+}
 /* Thornwood entry narration: plays once, the first time the hero walks
    into the Forest Edge, over the forest artwork, in the narrator's voice. */
 var THORN_ENTRY_PAGES=[
@@ -2339,7 +2846,7 @@ function buildScreen(id){
   return out;
 }
 /* ================= RUNTIME ================= */
-var player={x:480,y:520,dir:'down',atkT:0,invuln:0,moving:false};
+var player={x:480,y:520,dir:'down',atkT:0,rangedT:0,invuln:0,moving:false};
 var enemies=[], pickups=[], particles=[], npcs=[], herbsHere=[], digHere=[], crystalsHere=[], oilHere=[], blanketHere=[], lightsHere=[];
 var goatHere=null, goat={x:0,y:0};
 var curScreen='village', trans=null, inGame=false, paused=false;
@@ -2354,7 +2861,7 @@ function diffCounts(base){
 }
 function spawnScreen(id){
   var sc=SCREENS[id];
-  enemies=[]; pickups=[]; npcs=[]; herbsHere=[]; digHere=[]; crystalsHere=[]; oilHere=[]; blanketHere=[]; lightsHere=[];
+  enemies=[]; pickups=[]; npcs=[]; projectiles=[]; herbsHere=[]; digHere=[]; crystalsHere=[]; oilHere=[]; blanketHere=[]; lightsHere=[];
   goatHere=null;
   var rand=rng(id.length*31+7), eidx=0;
   var spots=[[240,180],[700,200],[300,440],[720,430],[480,160],[180,320],[780,320],[560,480]];
@@ -2435,6 +2942,7 @@ function enterScreen(id,fromDir){
   if(id==='wpath'&&G&&!G.whiteSeen){ G.whiteSeen=true; persist(); startWhitepeakEntry(); }
   if(id==='medge'&&G&&!G.mistSeen){ G.mistSeen=true; persist(); startMistmireEntry(); }
   if(id==='rgate'&&G&&!G.remnantSeen){ G.remnantSeen=true; persist(); startRemnantEntry(); }
+  for(var mgi3 in MINIGAMES){ var mg4=MINIGAMES[mgi3]; if(id===mg4.screen&&G.mgSeen&&!G.mgSeen[mgi3]){ G.mgSeen[mgi3]=true; persist(); toast('A game stone glimmers here \u2014 press E to play '+mg4.title+'.'); break; } }
   if(G.goatFollow){ goat.x=player.x+30; goat.y=player.y+30; }
   G.x=Math.round(player.x); G.y=Math.round(player.y); persist();
   flashName(SCREENS[id].name);
@@ -2882,6 +3390,9 @@ function drawWorld(g,screenId,ox,oy,drawDynamics){
     if(npcHasQuest(n.id)){ g.fillStyle='#ffd97a'; g.font='bold 20px Georgia'; g.fillText('!',n.x,n.y-44+Math.sin(Date.now()/300)*2); }
   });
   enemies.forEach(function(e){ drawEnemy(g,e); });
+  projectiles.forEach(function(p){ drawProjectile(g,p); });
+  /* minigame stones glow while unsolved */
+  for(var mgi2 in MINIGAMES){ var mg3=MINIGAMES[mgi2]; if(mg3.screen===screenId&&!G.mgDone[mgi2]){ g.save(); g.shadowColor='rgba(255,210,90,.9)'; g.shadowBlur=14; g.fillStyle='#ffd97a'; g.font='bold 22px Georgia'; g.textAlign='center'; g.fillText('\u2726',mg3.x,mg3.y-24); g.restore(); } }
   /* player */
   drawHeroSprite(g);
   /* particles */
@@ -2901,7 +3412,7 @@ function npcHasQuest(id){
   if(!G) return false;
   if(id==='bram') return G.quest==='none';
   if(id==='mira') return G.quest==='deliver';
-  if(id==='renn') return (!G.weapon&&(G.quest==='renn'||G.quest==='done'))||(G.weapon&&(G.trouble==='none'||(G.trouble==='active'&&(G.goblinKills||0)>=6)));
+  if(id==='renn') return (!G.weapon&&(G.quest==='renn'||G.quest==='done'))||(G.weapon&&(G.trouble==='none'||(G.trouble==='active'&&(G.goblinKills||0)>=6)||(G.trouble==='done'&&G.sidearmQuest==='none'&&!G.sidearm&&HEROES[G.hero].id!=='mage')||(G.sidearmQuest==='given'&&(G.wolfKills||0)>=4)));
   if(id==='girl') return G.girlMet&&G.girlChests<4&&girlState!=='idle';
   if(id==='dell') return G.goat==='none'||G.goat==='following';
   if(id==='joren') return G.axe==='none'||G.axe==='found';
@@ -3016,6 +3527,10 @@ function talkTo(npc){
     else if(G.weapon&&G.trouble==='none'){ openDialogue('renn',LINES.rennTrouble,function(){ G.trouble='active'; persist(); updateHUD(); toast('Quest: defeat 6 goblins for Captain Renn'); if((G.goblinKills||0)>=6) toast('You have already thinned them out — report back to Renn!'); }); }
     else if(G.weapon&&G.trouble==='active'&&(G.goblinKills||0)>=6){ openDialogue('renn',LINES.rennTroubleDone,function(){ completeTrouble(); }); }
     else if(G.weapon&&G.trouble==='active'){ openDialogue('renn',LINES.rennTroubleWait); }
+    else if(G.weapon&&G.trouble==='done'&&G.sidearmQuest==='none'&&!G.sidearm&&HEROES[G.hero].id!=='mage'){ openDialogue('renn',LINES.rennHunt,function(){ G.sidearmQuest='given'; G.wolfKills=0; persist(); updateHUD(); toast('Quest: defeat 4 shadow wolves for Captain Renn'); }); }
+    else if(G.weapon&&G.sidearmQuest==='given'&&(G.wolfKills||0)>=4){ openDialogue('renn',LINES.rennHuntDone,function(){ grantSidearm(); }); }
+    else if(G.weapon&&G.sidearmQuest==='given'){ openDialogue('renn',LINES.rennHuntWait,function(){ openShop('renn'); }); }
+    else if(G.weapon&&G.trouble==='done'&&HEROES[G.hero].id==='mage'){ openDialogue('renn',LINES.rennStaff,function(){ openShop('renn'); }); }
     else if(G.weapon) openDialogue('renn',LINES.rennRepeat,function(){ openShop('renn'); });
     else openDialogue('renn',first?LINES.rennFirst:LINES.rennRepeat);
     persist();
@@ -3176,11 +3691,14 @@ function tryInteract(){
   for(i=0;i<blanketHere.length;i++){ if(dist(player.x,player.y,blanketHere[i].x,blanketHere[i].y)<56){ collectBlanket(i); return; } }
   for(i=0;i<lightsHere.length;i++){ if(dist(player.x,player.y,lightsHere[i].x,lightsHere[i].y)<56){ collectLight(i); return; } }
   if(curScreen==='fmaze'&&!G.mazeDone&&dist(player.x,player.y,480,320)<56){ openMaze(); return; }
+  for(var mgi in MINIGAMES){ var mg2=MINIGAMES[mgi]; if(curScreen===mg2.screen&&dist(player.x,player.y,mg2.x,mg2.y)<70){ openMinigame(mgi); return; } }
   if(curScreen==='doasis'&&G.water==='skin'&&dist(player.x,player.y,480,330)<70){ fillWaterskin(); return; }
   if(isShrine(curScreen)&&dist(player.x,player.y,480,240)<84){
     G.hp=G.maxEmbers*2; lastShrine=curScreen; G.lastShrine=curScreen; G.x=Math.round(player.x); G.y=Math.round(player.y);
+    var refilled=false;
+    if(G.sidearm&&G.diff==='Medium'&&typeof G.sidearmAmmo==='number'&&G.sidearmAmmo<12){ G.sidearmAmmo=12; refilled=true; }
     persist(); SFX.shrine(); updateHUD();
-    toast('You rest at the shrine. Embers restored — game saved.');
+    toast('You rest at the shrine. Embers restored \u2014 game saved.'+(refilled?' Your quiver is full again.':''));
     return;
   }
   for(i=0;i<herbsHere.length;i++){ if(dist(player.x,player.y,herbsHere[i].x,herbsHere[i].y)<46){ collectHerb(i); return; } }
@@ -3261,6 +3779,75 @@ function doAttack(){
     }
   });
 }
+/* ================= RANGED ATTACK (second weapon) ================= */
+/* Ranged damage is one tier below the hero's current melee tier (min 1). */
+var projectiles=[];
+function rangedDamage(){ return Math.max(1,(G.weaponTier||1)-1); }
+function doRanged(){
+  if(!inGame||dlgOpen||itemOpen||paused||trans||shopOpen||mazeOpen||gameOpen) return;
+  audioInit();
+  if(!G.sidearm){
+    if(HEROES[G.hero].id==='mage') toast('Your staff strikes near and far \u2014 you need no second weapon.');
+    else if(HEROES[G.hero].id==='bow') toast('Earn the Hunter\u2019s Bow from Renn to fight from a distance.');
+    else toast('No long-range weapon yet \u2014 Captain Renn can help you earn one.');
+    return;
+  }
+  if(player.rangedT>0) return;
+  var sa=sidearmOf();
+  if(G.diff!=='Easy'){
+    if((G.sidearmAmmo||0)<=0){ toast('Out of '+sa.ammo.toLowerCase()+' \u2014 '+(G.diff==='Medium'?'rest at a shrine to refill.':'buy more at Renn\u2019s Armory.')); return; }
+    G.sidearmAmmo--;
+  }
+  player.rangedT=.45; SFX.shoot();
+  var dx=0,dy=0;
+  if(player.dir==='up') dy=-1; else if(player.dir==='down') dy=1;
+  else if(player.dir==='left') dx=-1; else dx=1;
+  projectiles.push({x:player.x+dx*26,y:player.y+dy*26,dx:dx,dy:dy,kind:sa.proj,life:.85,spin:0});
+  updateHUD(); persist();
+}
+function updateProjectiles(dt){
+  for(var i=projectiles.length-1;i>=0;i--){
+    var p=projectiles[i];
+    p.life-=dt; p.spin+=dt*12;
+    p.x+=p.dx*520*dt; p.y+=p.dy*520*dt;
+    var dead=p.life<=0||p.x<8||p.x>W-8||p.y<8||p.y>H-8;
+    if(!dead){
+      for(var j=0;j<enemies.length;j++){
+        var e=enemies[j];
+        if(e.dying) continue;
+        if(dist(p.x,p.y,e.x,e.y)<(e.boss?56:30)){
+          e.hp-=rangedDamage(); e.hitT=.18; SFX.hit();
+          burst(e.x,e.y,4,['#ffd97a','#ffb347']);
+          if(e.hp<=0) killEnemy(e);
+          dead=true; break;
+        }
+      }
+    }
+    if(dead) projectiles.splice(i,1);
+  }
+}
+function drawProjectile(g,p){
+  g.save(); g.translate(p.x,p.y);
+  var ang=Math.atan2(p.dy,p.dx);
+  g.rotate(ang);
+  if(p.kind==='arrow'){
+    g.strokeStyle='#d8b878'; g.lineWidth=3; g.beginPath(); g.moveTo(-12,0); g.lineTo(8,0); g.stroke();
+    g.fillStyle='#e8e8e8'; g.beginPath(); g.moveTo(14,0); g.lineTo(6,-5); g.lineTo(6,5); g.closePath(); g.fill();
+  } else if(p.kind==='javelin'){
+    g.strokeStyle='#b89058'; g.lineWidth=4; g.beginPath(); g.moveTo(-16,0); g.lineTo(10,0); g.stroke();
+    g.fillStyle='#dfe8f0'; g.beginPath(); g.moveTo(18,0); g.lineTo(8,-5); g.lineTo(8,5); g.closePath(); g.fill();
+  } else if(p.kind==='dagger'){
+    g.fillStyle='#dfe8f0'; g.beginPath(); g.moveTo(14,0); g.lineTo(2,-4); g.lineTo(-6,0); g.lineTo(2,4); g.closePath(); g.fill();
+    g.strokeStyle='#8a6d2f'; g.lineWidth=3; g.beginPath(); g.moveTo(-6,0); g.lineTo(-13,0); g.stroke();
+  } else { /* axe: spins as it flies */
+    g.rotate(p.spin);
+    g.strokeStyle='#8a6d2f'; g.lineWidth=4; g.beginPath(); g.moveTo(-10,-10); g.lineTo(10,10); g.stroke();
+    g.fillStyle='#c8ccd4';
+    g.beginPath(); g.moveTo(0,-14); g.lineTo(8,-4); g.lineTo(-8,-4); g.closePath(); g.fill();
+    g.beginPath(); g.moveTo(0,14); g.lineTo(8,4); g.lineTo(-8,4); g.closePath(); g.fill();
+  }
+  g.restore();
+}
 function killEnemy(e){
   if(e.boss){ if(e.bossId==='thornwolf') killThornwolf(e); else if(e.bossId==='colossus') killColossus(e); else if(e.bossId==='wraith') killWraith(e); else if(e.bossId==='shadowknight') killShadow(e); else killGrak(e); return; }
   enemies.splice(enemies.indexOf(e),1);
@@ -3274,6 +3861,7 @@ function killEnemy(e){
   pickups.push({kind:'coin',x:e.x,y:e.y,val:val});
   /* every shadow wolf leaves a pelt: Sable buys them, 5 coins apiece */
   if(e.kind==='wolf'){ G.pelts=(G.pelts||0)+1; }
+  if(e.kind==='wolf'&&G.sidearmQuest==='given'){ G.wolfKills=(G.wolfKills||0)+1; if(G.wolfKills>=4) toast('That is 4 shadow wolves \u2014 report back to Captain Renn!'); }
   if(G.trouble==='active'&&(G.goblinKills||0)>=6) toast('That is 6 goblins — report back to Captain Renn!');
   persist();
 }
@@ -3550,6 +4138,7 @@ function update(dt){
     if(wedged||!collide(player.x,ny)) player.y=ny;
   }
   if(player.atkT>0) player.atkT-=dt;
+  if(player.rangedT>0) player.rangedT-=dt;
   if(player.invuln>0) player.invuln-=dt;
   /* edges */
   var M=14;
@@ -3600,6 +4189,7 @@ function update(dt){
       if(G.hp<=0){ die(); }
     }
   });
+  updateProjectiles(dt);
   /* girl follow / lead */
   var girl=npcs.filter(function(n){ return n.id==='girl'; })[0];
   if(girl&&curScreen==='village'){ var _gx0=girl.x,_gy0=girl.y;
@@ -3675,7 +4265,7 @@ function updateHUD(){
   }
   $('coinCount').textContent=G.coins;
   var ks=(G.keys||[]);
-  $('keyRow').textContent='🗝 Keys: '+(ks.length?ks.map(function(k){ return KEY_NAMES[k]||k; }).join(', '):'none yet')+' · '+(G.weapon?weaponName():'No weapon')+(G.armorTier?' · '+ARMOR_NAMES[G.armorTier-1]:'');
+  $('keyRow').textContent='🗝 Keys: '+(ks.length?ks.map(function(k){ return KEY_NAMES[k]||k; }).join(', '):'none yet')+' · '+(G.weapon?weaponName():'No weapon')+(G.armorTier?' · '+ARMOR_NAMES[G.armorTier-1]:'')+sidearmAmmoText();
   var qr=
     G.quest==='none'?'✦ Speak with Elder Bram in the village':
     G.quest==='collect'?'✦ Sunleaf for Mira: '+Math.min(G.herbs,3)+'/3 — North Meadow & Herb Field':
@@ -3683,6 +4273,7 @@ function updateHUD(){
     (G.quest==='renn'||(G.quest==='done'&&!G.weapon))?'✦ Go see Captain Renn in the village':
     G.grakDown?'✦ Grak defeated — Meadow Key secured (1 of 4)':'✦ Armed and ready — explore the Meadowlands';
   if(G.trouble==='active') qr+=' · 👹 Goblins '+(Math.min(G.goblinKills||0,6))+'/6 for Renn';
+  if(G.sidearmQuest==='given') qr+=' · 🏹 Shadow wolves '+(G.wolfKills||0)+'/4 for Renn';
   if(G.goat==='active') qr+=' · 🐐 Find Bessie the goat';
   if(G.goat==='following') qr+=' · 🐐 Bring Bessie home to Dell';
   if(G.girlMet&&G.girlChests<4) qr+=' · ✦ Secrets '+G.girlChests+'/4';
@@ -3804,6 +4395,7 @@ function openBag(){
   var rows=[];
   rows.push(['Ember (the ancient light)','×1']);
   if(G.weapon) rows.push([weaponName()+' (tier '+(G.weaponTier||1)+')','equipped']);
+  if(G.sidearm){ var _sa=sidearmOf(); rows.push([_sa.name+' (long-range)','equipped \u00b7 '+(G.sidearmAmmo===null||G.sidearmAmmo===undefined?'\u221e':G.sidearmAmmo)+' '+_sa.ammo]); }
   if((G.armorTier||0)>0) rows.push([ARMOR_NAMES[G.armorTier-1]+' (tier '+G.armorTier+')','equipped']);
   rows.push(['Sunleaf sprigs', '×'+G.herbs, G.herbs>0?'<button class="use-btn" data-kind="herb">Use</button>':'']);
   rows.push(['Healing Potions', '×'+(G.potions||0), (G.potions||0)>0?'<button class="use-btn" data-kind="potion">Use</button>':'']);
@@ -3853,9 +4445,20 @@ window.addEventListener('keydown',function(e){
     else if(k==='arrowright'||k==='d') moveMaze(1,0);
     return;
   }
+  if(gameOpen){
+    if(k==='escape'||k==='e') closeMinigame();
+    else if(k==='arrowup'||k==='w') gameMove(0,-1);
+    else if(k==='arrowdown'||k==='s') gameMove(0,1);
+    else if(k==='arrowleft'||k==='a') gameMove(-1,0);
+    else if(k==='arrowright'||k==='d') gameMove(1,0);
+    else if(k===' '||k==='enter') gameAct();
+    else if(gameId==='word'&&/^[a-z]$/.test(k)) gameType(k);
+    return;
+  }
   keys[k===' '?'space':k]=true;
   if(!inGame) return;
   if(k===' '||k==='j') doAttack();
+  if(k==='k') doRanged();
   if(k==='e') tryInteract();
   if(k==='escape'||k==='p'){ if($('howOverlay').classList.contains('open')) $('howOverlay').classList.remove('open'); else if(paused) closePause(); else openPause(); }
   if(k==='m'){ if($('mapOverlay').classList.contains('open')) $('mapOverlay').classList.remove('open'); else { drawBigMap(); $('mapOverlay').classList.add('open'); } }
@@ -3877,6 +4480,8 @@ function stickEnd(e){ if(e.pointerId===stickId){ stickId=null; joy.x=0; joy.y=0;
 stick.addEventListener('pointerup',stickEnd); stick.addEventListener('pointercancel',stickEnd);
 $('tbAttack').addEventListener('pointerdown',function(e){ e.preventDefault(); audioInit();
   if(itemOpen) closeItemFind(); else if(dlgOpen) advanceDialogue(); else doAttack(); });
+$('tbRanged').addEventListener('pointerdown',function(e){ e.preventDefault(); audioInit();
+  if(itemOpen) closeItemFind(); else if(dlgOpen) advanceDialogue(); else doRanged(); });
 $('tbInteract').addEventListener('pointerdown',function(e){ e.preventDefault(); audioInit();
   if(itemOpen) closeItemFind(); else if(dlgOpen) advanceDialogue(); else tryInteract(); });
 document.addEventListener('pointerdown',function(){ audioInit(); },{once:true});
@@ -3932,6 +4537,12 @@ function enterGame(fromCutscene){
   if(G.weaponTier===undefined) G.weaponTier=G.weapon?1:0;
   if(G.armorTier===undefined) G.armorTier=0;
   if(G.bagSize===undefined) G.bagSize=12;
+  if(G.sidearm===undefined) G.sidearm=false;
+  if(G.sidearmQuest===undefined) G.sidearmQuest='none';
+  if(G.wolfKills===undefined) G.wolfKills=0;
+  if(G.sidearmAmmo===undefined) G.sidearmAmmo=0;
+  if(!G.mgDone) G.mgDone={};
+  if(!G.mgSeen) G.mgSeen={};
   if(G.goat===undefined) G.goat='none';
   if(G.goatFollow===undefined) G.goatFollow=false;
   if(G.trouble===undefined) G.trouble='none';
