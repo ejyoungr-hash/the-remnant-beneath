@@ -493,15 +493,15 @@ var THORN_AFTER_PAGES=[
  "East lies Dustfall, where the sand hides old things. The Dust Key waits there."
 ];
 var THORN_KEY_WORDS="You got the Thorn Key! Two of four. When all four are yours, they become the master key.";
-/* The Dune Colossus speaks: the meeting is the narrator plus the Colossus voice. */
+/* Korvath, the Dune Colossus, speaks: the meeting is the narrator plus the Colossus voice. */
 var COLOSSUS_MEET_PAGES=[
- "The sand shifts beneath your feet, and the Dune Colossus rises, stone grinding on stone, taller than the dunes themselves.",
+ "The sand shifts beneath your feet, and Korvath, the Dune Colossus, rises, stone grinding on stone, taller than the dunes themselves.",
  "It speaks in a voice like mountains moving. \u2018The sand remembers,\u2019 it says. \u2018You do not belong here.\u2019",
  "It has guarded this place since before your people had a name, and it will not let you pass."
 ];
-/* Narration after the Dune Colossus is beaten: plays right after the Dust Key item find. */
+/* Narration after Korvath is beaten: plays right after the Dust Key item find. */
 var COLOSSUS_AFTER_PAGES=[
- "The Dune Colossus dissolves into embers, and the desert goes quiet. The sand settles, and the sun feels a little less cruel.",
+ "Korvath dissolves into embers, and the desert goes quiet. The sand settles, and the sun feels a little less cruel.",
  "The third key is yours. One more waits in the far north, and far below, the fifth realm still sleeps.",
  "North lies Whitepeak, where the storm never sleeps. The Peak Key waits there."
 ];
@@ -1136,7 +1136,7 @@ var SCREENS={
  ddunes:{name:'The Dunes',col:3,row:1,type:'desert',realm:'dustfall',goblins:0,wisps:1,golems:1},
  doasis:{name:'The Oasis',col:4,row:1,type:'desert',realm:'dustfall',goblins:0,wisps:1,golems:1},
  druins:{name:'Buried Ruins',col:5,row:1,type:'desert',realm:'dustfall',goblins:0,wisps:2,golems:2},
- darena:{name:'Dune Colossus Arena',col:5,row:0,type:'desert',realm:'dustfall',goblins:0,wisps:0,golems:0},
+ darena:{name:'Korvath’s Arena',col:5,row:0,type:'desert',realm:'dustfall',goblins:0,wisps:0,golems:0},
  dbridge:{name:'Broken Bridge',col:4,row:0,type:'desert',realm:'dustfall',goblins:0,wisps:1,golems:1},
  dtower:{name:'Ruined Watchtower',col:3,row:0,type:'desert',realm:'dustfall',goblins:0,wisps:0,golems:1},
  dpit:{name:'Sand Pit',col:3,row:2,type:'desert',realm:'dustfall',goblins:0,wisps:1,golems:1},
@@ -1578,7 +1578,7 @@ function endColossusMeeting(){
   bossMeetActive=false;cutActive=false;stopVoice();
   who('THE OLD STORIES');
   showView('gameView');
-  toast('The fight begins — defeat the Dune Colossus, guardian of the Dust Key!');
+  toast('The fight begins — defeat Korvath, guardian of the Dust Key!');
 }
 function startColossusAfter(){
   bossMeetActive=false;cutStandalone=true;cutActive=true;
@@ -1704,7 +1704,7 @@ var DUST_ENTRY_PAGES=[
  "The sand stretches to every horizon, and the sun does not forgive.",
  "The old world's ruins lie buried here, and the desert keeps what it takes.",
  "Water is worth more than gold in Dustfall, and the traders know it.",
- "The Dune Colossus sleeps beneath the sand, and it has slept for a thousand years."
+ "Korvath sleeps beneath the sand, and he has slept for a thousand years."
 ];
 var WHITEPEAK_ENTRY_PAGES=[
  "The cold bites through every layer, and the mountain hums with a song only the storm knows.",
@@ -2985,7 +2985,7 @@ function finishColossus(e){
   if(!hasKey('dust')) G.keys.push('dust');
   bossMusic=false;
   persist(); updateHUD();
-  showItemFind(DUST_KEY_IMG,COLOSSUS_KEY_WORDS,function(){ toast('The Dune Colossus dropped 50 coins — and the Dust Key is yours (3 of 4).'); startColossusAfter(); });
+  showItemFind(DUST_KEY_IMG,COLOSSUS_KEY_WORDS,function(){ toast('Korvath dropped 50 coins — and the Dust Key is yours (3 of 4).'); startColossusAfter(); });
 }
 function killWraith(e){
   e.dying=true; e.dieT=1.8; e.hp=0;

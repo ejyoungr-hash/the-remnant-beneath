@@ -58,7 +58,7 @@ The desert east of the meadow. Dark wisps and stone golems. Slice 1: all 10 scre
 1. The Dunes — Zeke's camp
 2. The Oasis — water for the Water Run
 3. Buried Ruins — wisps and golems
-4. Dune Colossus Arena — the boss room
+4. Korvath's Arena — the boss room
 5. Broken Bridge — the crossing over the canyon from the East Meadow
 6. Dead Palms — Old Maren's relic, where the two dead palms lean together
 7. Sand Pit — dig for coins
@@ -116,7 +116,7 @@ One boss per realm. Each drops a key. The four keys combine into one Master Key 
 |---|---|---|---|
 | Grak, the Goblin King | Meadowlands | Meadow Key | Built, live |
 | Thornwolf, alpha of the shadow wolves | Thornwood | Thorn Key | Slice 3, next |
-| Dune Colossus, ancient sandstone golem | Dustfall | Dust Key | Designed |
+| Korvath, the Dune Colossus, ancient sandstone golem | Dustfall | Dust Key | Designed |
 | Storm Wraith, ice spirit | Whitepeak | Peak Key | Designed |
 | Shadow Knight | The Remnant | Final boss | Designed |
 
