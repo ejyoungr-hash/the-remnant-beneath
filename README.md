@@ -80,8 +80,8 @@ The snowy mountains north of the meadow. Shadow wolves and stone golems.
 9. Crystal Field — more Storm Crystals
 10. Mountain Shrine — save shrine
 
-### Mistmire (10) — designed, not built yet
-The swamp south of the meadow. Dark wisps, shadow wolves, goblins. Hides the entrance to the fifth realm.
+### Mistmire (10) — BUILT, live as v24 (Nov 26)
+The swamp south of the meadow. Dark wisps, shadow wolves, goblins. Hides the entrance to the fifth realm. Swamp ground tile + dead swamp trees/dark reeds, black water pools, drifting fireflies, realm-entry narration, Mistmire D-minor melody. Pell at Black Water with the Ferryman's Lantern quest (lantern oil in the Sunken Cave, 50 coins, opens the ferry south across the Black Water — the south exit is blocked until his lantern burns again), then the Swamp Lights quest (3 bright lights at Firefly Marsh, 50 coins, Pell's lore: "the fifth realm is below, not above. The swamp hides its door."). Mudfoot at his Hut with the Medicine quest (dry blanket at the Old Ferry Dock, potion + 40 coins). Sunken Shrine quest (sunken relic, 50 coins, one-time). The Sealed Door at the far south needs the Master Key; interacting with it says so. Swamp Shrine is the save shrine.
 
 1. Swamp Edge — Mudfoot
 2. Black Water — Pell's ferry crossing

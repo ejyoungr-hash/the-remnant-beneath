@@ -437,6 +437,17 @@ var LINES={
  travelerWait:['My pack... I left it at Hilda\u2019s inn. If you\u2019re going that way, I\u2019d owe you.','@I\u2019ll bring your pack. Stay warm.'],
  travelerPackDone:['You... you brought my pack? I thought the storm had taken it. Thank you, friend. Here, take these coins \u2014 the mountain owes you a warm fire.','@You look half-frozen. Get to the inn before the storm catches you again.'],
  travelerAfter:['The inn, then. Hilda\u2019s stew is the best thing in Whitepeak.','@Safe travels, friend.'],
+ pellFirst:['The swamp is deep, friend, and the water hides what it wants. I will take you across, but mind the lights. They are not stars, and they are not kind.','@Your lantern is out. Can I help?','The oil is gone. The Sunken Cave, west of here \u2014 old-world supplies, still sealed. Bring me a flask of lantern oil and I will take you across the Black Water.','@Lantern oil from the Sunken Cave. I will bring it.'],
+ pellRepeat:['The ferry runs when the water allows. The water allows when it feels like it.','@I am looking for the lantern oil, Pell.'],
+ pellOilDone:['Lantern oil! Good. The flame catches \u2014 see? The lights will not lead you astray now. Here, take these coins, and the ferry is yours. Cross when you are ready.','@The ferry is mine to cross. Thank you, Pell.'],
+ pellAfter:['The ferry runs when the water allows. The water allows when it feels like it.','@Safe crossings, Pell.'],
+ pellLightsFirst:['The lights gather thickest at the Firefly Marsh, east of here. They are not stars, and they are not kind \u2014 but they know the way. Bring me three bright lights and I will tell you what they are hiding.','@Three bright lights from the Firefly Marsh. I will bring them.'],
+ pellLightsRepeat:['The lights are at the Firefly Marsh, east of here. Three bright ones, and mind that they do not lead you astray.','@I am gathering the bright lights, Pell.'],
+ pellLightsDone:['Three bright lights! Look at them \u2014 they gather where the way lies. The fifth realm is below, friend, and the swamp hides its door. The Sealed Door, south of here \u2014 that is the way in. Here, take these coins.','@Below, not above. Thank you, Pell.'],
+ mudfootFirst:['Herbs? Oh, I have herbs. The rarest in the realms, growing right here in the muck. Bring me something dry \u2014 socks, a blanket, anything \u2014 and we will trade.','@Something dry? What do you need?','A blanket, dry as a bone. The Old Ferry Dock, north of here \u2014 the ferry used to run there, and dry things were left behind. Bring me a blanket and I will give you medicine.','@A dry blanket from the Old Ferry Dock. I will bring it.'],
+ mudfootRepeat:['The swamp gives to those who wade in. Mind the leeches. They give too.','@I am looking for a dry blanket, Mudfoot.'],
+ mudfootBlanketDone:['A dry blanket! Oh, that is good. Dry as a bone. Here \u2014 medicine, the best in the realms, and coins for the trouble. The swamp provides, if you know where to look.','@Medicine and coins. Thank you, Mudfoot.'],
+ mudfootAfter:['The swamp gives to those who wade in. Mind the leeches. They give too.','@I will mind the leeches, Mudfoot.'],
  jorenAxeDone:['My axe... you found it. Twenty years, and it comes home.','@It belongs with you, Joren. Your father would want it cutting wood, not sitting in a goblin den.','Then I owe you, and I pay my debts. Take this, and my thanks.','@Thank you, Joren. Keep the trees waiting.'],
  jorenAfter:['An axe is a woodcutter\u2019s soul. You gave mine back to me.','@Glad it\u2019s home, Joren.'],
  girlFirst:['Hi! Hi! You\u2019re the one with the ember!','@That\u2019s me. And you must be the one who knows all the secrets.','I know all the secret places in the village. Follow me, I\u2019ll show you one! There\u2019s a chest, and it\u2019s got something shiny in it!','@Lead the way, then. I like shiny.'],
@@ -663,7 +674,7 @@ function completeTrouble(){
 var KEY_NAMES={meadow:'Meadow Key',thorn:'Thorn Key',dust:'Dust Key',peak:'Peak Key'};
 var grakImg=new Image(); grakImg.src=GRAK_SPRITE;
 /* SPRITE_DATA lives in data/sprites.js */
-var SPRITE_ASPECT={ hero_swordsman_male:0.585, hero_swordsman_female:0.69, hero_spear_male:0.645, hero_spear_female:0.59, hero_bow_male:0.78, hero_bow_female:1.13, hero_mage_male:0.83, hero_mage_female:0.86, hero_guardian_male:1.375, hero_guardian_female:1.07, npc_bram:0.8, npc_dell:0.6071, npc_renn:0.78, npc_mira:0.51, npc_joren:0.865, npc_girl:0.8929, goblin:0.89,hero_swordsman_male_sb:0.863,hero_swordsman_male_ea:0.863,hero_swordsman_male_eb:0.863,hero_swordsman_male_na:0.863,hero_swordsman_male_nb:0.863,hero_swordsman_female_sb:0.85,hero_swordsman_female_ea:0.85,hero_swordsman_female_eb:0.85,hero_swordsman_female_na:0.85,hero_swordsman_female_nb:0.85,hero_spear_male_sb:0.775,hero_spear_male_ea:0.775,hero_spear_male_eb:0.775,hero_spear_male_na:0.775,hero_spear_male_nb:0.775,hero_spear_female_sb:0.8,hero_spear_female_ea:0.8,hero_spear_female_eb:0.8,hero_spear_female_na:0.8,hero_spear_female_nb:0.8,hero_bow_male_sb:0.975,hero_bow_male_ea:0.975,hero_bow_male_eb:0.975,hero_bow_male_na:0.975,hero_bow_male_nb:0.975,hero_bow_female_sb:1.1625,hero_bow_female_ea:1.163,hero_bow_female_eb:1.163,hero_bow_female_na:1.163,hero_bow_female_nb:1.163,hero_mage_male_sb:0.925,hero_mage_male_ea:0.925,hero_mage_male_eb:0.925,hero_mage_male_na:0.925,hero_mage_male_nb:0.925,hero_mage_female_sb:0.938,hero_mage_female_ea:0.938,hero_mage_female_eb:0.938,hero_mage_female_na:0.938,hero_mage_female_nb:0.938,hero_guardian_male_sb:1.375, hero_guardian_male_sa:1.375,hero_guardian_male_ea:1.375,hero_guardian_male_eb:1.375,hero_guardian_male_na:1.375,hero_guardian_male_nb:1.375,hero_guardian_female_sb:1.2,hero_guardian_female_ea:1.2,hero_guardian_female_eb:1.2,hero_guardian_female_na:1.2,hero_guardian_female_nb:1.2,goat_ea:1.156,goat_eb:1.156,goblin_sb:1.2,goblin_ea:1.2,goblin_eb:1.2,goblin_na:1.2,goblin_nb:1.2,girl_sb:0.8929,girl_ea:0.8929,girl_eb:0.8929,girl_na:0.8929,girl_nb:0.8929,grak_sa:0.871,grak_sb:0.879,grak_ea:0.879,grak_eb:0.879,grak_na:0.879,grak_nb:0.879,hero_mage_male_sa:0.925,hero_mage_female_sa:0.938,hero_guardian_female_sa:1.2,hero_atk_swordsman_a:1.3,hero_atk_swordsman_b:1.3,hero_atk_swordsman_c:1.3,hero_atk_spear_a:1.5,hero_atk_spear_b:1.5,hero_atk_spear_c:1.5,hero_atk_bow_a:0.988,hero_atk_bow_b:0.988,hero_atk_bow_c:0.988,hero_atk_mage_a:1.312,hero_atk_mage_b:1.312,hero_atk_mage_c:1.312,hero_atk_guardian_a:0.9,hero_atk_guardian_b:0.9,hero_atk_guardian_c:0.9,hero_swordsman_male_nw:1.0156,hero_swordsman_male_nw_sb:1.0156,hero_swordsman_male_nw_ea:1.0156,hero_swordsman_male_nw_eb:1.0156,hero_swordsman_male_nw_na:1.0156,hero_swordsman_male_nw_nb:1.0156,hero_swordsman_female_nw:0.8438,hero_swordsman_female_nw_sb:0.8438,hero_swordsman_female_nw_ea:0.8438,hero_swordsman_female_nw_eb:0.8438,hero_swordsman_female_nw_na:0.8438,hero_swordsman_female_nw_nb:0.8438,hero_spear_male_nw:0.9531,hero_spear_male_nw_sb:0.9531,hero_spear_male_nw_ea:0.9531,hero_spear_male_nw_eb:0.9531,hero_spear_male_nw_na:0.9531,hero_spear_male_nw_nb:0.9531,hero_spear_female_nw:0.9375,hero_spear_female_nw_sb:0.9375,hero_spear_female_nw_ea:0.9375,hero_spear_female_nw_eb:0.9375,hero_spear_female_nw_na:0.9375,hero_spear_female_nw_nb:0.9375,hero_bow_male_nw:1.0469,hero_bow_male_nw_sb:1.0469,hero_bow_male_nw_ea:1.0469,hero_bow_male_nw_eb:1.0469,hero_bow_male_nw_na:1.0469,hero_bow_male_nw_nb:1.0469,hero_bow_female_nw:1.1562,hero_bow_female_nw_sb:1.1562,hero_bow_female_nw_ea:1.1562,hero_bow_female_nw_eb:1.1562,hero_bow_female_nw_na:1.1562,hero_bow_female_nw_nb:1.1562,hero_mage_male_nw:1.0312,hero_mage_male_nw_sb:1.0312,hero_mage_male_nw_ea:1.0312,hero_mage_male_nw_eb:1.0312,hero_mage_male_nw_na:1.0312,hero_mage_male_nw_nb:1.0312,hero_mage_female_nw:1.0469,hero_mage_female_nw_sb:1.0469,hero_mage_female_nw_ea:1.0469,hero_mage_female_nw_eb:1.0469,hero_mage_female_nw_na:1.0469,hero_mage_female_nw_nb:1.0469,hero_guardian_male_nw:1.375,hero_guardian_male_nw_sb:1.375,hero_guardian_male_nw_ea:1.375,hero_guardian_male_nw_eb:1.375,hero_guardian_male_nw_na:1.375,hero_guardian_male_nw_nb:1.375,hero_guardian_female_nw:1.2031,hero_guardian_female_nw_sb:1.2031,hero_guardian_female_nw_ea:1.2031,hero_guardian_female_nw_eb:1.2031,hero_guardian_female_nw_na:1.2031,hero_guardian_female_nw_nb:1.2031,hero_atk_swordsman_female_a:1.175,hero_atk_swordsman_female_b:1.175,hero_atk_swordsman_female_c:1.175,hero_atk_spear_female_a:1.225,hero_atk_spear_female_b:1.225,hero_atk_spear_female_c:1.225,hero_atk_bow_female_a:1.45,hero_atk_bow_female_b:1.45,hero_atk_bow_female_c:1.45,hero_atk_mage_female_a:1.4875,hero_atk_mage_female_b:1.4875,hero_atk_mage_female_c:1.4875,hero_atk_guardian_female_a:1.3125,hero_atk_guardian_female_b:1.3125,hero_atk_guardian_female_c:1.3125,wpon_sword:0.3438,wpon_spear:0.1667,wpon_bow:0.2188,wpon_mage:0.2292,wpon_guardian:0.7812,wpon_dagger:0.4,wolf:0.7083,wolf_sb:0.7083,wolf_na:1.0972,wolf_nb:1.0972,wolf_ea:1.3333,wolf_eb:1.4394,wisp:0.6806,wisp_ea:0.6806,wisp_na:0.6806,wisp_sb:0.7639,wisp_eb:0.7639,wisp_nb:0.7639,npc_sable:0.4107,npc_zeke:0.655,npc_maren:0.5375,golem:0.607,golem_ea:0.607,golem_eb:0.911,golem_sb:0.607,golem_na:0.607,golem_nb:0.911,colossus:1.27,npc_hilda:0.74,npc_ivo:0.775,npc_traveler:0.525,wraith:0.9475};
+var SPRITE_ASPECT={ hero_swordsman_male:0.585, hero_swordsman_female:0.69, hero_spear_male:0.645, hero_spear_female:0.59, hero_bow_male:0.78, hero_bow_female:1.13, hero_mage_male:0.83, hero_mage_female:0.86, hero_guardian_male:1.375, hero_guardian_female:1.07, npc_bram:0.8, npc_dell:0.6071, npc_renn:0.78, npc_mira:0.51, npc_joren:0.865, npc_girl:0.8929, goblin:0.89,hero_swordsman_male_sb:0.863,hero_swordsman_male_ea:0.863,hero_swordsman_male_eb:0.863,hero_swordsman_male_na:0.863,hero_swordsman_male_nb:0.863,hero_swordsman_female_sb:0.85,hero_swordsman_female_ea:0.85,hero_swordsman_female_eb:0.85,hero_swordsman_female_na:0.85,hero_swordsman_female_nb:0.85,hero_spear_male_sb:0.775,hero_spear_male_ea:0.775,hero_spear_male_eb:0.775,hero_spear_male_na:0.775,hero_spear_male_nb:0.775,hero_spear_female_sb:0.8,hero_spear_female_ea:0.8,hero_spear_female_eb:0.8,hero_spear_female_na:0.8,hero_spear_female_nb:0.8,hero_bow_male_sb:0.975,hero_bow_male_ea:0.975,hero_bow_male_eb:0.975,hero_bow_male_na:0.975,hero_bow_male_nb:0.975,hero_bow_female_sb:1.1625,hero_bow_female_ea:1.163,hero_bow_female_eb:1.163,hero_bow_female_na:1.163,hero_bow_female_nb:1.163,hero_mage_male_sb:0.925,hero_mage_male_ea:0.925,hero_mage_male_eb:0.925,hero_mage_male_na:0.925,hero_mage_male_nb:0.925,hero_mage_female_sb:0.938,hero_mage_female_ea:0.938,hero_mage_female_eb:0.938,hero_mage_female_na:0.938,hero_mage_female_nb:0.938,hero_guardian_male_sb:1.375, hero_guardian_male_sa:1.375,hero_guardian_male_ea:1.375,hero_guardian_male_eb:1.375,hero_guardian_male_na:1.375,hero_guardian_male_nb:1.375,hero_guardian_female_sb:1.2,hero_guardian_female_ea:1.2,hero_guardian_female_eb:1.2,hero_guardian_female_na:1.2,hero_guardian_female_nb:1.2,goat_ea:1.156,goat_eb:1.156,goblin_sb:1.2,goblin_ea:1.2,goblin_eb:1.2,goblin_na:1.2,goblin_nb:1.2,girl_sb:0.8929,girl_ea:0.8929,girl_eb:0.8929,girl_na:0.8929,girl_nb:0.8929,grak_sa:0.871,grak_sb:0.879,grak_ea:0.879,grak_eb:0.879,grak_na:0.879,grak_nb:0.879,hero_mage_male_sa:0.925,hero_mage_female_sa:0.938,hero_guardian_female_sa:1.2,hero_atk_swordsman_a:1.3,hero_atk_swordsman_b:1.3,hero_atk_swordsman_c:1.3,hero_atk_spear_a:1.5,hero_atk_spear_b:1.5,hero_atk_spear_c:1.5,hero_atk_bow_a:0.988,hero_atk_bow_b:0.988,hero_atk_bow_c:0.988,hero_atk_mage_a:1.312,hero_atk_mage_b:1.312,hero_atk_mage_c:1.312,hero_atk_guardian_a:0.9,hero_atk_guardian_b:0.9,hero_atk_guardian_c:0.9,hero_swordsman_male_nw:1.0156,hero_swordsman_male_nw_sb:1.0156,hero_swordsman_male_nw_ea:1.0156,hero_swordsman_male_nw_eb:1.0156,hero_swordsman_male_nw_na:1.0156,hero_swordsman_male_nw_nb:1.0156,hero_swordsman_female_nw:0.8438,hero_swordsman_female_nw_sb:0.8438,hero_swordsman_female_nw_ea:0.8438,hero_swordsman_female_nw_eb:0.8438,hero_swordsman_female_nw_na:0.8438,hero_swordsman_female_nw_nb:0.8438,hero_spear_male_nw:0.9531,hero_spear_male_nw_sb:0.9531,hero_spear_male_nw_ea:0.9531,hero_spear_male_nw_eb:0.9531,hero_spear_male_nw_na:0.9531,hero_spear_male_nw_nb:0.9531,hero_spear_female_nw:0.9375,hero_spear_female_nw_sb:0.9375,hero_spear_female_nw_ea:0.9375,hero_spear_female_nw_eb:0.9375,hero_spear_female_nw_na:0.9375,hero_spear_female_nw_nb:0.9375,hero_bow_male_nw:1.0469,hero_bow_male_nw_sb:1.0469,hero_bow_male_nw_ea:1.0469,hero_bow_male_nw_eb:1.0469,hero_bow_male_nw_na:1.0469,hero_bow_male_nw_nb:1.0469,hero_bow_female_nw:1.1562,hero_bow_female_nw_sb:1.1562,hero_bow_female_nw_ea:1.1562,hero_bow_female_nw_eb:1.1562,hero_bow_female_nw_na:1.1562,hero_bow_female_nw_nb:1.1562,hero_mage_male_nw:1.0312,hero_mage_male_nw_sb:1.0312,hero_mage_male_nw_ea:1.0312,hero_mage_male_nw_eb:1.0312,hero_mage_male_nw_na:1.0312,hero_mage_male_nw_nb:1.0312,hero_mage_female_nw:1.0469,hero_mage_female_nw_sb:1.0469,hero_mage_female_nw_ea:1.0469,hero_mage_female_nw_eb:1.0469,hero_mage_female_nw_na:1.0469,hero_mage_female_nw_nb:1.0469,hero_guardian_male_nw:1.375,hero_guardian_male_nw_sb:1.375,hero_guardian_male_nw_ea:1.375,hero_guardian_male_nw_eb:1.375,hero_guardian_male_nw_na:1.375,hero_guardian_male_nw_nb:1.375,hero_guardian_female_nw:1.2031,hero_guardian_female_nw_sb:1.2031,hero_guardian_female_nw_ea:1.2031,hero_guardian_female_nw_eb:1.2031,hero_guardian_female_nw_na:1.2031,hero_guardian_female_nw_nb:1.2031,hero_atk_swordsman_female_a:1.175,hero_atk_swordsman_female_b:1.175,hero_atk_swordsman_female_c:1.175,hero_atk_spear_female_a:1.225,hero_atk_spear_female_b:1.225,hero_atk_spear_female_c:1.225,hero_atk_bow_female_a:1.45,hero_atk_bow_female_b:1.45,hero_atk_bow_female_c:1.45,hero_atk_mage_female_a:1.4875,hero_atk_mage_female_b:1.4875,hero_atk_mage_female_c:1.4875,hero_atk_guardian_female_a:1.3125,hero_atk_guardian_female_b:1.3125,hero_atk_guardian_female_c:1.3125,wpon_sword:0.3438,wpon_spear:0.1667,wpon_bow:0.2188,wpon_mage:0.2292,wpon_guardian:0.7812,wpon_dagger:0.4,wolf:0.7083,wolf_sb:0.7083,wolf_na:1.0972,wolf_nb:1.0972,wolf_ea:1.3333,wolf_eb:1.4394,wisp:0.6806,wisp_ea:0.6806,wisp_na:0.6806,wisp_sb:0.7639,wisp_eb:0.7639,wisp_nb:0.7639,npc_sable:0.4107,npc_zeke:0.655,npc_maren:0.5375,golem:0.607,golem_ea:0.607,golem_eb:0.911,golem_sb:0.607,golem_na:0.607,golem_nb:0.911,colossus:1.27,npc_hilda:0.74,npc_ivo:0.775,npc_traveler:0.525,wraith:0.9475, npc_pell:0.885, npc_mudfoot:0.7875};
 var spriteImgs={};
 Object.keys(SPRITE_DATA).forEach(function(k){ var im=new Image(); im.src=SPRITE_DATA[k]; spriteImgs[k]=im; });
 /* ================= SCENERY ART (real artwork, Meadowlands) ================= */
@@ -744,6 +755,7 @@ function wornTrack(g,vertical,fixed,from,to,seed,type){
   var pal=type==='den'?{dirt:[96,76,52],dark:[70,54,38],light:[120,96,66],tuft:['rgba(52,70,44,.5)','rgba(44,60,38,.5)','rgba(60,74,48,.5)'],speck:['rgba(150,128,96,.4)','rgba(60,46,32,.4)']}
     :type==='desert'?{dirt:[190,160,105],dark:[160,130,80],light:[215,185,130],tuft:['rgba(150,120,70,.5)','rgba(130,100,60,.5)','rgba(170,140,85,.5)'],speck:['rgba(230,205,150,.5)','rgba(120,95,55,.5)']}
     :type==='snow'?{dirt:[200,214,234],dark:[168,188,214],light:[226,236,246],tuft:['rgba(178,198,224,.5)','rgba(160,182,210,.5)','rgba(196,212,232,.5)'],speck:['rgba(255,255,255,.5)','rgba(158,178,206,.4)']}
+    :type==='swamp'?{dirt:[52,66,38],dark:[38,48,28],light:[70,86,50],tuft:['rgba(96,120,60,.6)','rgba(80,104,52,.6)','rgba(110,132,68,.6)'],speck:['rgba(140,170,100,.4)','rgba(40,52,30,.4)']}
     :{dirt:[150,124,82],dark:[118,92,58],light:[178,148,100],tuft:['rgba(58,96,46,.7)','rgba(74,116,54,.7)','rgba(46,82,40,.7)'],speck:['rgba(214,186,136,.5)','rgba(90,70,40,.5)']};
   for(d=from-20; d<=to+20; d+=14){
     c+=Math.floor(pr()*21)-10;
@@ -1140,7 +1152,18 @@ var SCREENS={
  wpeak:{name:'Storm Wraith Peak',col:1,row:-3,type:'snow',realm:'whitepeak',goblins:0,wisps:0,wolves:0,golems:0},
  wcave:{name:'Ice Caves',col:0,row:-3,type:'snow',realm:'whitepeak',goblins:0,wisps:0,wolves:0,golems:2},
  wridge:{name:'Snowy Ridge',col:2,row:-3,type:'snow',realm:'whitepeak',goblins:0,wisps:0,wolves:2,golems:1},
- wshrine:{name:'Mountain Shrine',col:2,row:-4,type:'snow',realm:'whitepeak',goblins:0,wisps:0,wolves:0,golems:0}
+ wshrine:{name:'Mountain Shrine',col:2,row:-4,type:'snow',realm:'whitepeak',goblins:0,wisps:0,wolves:0,golems:0},
+ /* Mistmire (south of the Meadow Shrine) */
+ medge:{name:'Swamp Edge',col:1,row:4,type:'swamp',realm:'mistmire',goblins:1,wisps:1,wolves:0},
+ mdock:{name:'Old Ferry Dock',col:0,row:4,type:'swamp',realm:'mistmire',goblins:1,wisps:1,wolves:0},
+ mbog:{name:'Deep Bog',col:2,row:4,type:'swamp',realm:'mistmire',goblins:0,wisps:1,wolves:2},
+ mhut:{name:"Mudfoot's Hut",col:0,row:5,type:'swamp',realm:'mistmire',goblins:1,wisps:0,wolves:0},
+ mwater:{name:'Black Water',col:1,row:5,type:'swamp',realm:'mistmire',goblins:0,wisps:2,wolves:0},
+ mmarsh:{name:'Firefly Marsh',col:2,row:5,type:'swamp',realm:'mistmire',goblins:0,wisps:2,wolves:1},
+ mcave:{name:'Sunken Cave',col:0,row:6,type:'den',realm:'mistmire',goblins:2,wisps:1,wolves:0},
+ msunk:{name:'Sunken Shrine',col:1,row:6,type:'swamp',realm:'mistmire',goblins:0,wisps:1,wolves:1},
+ mshrine:{name:'Swamp Shrine',col:0,row:7,type:'swamp',realm:'mistmire',goblins:0,wisps:0,wolves:0},
+ mdoor:{name:'The Sealed Door',col:1,row:7,type:'swamp',realm:'mistmire',goblins:0,wisps:0,wolves:0}
 };
 var GRID={}; Object.keys(SCREENS).forEach(function(k){ GRID[SCREENS[k].col+','+SCREENS[k].row]=k; });
 /* map bounds, from the screens themselves, so new realms widen the map */
@@ -1160,10 +1183,13 @@ function mapThumb(id){
 var HERB_SPOTS={ north:[[300,205],[625,300],[480,455]], herb:[[250,180],[700,225],[400,425],[620,485]], fgrove:[[300,220],[640,300],[480,460]] };
 var DIG_SPOTS={ dpit:[[300,220],[640,300],[480,460]] };
 var CRYSTAL_SPOTS={wlake:[[480,330]],wfield:[[300,300],[660,300]]};
+OIL_SPOTS={mcave:[[480,330]]};
+BLANKET_SPOTS={mdock:[[480,330]]};
+LIGHT_SPOTS={mmarsh:[[300,300],[480,330],[660,300]]};
 /* Thornwood helpers: a screen's realm (Meadowlands when unset) and whether a
    screen id is a save shrine (Meadow Shrine or Forest Shrine). */
 function screenRealm(id){ var sc=SCREENS[id]; return (sc&&sc.realm)||'meadow'; }
-function isShrine(id){ return id==='shrine'||id==='fshrine'||id==='dshrine'||id==='wshrine'; }
+function isShrine(id){ return id==='shrine'||id==='fshrine'||id==='dshrine'||id==='wshrine'||id==='mshrine'; }
 var NPC_SPOTS={
  village:[
   {id:'bram',x:560,y:230},{id:'renn',x:290,y:250},{id:'mira',x:355,y:576},
@@ -1174,7 +1200,9 @@ var NPC_SPOTS={
  ddunes:[{id:'zeke',x:480,y:320}],
  winn:[{id:'hilda',x:480,y:320}],
  wfield:[{id:'ivo',x:480,y:320}],
- wcamp:[{id:'traveler',x:480,y:320}]};
+ wcamp:[{id:'traveler',x:480,y:320}],
+ mwater:[{id:'pell',x:480,y:320}],
+ mhut:[{id:'mudfoot',x:480,y:320}]};
 var CHEST_SPOTS=[{x:852,y:118},{x:60,y:545},{x:60,y:60},{x:905,y:545}];
 var CHEST_PRIZES=['shard','coins','seeker','hidden'];
 var CHARM_SPOTS={east:[{id:'lucky',x:905,y:300}],north:[{id:'guardian',x:480,y:60}],west:[{id:'ember',x:55,y:300}]};
@@ -1238,7 +1266,7 @@ var SFX={
   roar:function(){ if(AC){ var t=AC.currentTime; tone(90,t,.7,'sawtooth',.2,null,45); noiseBurst(t,.5,.2,500,120); } }
 };
 /* Spoken dialogue — browser speech. Profiles are [pitch,rate,gender]. */
-var VOICE={bram:[.55,.85,0],dell:[.9,.95,0],renn:[.75,1,0],mira:[1.25,1,1],joren:[.65,.9,0],sable:[1.35,1,1],girl:[1.7,1.15,1],grak:[.35,.8,0],narr:[.6,.85,0],zeke:[.8,.9,0],maren:[1.1,.8,1],colossus:[.3,.7,0],hilda:[1.2,.95,1],ivo:[.8,1,0],traveler:[.6,.85,0],wraith:[.25,.7,0]};
+var VOICE={bram:[.55,.85,0],dell:[.9,.95,0],renn:[.75,1,0],mira:[1.25,1,1],joren:[.65,.9,0],sable:[1.35,1,1],girl:[1.7,1.15,1],grak:[.35,.8,0],narr:[.6,.85,0],zeke:[.8,.9,0],maren:[1.1,.8,1],colossus:[.3,.7,0],hilda:[1.2,.95,1],ivo:[.8,1,0],traveler:[.6,.85,0],wraith:[.25,.7,0], pell:[.5,.8,0], mudfoot:[.7,.9,0]};
 var VHER={swordsman:[.9,1],spear:[1,1],bow:[1.1,1.05],mage:[1.2,.95],guardian:[.7,.9]};
 var sayN=0;
 function vPick(f){try{var vs=speechSynthesis.getVoices().filter(v=>/^en/i.test(v.lang));if(!vs.length)return;var m=f?/female|zira|samantha|aria|jenny/i:/male|daniel|david|guy/i;return vs.find(v=>m.test(v.name))||(f?vs[vs.length-1]:vs[0])}catch(e){return}}
@@ -1271,12 +1299,14 @@ var DUST_MELODY=[330,415,440,523,440,415,330,415, 349,415,440,494,440,415,349,33
 var DUST_BASS=[82,110,123,110, 82,110,98,110, 82,110,123,110, 87,98,110,98];
 var WHITE_MELODY=[440,0,523,0, 440,0,392,0, 349,0,392,0, 440,0,0,0, 392,0,349,0, 330,0,392,0, 440,0,523,0, 440,0,392,0];
 var WHITE_BASS=[110,0,98,0, 110,0,87,0, 110,0,98,0, 82,0,98,0];
+MIST_MELODY=[293,0,0,0, 349,0,0,0, 440,0,0,0, 349,0,0,0, 293,0,0,0, 262,0,0,0, 293,0,0,0, 0,0,0,0];
+var MIST_BASS=[73,0,0,0, 87,0,0,0, 73,0,0,0, 65,0,0,0];
 function startMusic(){
   if(musicTimer||!AC) return;
   musicTimer=setInterval(function(){
     if(!AC||document.hidden) return;
     var realm=screenRealm(curScreen);
-    var MEL=realm==='thornwood'?THORN_MELODY:(realm==='dustfall'?DUST_MELODY:(realm==='whitepeak'?WHITE_MELODY:MELODY)), BAS=realm==='thornwood'?THORN_BASS:(realm==='dustfall'?DUST_BASS:(realm==='whitepeak'?WHITE_BASS:BASSN));
+    var MEL=realm==='thornwood'?THORN_MELODY:(realm==='dustfall'?DUST_MELODY:(realm==='whitepeak'?WHITE_MELODY:(realm==='mistmire'?MIST_MELODY:MELODY))), BAS=realm==='thornwood'?THORN_BASS:(realm==='dustfall'?DUST_BASS:(realm==='whitepeak'?WHITE_BASS:(realm==='mistmire'?MIST_BASS:BASSN)));
     var t=AC.currentTime+.05, i=musicStep%MEL.length, f=MEL[i];
     if(bossMusic){
       /* Boss theme: the realm's own melody, kept recognizable, made dangerous — short sharp notes, low drone, tritone bass hits, drum thump on every beat */
@@ -1302,9 +1332,10 @@ function newState(slot,heroIdx,gender,diff){
     hp:6, maxEmbers:3, coins:0, herbs:0, weapon:false, potions:0, weaponTier:0, armorTier:0, bagSize:12, quest:'none', keys:[], grakDown:false, grakMet:false,
     pelts:0, axe:'none', thornMet:false, thornDown:false, mazeDone:false, water:'none', relic:'none', colossusMet:false, colossusDown:false,
     pack:'none', crystals:'none', crystalCount:0, crystalsTaken:{}, wraithMet:false, wraithDown:false,
+    lantern:'none', lights:'none', lightCount:0, lightsTaken:{}, medicine:'none', sunkenRelic:false,
     visited:{village:true}, herbsTaken:{}, enemiesDown:{}, millChest:false, girlChest:false, girlChests:0,
     goat:'none', goatFollow:false, trouble:'none', goblinKills:0, charms:[], equipped:[],
-    talked:{}, rennAfter:false, girlMet:false, shrineSeen:false, playSec:0, thornSeen:false, dustSeen:false, whiteSeen:false, lastShrine:'village' };
+    talked:{}, rennAfter:false, girlMet:false, shrineSeen:false, playSec:0, thornSeen:false, dustSeen:false, whiteSeen:false, mistSeen:false, lastShrine:'village' };
 }
 var G=null; /* current game state */
 function persist(){
@@ -1315,12 +1346,19 @@ function persist(){
   if(G.thornSeen===undefined) G.thornSeen=false;
   if(G.dustSeen===undefined) G.dustSeen=false;
   if(G.whiteSeen===undefined) G.whiteSeen=false;
+  if(G.mistSeen===undefined) G.mistSeen=false;
   if(G.pack===undefined) G.pack='none';
   if(G.crystals===undefined) G.crystals='none';
   if(G.crystalCount===undefined) G.crystalCount=0;
   if(G.crystalsTaken===undefined) G.crystalsTaken={};
   if(G.wraithMet===undefined) G.wraithMet=false;
   if(G.wraithDown===undefined) G.wraithDown=false;
+  if(G.lantern===undefined) G.lantern='none';
+  if(G.lights===undefined) G.lights='none';
+  if(G.lightCount===undefined) G.lightCount=0;
+  if(G.lightsTaken===undefined) G.lightsTaken={};
+  if(G.medicine===undefined) G.medicine='none';
+  if(G.sunkenRelic===undefined) G.sunkenRelic=false;
   if(G.pelts===undefined) G.pelts=0;
   if(G.axe===undefined) G.axe='none';
   if(G.thornMet===undefined) G.thornMet=false;
@@ -1686,6 +1724,25 @@ function startWhitepeakEntry(){
   }
   next();
 }
+MISTMIRE_ENTRY_PAGES=[
+ "The water is black and still, and the lights that drift over it are not stars.",
+ "The swamp swallows roads, houses, and whole villages, and gives nothing back.",
+ "Only the ferryman knows the safe channels, and he does not cross for free.",
+ "Somewhere in the deep water, hidden where the lights gather thickest, lies the way into the fifth realm."
+];
+function startMistmireEntry(){
+  bossMeetActive=false;cutStandalone=true;cutActive=true;
+  showView('cutView');
+  var img=$('cutImg');img.src=MISTMIRE_IMG;img.className='';
+  var fx=$('cutFx');fx.className='fx';$('cutEmbers').style.display='none';
+  who('THE OLD STORIES');
+  var i=0;
+  function next(){
+    if(i>=MISTMIRE_ENTRY_PAGES.length){ cutDone(); return; }
+    say(MISTMIRE_ENTRY_PAGES[i++],next);
+  }
+  next();
+}
 function startDustfallEntry(){
   bossMeetActive=false;cutStandalone=true;cutActive=true;
   showView('cutView');
@@ -1762,12 +1819,12 @@ function buildScreen(id){
   if(bgCache[id]) return bgCache[id];
   var sc=SCREENS[id], c=document.createElement('canvas'); c.width=W; c.height=H;
   var g=c.getContext('2d'), rand=rng(id.length*777+sc.col*131+sc.row*17+5), solids=[];
-  var grass={village:'#7aa75c',meadow:'#83b364',east:'#a9a05e',west:'#5f8a4e',pond:'#7aa75c',herb:'#86b364',den:'#8a7a52',mill:'#94a95e',flower:'#7fb45e',shrine:'#6f9a58',forest:'#4f6b3a',desert:'#d9b96a',snow:'#e8f0f8'}[sc.type];
+  var grass={village:'#7aa75c',meadow:'#83b364',east:'#a9a05e',west:'#5f8a4e',pond:'#7aa75c',herb:'#86b364',den:'#8a7a52',mill:'#94a95e',flower:'#7fb45e',shrine:'#6f9a58',forest:'#4f6b3a',desert:'#d9b96a',snow:'#e8f0f8',swamp:'#2a3a26'}[sc.type];
   /* The old speckle/flower/blade ground loops are gone (the ground is a real
      art tile now), but they consumed 1442 rand() calls; burn the same count
      so every later random placement lands in exactly the same spot. */
   for(var bi=0;bi<1442;bi++) rand();
-  var groundTiles={village:['ground_grass'],meadow:['ground_grass'],east:['ground_grass'],west:['ground_grass'],pond:['ground_grass'],herb:['ground_grass'],mill:['ground_grass'],flower:['ground_flowers'],shrine:['ground_grass'],den:['ground_den','ground_den_b'],forest:['ground_grass'],desert:['ground_sand'],snow:['ground_snow']}[sc.type];
+  var groundTiles={village:['ground_grass'],meadow:['ground_grass'],east:['ground_grass'],west:['ground_grass'],pond:['ground_grass'],herb:['ground_grass'],mill:['ground_grass'],flower:['ground_flowers'],shrine:['ground_grass'],den:['ground_den','ground_den_b'],forest:['ground_grass'],desert:['ground_sand'],snow:['ground_snow'],swamp:['ground_swamp']}[sc.type];
   tileGround(g,groundTiles,grass,id.length*313+sc.col*57+sc.row*11+3);
   /* worn dirt paths, not hard rectangles */
   if(GRID[sc.col+','+(sc.row-1)]) wornTrack(g,true,480,0,320,id.length*911+sc.col*31+sc.row*13+1,sc.type);
@@ -2012,6 +2069,41 @@ function buildScreen(id){
     for(var du=0;du<6;du++){ g.beginPath(); g.ellipse(140+rand()*680,120+rand()*400,90+rand()*60,18+rand()*10,0,0,7); g.fill(); }
     if(id==='wlake'){ g.fillStyle='#7fb2d8'; g.beginPath(); g.ellipse(480,330,150,70,0,0,7); g.fill(); g.fillStyle='#a8cfe8'; g.beginPath(); g.ellipse(480,330,120,52,0,0,7); g.fill(); g.fillStyle='rgba(255,255,255,.55)'; g.beginPath(); g.ellipse(480,318,70,18,0,0,7); g.fill(); }
     if(id==='wshrine'){ drawArtBottom(g,'shrine',480,297,120); solids.push({x:428,y:168,w:104,h:96}); g.fillStyle='#e8e2d2'; g.font='15px Georgia'; g.textAlign='center'; g.fillText('~ SHRINE OF THE EMBER ~',480,322); [[330,240],[630,240],[360,300],[600,300]].forEach(function(p,i){ drawArtCFlip(g,'standing_stone',p[0],p[1]-12,22,i%2); }); }
+  } else if(sc.type==='swamp'){
+    /* Mistmire: dead swamp trees and dark reeds, black water pools, drifting fireflies, open middle */
+    for(var t5=0;t5<9;t5++){ var bx=70+rand()*820, by=60+rand()*120; drawArtBottom(g,'tree_swamp',bx,by+16,72); }
+    for(var t6=0;t6<7;t6++){ var bx2=70+rand()*820, by2=470+rand()*110; drawArtBottom(g,'tree_swamp',bx2,by2+16,72); }
+    for(var bu=0;bu<8;bu++){ var bx3=60+rand()*840, by3=140+rand()*360;
+      drawArtCFlip(g,'bush_swamp',bx3,by3,44+(bu%3)*4,bu%2);
+      for(var bub=0;bub<42;bub++) rand(); }
+    borderTrees(130,true,'tree_swamp');
+    /* black water pools */
+    g.fillStyle='rgba(18,38,36,.55)';
+    for(var wp=0;wp<4;wp++){ g.beginPath(); g.ellipse(140+rand()*680,140+rand()*360,70+rand()*50,28+rand()*14,0,0,7); g.fill(); }
+    /* drifting fireflies (swamp lights) */
+    for(var ff=0;ff<10;ff++){ var fx=80+rand()*800, fy=100+rand()*420, fa=.35+Math.sin(Date.now()/400+ff*1.7)*.3;
+      g.fillStyle='rgba(140,255,170,'+fa+')'; g.beginPath(); g.arc(fx,fy,3.5,0,7); g.fill();
+      g.fillStyle='rgba(140,255,170,'+(fa*.25)+')'; g.beginPath(); g.arc(fx,fy,9,0,7); g.fill(); }
+    if(id==='mshrine'){ drawArtBottom(g,'shrine',480,297,120); solids.push({x:428,y:168,w:104,h:96}); g.fillStyle='#d8e2c8'; g.font='15px Georgia'; g.textAlign='center'; g.fillText('~ SHRINE OF THE EMBER ~',480,322); [[330,240],[630,240],[360,300],[600,300]].forEach(function(p,i){ drawArtCFlip(g,'standing_stone',p[0],p[1]-12,22,i%2); }); }
+    if(id==='msunk'){ /* Sunken Shrine: a weathered standing stone, tilted, half in the black water */
+      g.fillStyle='rgba(18,38,36,.6)'; g.beginPath(); g.ellipse(480,330,120,50,0,0,7); g.fill();
+      g.save(); g.translate(480,330); g.rotate(0.12);
+      g.fillStyle='#8a8a92'; g.beginPath(); g.moveTo(-18,12); g.lineTo(-16,-40); g.quadraticCurveTo(0,-58,16,-40); g.lineTo(18,12); g.closePath(); g.fill();
+      g.fillStyle='#6a6a72'; g.beginPath(); g.moveTo(6,12); g.lineTo(8,-38); g.quadraticCurveTo(2,-50,0,-52); g.lineTo(18,12); g.closePath(); g.fill();
+      g.strokeStyle='#4a4a52'; g.lineWidth=2; g.beginPath(); g.moveTo(-6,-10); g.lineTo(2,-24); g.lineTo(-2,-38); g.stroke();
+      g.fillStyle='#5a7a3a'; g.beginPath(); g.ellipse(0,8,16,5,0,0,7); g.fill();
+      g.restore();
+      g.fillStyle='rgba(140,255,170,.7)'; g.beginPath(); g.arc(480,300,5,0,7); g.fill();
+      g.fillStyle='#c8d2e0'; g.font='13px Georgia'; g.textAlign='center'; g.fillText('~ SUNKEN SHRINE ~',480,400); }
+    if(id==='mdoor'){ /* The Sealed Door: dark stone arch, glowing runes, solid */
+      g.fillStyle='#3a3a42'; g.fillRect(380,60,200,150);
+      g.fillStyle='#23232a'; g.fillRect(410,90,140,120);
+      g.fillStyle='#1a1a20'; g.fillRect(430,110,100,100);
+      g.strokeStyle='rgba(120,220,255,.8)'; g.lineWidth=2; g.strokeRect(410,90,140,120);
+      g.fillStyle='rgba(120,220,255,.9)';
+      for(var rd=0;rd<5;rd++){ g.beginPath(); g.arc(420+rd*30,78,4,0,7); g.fill(); }
+      g.fillStyle='#c8d2e0'; g.font='15px Georgia'; g.textAlign='center'; g.fillText('~ THE SEALED DOOR ~',480,232);
+      solids.push({x:380,y:60,w:200,h:150}); }
   } else {
     for(var t5=0;t5<9;t5++){ var bx=70+rand()*820, by=60+rand()*120; drawArtBottom(g,t5%2?'tree_pine':'tree_oak',bx,by+16,72); }
     for(var t6=0;t6<7;t6++){ var bx2=70+rand()*820, by2=470+rand()*110; drawArtBottom(g,t6%2?'tree_pine':'tree_oak',bx2,by2+16,72); }
@@ -2026,7 +2118,7 @@ function buildScreen(id){
 }
 /* ================= RUNTIME ================= */
 var player={x:480,y:520,dir:'down',atkT:0,invuln:0,moving:false};
-var enemies=[], pickups=[], particles=[], npcs=[], herbsHere=[], digHere=[], crystalsHere=[];
+var enemies=[], pickups=[], particles=[], npcs=[], herbsHere=[], digHere=[], crystalsHere=[], oilHere=[], blanketHere=[], lightsHere=[];
 var goatHere=null, goat={x:0,y:0};
 var curScreen='village', trans=null, inGame=false, paused=false;
 var dlgOpen=false, dlgT=0, itemOpen=false, girlState='idle', chestVisible=false, lastShrine='village';
@@ -2040,7 +2132,7 @@ function diffCounts(base){
 }
 function spawnScreen(id){
   var sc=SCREENS[id];
-  enemies=[]; pickups=[]; npcs=[]; herbsHere=[]; digHere=[]; crystalsHere=[];
+  enemies=[]; pickups=[]; npcs=[]; herbsHere=[]; digHere=[]; crystalsHere=[]; oilHere=[]; blanketHere=[]; lightsHere=[];
   goatHere=null;
   var rand=rng(id.length*31+7), eidx=0;
   var spots=[[240,180],[700,200],[300,440],[720,430],[480,160],[180,320],[780,320],[560,480]];
@@ -2079,6 +2171,9 @@ function spawnScreen(id){
   (HERB_SPOTS[id]||[]).forEach(function(hs,hi){ if(!G.herbsTaken[id+':'+hi]) herbsHere.push({x:hs[0],y:hs[1],idx:hi}); });
   (DIG_SPOTS[id]||[]).forEach(function(ds,di){ if(!G.digsTaken||!G.digsTaken[id+':'+di]) digHere.push({x:ds[0],y:ds[1],idx:di}); });
   (CRYSTAL_SPOTS[id]||[]).forEach(function(cs,ci){ if(G.crystals==='given'&&!G.crystalsTaken[id+':'+ci]) crystalsHere.push({x:cs[0],y:cs[1],idx:ci}); });
+  (OIL_SPOTS[id]||[]).forEach(function(os,oi){ if(G.lantern==='given') oilHere.push({x:os[0],y:os[1],idx:oi}); });
+  (BLANKET_SPOTS[id]||[]).forEach(function(bs,bi){ if(G.medicine==='given') blanketHere.push({x:bs[0],y:bs[1],idx:bi}); });
+  (LIGHT_SPOTS[id]||[]).forEach(function(ls,li){ if(G.lights==='given'&&!G.lightsTaken[id+':'+li]) lightsHere.push({x:ls[0],y:ls[1],idx:li}); });
   (NPC_SPOTS[id]||[]).forEach(function(ns){ npcs.push({id:ns.id,x:ns.x,y:ns.y,homeX:ns.x,homeY:ns.y}); });
   if(id==='mill'&&!G.millChest) pickups.push({kind:'chest',x:520,y:330});
   if(id==='fcave'&&G.axe!=='found'&&G.axe!=='done') pickups.push({kind:'axe',x:480,y:330});
@@ -2106,6 +2201,7 @@ function enterScreen(id,fromDir){
   if(id==='fedge'&&G&&!G.thornSeen){ G.thornSeen=true; persist(); startThornwoodEntry(); }
   if(id==='ddunes'&&G&&!G.dustSeen){ G.dustSeen=true; persist(); startDustfallEntry(); }
   if(id==='wpath'&&G&&!G.whiteSeen){ G.whiteSeen=true; persist(); startWhitepeakEntry(); }
+  if(id==='medge'&&G&&!G.mistSeen){ G.mistSeen=true; persist(); startMistmireEntry(); }
   if(G.goatFollow){ goat.x=player.x+30; goat.y=player.y+30; }
   G.x=Math.round(player.x); G.y=Math.round(player.y); persist();
   flashName(SCREENS[id].name);
@@ -2410,6 +2506,26 @@ function drawWorld(g,screenId,ox,oy,drawDynamics){
     if(img&&img.complete&&img.naturalWidth){ g.drawImage(img,c.x-14,c.y-18,28,28); }
     else { g.fillStyle='#7ab8ff'; g.beginPath(); g.moveTo(c.x,c.y-16); g.lineTo(c.x+10,c.y+8); g.lineTo(c.x-10,c.y+8); g.closePath(); g.fill(); }
   });
+  /* lantern oil: a sealed flask, glowing amber */
+  oilHere.forEach(function(o){
+    g.fillStyle='rgba(255,180,60,'+(0.3+Math.sin(Date.now()/300)*0.15)+')'; g.beginPath(); g.arc(o.x,o.y,24,0,7); g.fill();
+    g.fillStyle='#8a6a2a'; g.fillRect(o.x-3,o.y-18,6,8);
+    g.fillStyle='#e8a83a'; g.beginPath(); g.ellipse(o.x,o.y,11,14,0,0,7); g.fill();
+    g.fillStyle='#f8d878'; g.beginPath(); g.ellipse(o.x,o.y-3,6,8,0,0,7); g.fill();
+  });
+  /* dry blanket: folded, dry as a bone */
+  blanketHere.forEach(function(b){
+    g.fillStyle='rgba(255,220,140,'+(0.3+Math.sin(Date.now()/300)*0.15)+')'; g.beginPath(); g.arc(b.x,b.y,24,0,7); g.fill();
+    g.fillStyle='#a88a5a'; g.fillRect(b.x-16,b.y-10,32,20);
+    g.fillStyle='#c8a878'; g.fillRect(b.x-16,b.y-10,32,8);
+    g.fillStyle='#8a6a3a'; g.fillRect(b.x-16,b.y-2,32,2);
+  });
+  /* bright lights: the swamp lights, gathered thick */
+  lightsHere.forEach(function(l){
+    g.fillStyle='rgba(140,255,170,'+(0.35+Math.sin(Date.now()/300)*0.2)+')'; g.beginPath(); g.arc(l.x,l.y,24,0,7); g.fill();
+    g.fillStyle='#b8ffb8'; g.beginPath(); g.arc(l.x,l.y,8,0,7); g.fill();
+    g.fillStyle='#e8ffe8'; g.beginPath(); g.arc(l.x,l.y,3.5,0,7); g.fill();
+  });
   /* herbs */
   herbsHere.forEach(function(h){
     g.fillStyle='#4d7a33'; g.beginPath(); g.ellipse(h.x,h.y,13,7,0,0,7); g.fill();
@@ -2495,6 +2611,8 @@ function npcHasQuest(id){
   if(id==='hilda') return G.pack==='none';
   if(id==='ivo') return G.crystals==='none'||(G.crystals==='given'&&(G.crystalCount||0)>=3);
   if(id==='traveler') return G.pack==='carrying';
+  if(id==='pell') return G.lantern==='none'||G.lantern==='found'||(G.lantern==='done'&&G.lights==='none')||(G.lights==='given'&&(G.lightCount||0)>=3);
+  if(id==='mudfoot') return G.medicine==='none'||G.medicine==='found';
   return false;
 }
 </script>
@@ -2639,6 +2757,22 @@ function talkTo(npc){
     else if(G.pack==='done') openDialogue('traveler',LINES.travelerAfter);
     else openDialogue('traveler',LINES.travelerWait);
   }
+  else if(id==='pell'){
+    if(G.lantern==='none'){ openDialogue('pell',LINES.pellFirst,function(){ G.lantern='given'; persist(); updateHUD(); toast('Quest: bring Ferryman Pell a flask of lantern oil \u2014 Sunken Cave, west of the Black Water'); }); }
+    else if(G.lantern==='found'){ openDialogue('pell',LINES.pellOilDone,function(){ G.lantern='done'; G.coins+=50; persist(); updateHUD(); toast('Ferryman Pell pays you 50 coins. The ferry is yours \u2014 cross the Black Water to the south.'); }); }
+    else if(G.lantern==='done'&&G.lights==='none'){ openDialogue('pell',LINES.pellLightsFirst,function(){ G.lights='given'; persist(); updateHUD(); toast('Quest: bring Ferryman Pell three bright lights \u2014 Firefly Marsh, east of the Black Water'); }); }
+    else if(G.lights==='given'&&(G.lightCount||0)>=3){ openDialogue('pell',LINES.pellLightsDone,function(){ G.lights='done'; G.coins+=50; persist(); updateHUD(); toast('Ferryman Pell pays you 50 coins for the bright lights.'); }); }
+    else if(G.lights==='given') openDialogue('pell',LINES.pellLightsRepeat);
+    else if(G.lights==='done') openDialogue('pell',LINES.pellAfter);
+    else if(G.lantern==='done') openDialogue('pell',LINES.pellAfter);
+    else openDialogue('pell',LINES.pellRepeat);
+  }
+  else if(id==='mudfoot'){
+    if(G.medicine==='none'){ openDialogue('mudfoot',LINES.mudfootFirst,function(){ G.medicine='given'; persist(); updateHUD(); toast('Quest: bring Mudfoot a dry blanket \u2014 Old Ferry Dock, north of the swamp'); }); }
+    else if(G.medicine==='found'){ openDialogue('mudfoot',LINES.mudfootBlanketDone,function(){ G.medicine='done'; G.coins+=40; G.potions=(G.potions||0)+1; persist(); updateHUD(); toast('Mudfoot pays you 40 coins and a potion for the dry blanket.'); }); }
+    else if(G.medicine==='done') openDialogue('mudfoot',LINES.mudfootAfter);
+    else openDialogue('mudfoot',LINES.mudfootRepeat);
+  }
   else if(id==='sable'){
     /* Sable buys every wolf pelt the hero carries, 5 coins apiece, once her lines are done. */
     if(first) openDialogue('sable',LINES.sableFirst,function(){ sellPelts(); });
@@ -2684,6 +2818,8 @@ function tryInteract(){
     return;
   }
   for(i=0;i<npcs.length;i++){ n=npcs[i]; if(dist(player.x,player.y,n.x,n.y)<54){ talkTo(n); return; } }
+  if(curScreen==='mdoor'&&dist(player.x,player.y,480,220)<70){ toast('The Sealed Door. It needs the Master Key.'); return; }
+  if(curScreen==='msunk'&&!G.sunkenRelic&&dist(player.x,player.y,480,330)<70){ G.sunkenRelic=true; G.coins+=50; SFX.chest(); persist(); updateHUD(); showItemFind(CHARM_IMG.coin,'You found a sunken relic in the shrine! 50 coins.'); return; }
   if(curScreen==='village'&&dist(player.x,player.y,854,215)<56){ openShop('store'); return; }
   var csp=(CHARM_SPOTS[curScreen]||[]);
   for(var ci=0;ci<csp.length;ci++){ if(!hasCharm(csp[ci].id)&&dist(player.x,player.y,csp[ci].x,csp[ci].y)<46){ addCharm(csp[ci].id); return; } }
@@ -2703,6 +2839,9 @@ function tryInteract(){
     pickups.splice(i,1); G.water='skin'; SFX.chest(); persist(); updateHUD();
     toast('You found the empty waterskin! Fill it at the Oasis, then bring it back to Zeke.'); return; } }
   for(i=0;i<crystalsHere.length;i++){ if(dist(player.x,player.y,crystalsHere[i].x,crystalsHere[i].y)<56){ collectCrystal(i); return; } }
+  for(i=0;i<oilHere.length;i++){ if(dist(player.x,player.y,oilHere[i].x,oilHere[i].y)<56){ collectOil(i); return; } }
+  for(i=0;i<blanketHere.length;i++){ if(dist(player.x,player.y,blanketHere[i].x,blanketHere[i].y)<56){ collectBlanket(i); return; } }
+  for(i=0;i<lightsHere.length;i++){ if(dist(player.x,player.y,lightsHere[i].x,lightsHere[i].y)<56){ collectLight(i); return; } }
   if(curScreen==='fmaze'&&!G.mazeDone&&dist(player.x,player.y,480,320)<56){ openMaze(); return; }
   if(curScreen==='doasis'&&G.water==='skin'&&dist(player.x,player.y,480,330)<70){ fillWaterskin(); return; }
   if(isShrine(curScreen)&&dist(player.x,player.y,480,240)<84){
@@ -2746,6 +2885,23 @@ function collectCrystal(i){
   G.crystalCount=(G.crystalCount||0)+1; SFX.coin(); burst(c.x,c.y,8,['#7ab8ff','#b8d8ff','#e8f4ff']); persist(); updateHUD();
   if(G.crystalCount>=3) toast('You have all three storm crystals! Bring them to Scholar Ivo at the Crystal Field.');
   else toast('You found a storm crystal! '+(G.crystalCount)+' of 3.');
+}
+function collectOil(i){
+  var o=oilHere[i]; oilHere.splice(i,1);
+  G.lantern='found'; SFX.coin(); burst(o.x,o.y,8,['#e8a83a','#f8d878','#fff0b8']); persist(); updateHUD();
+  toast('You found a flask of lantern oil! Bring it to Ferryman Pell at the Black Water.');
+}
+function collectBlanket(i){
+  var b=blanketHere[i]; blanketHere.splice(i,1);
+  G.medicine='found'; SFX.coin(); burst(b.x,b.y,8,['#c8a878','#e8d8a8','#fff8d8']); persist(); updateHUD();
+  toast('You found a dry blanket! Bring it to Mudfoot at his hut.');
+}
+function collectLight(i){
+  var l=lightsHere[i]; lightsHere.splice(i,1);
+  if(!G.lightsTaken) G.lightsTaken={}; G.lightsTaken[curScreen+':'+l.idx]=true;
+  G.lightCount=(G.lightCount||0)+1; SFX.coin(); burst(l.x,l.y,8,['#8cffaa','#b8ffb8','#e8ffe8']); persist(); updateHUD();
+  if(G.lightCount>=3) toast('You have all three bright lights! Bring them to Ferryman Pell at the Black Water.');
+  else toast('You caught a bright light! '+(G.lightCount)+' of 3.');
 }
 function doAttack(){
   if(!inGame||dlgOpen||itemOpen||paused||trans||shopOpen) return;
@@ -2889,6 +3045,8 @@ function startTransition(dir){
   var dc=dir==='left'?-1:dir==='right'?1:0, dr=dir==='up'?-1:dir==='down'?1:0;
   var nid=GRID[(sc.col+dc)+','+(sc.row+dr)];
   if(!nid) return false;
+  /* Pell's ferry: the Black Water is too deep to wade south until his lantern burns again */
+  if(curScreen==='mwater'&&dir==='down'&&G&&G.lantern!=='done'){ toast('The Black Water is too deep. Pell\u2019s ferry is the only way across.'); return false; }
   trans={from:curScreen,to:nid,dir:dir,t:0,started:Date.now()};
   return true;
 }
@@ -3063,7 +3221,7 @@ function drawMinimap(){
   c.clearRect(0,0,Wd,Ht);
   /* only the realm you are in, with its name at the top */
   var realm=screenRealm(curScreen);
-  var rname={meadow:'Meadowlands',thornwood:'Thornwood',dustfall:'Dustfall',whitepeak:'Whitepeak'}[realm]||realm;
+  var rname={meadow:'Meadowlands',thornwood:'Thornwood',dustfall:'Dustfall',whitepeak:'Whitepeak',mistmire:'Mistmire'}[realm]||realm;
   c.fillStyle='#ffd97a'; c.font='bold 11px Georgia'; c.textAlign='center';
   c.fillText(rname,Wd/2,12);
   /* that realm's screens, in their own col/row grid */
@@ -3264,12 +3422,19 @@ function enterGame(fromCutscene){
   if(G.thornSeen===undefined) G.thornSeen=false;
   if(G.dustSeen===undefined) G.dustSeen=false;
   if(G.whiteSeen===undefined) G.whiteSeen=false;
+  if(G.mistSeen===undefined) G.mistSeen=false;
   if(G.pack===undefined) G.pack='none';
   if(G.crystals===undefined) G.crystals='none';
   if(G.crystalCount===undefined) G.crystalCount=0;
   if(G.crystalsTaken===undefined) G.crystalsTaken={};
   if(G.wraithMet===undefined) G.wraithMet=false;
   if(G.wraithDown===undefined) G.wraithDown=false;
+  if(G.lantern===undefined) G.lantern='none';
+  if(G.lights===undefined) G.lights='none';
+  if(G.lightCount===undefined) G.lightCount=0;
+  if(G.lightsTaken===undefined) G.lightsTaken={};
+  if(G.medicine===undefined) G.medicine='none';
+  if(G.sunkenRelic===undefined) G.sunkenRelic=false;
   if(G.pelts===undefined) G.pelts=0;
   if(G.axe===undefined) G.axe='none';
   if(G.thornMet===undefined) G.thornMet=false;
