@@ -419,6 +419,14 @@ var LINES={
  jorenRepeat:['An axe is a woodcutter\u2019s soul. Without mine, I\u2019m just a man staring at trees.','@I\u2019ll find it, Joren. Keep the trees waiting.'],
  sableFirst:['Wolf pelts, I buy them. Five coins apiece, fair price.','@Five coins a pelt. I\u2019ll bring you every one I find.','The shadow wolves are another matter \u2014 their pelts aren\u2019t worth the danger. Well... unless you\u2019re the one hunting the Thornwolf.','@Then the Thornwolf\u2019s pack is my hunting ground.'],
  sableRepeat:['Tracks don\u2019t lie. The pack was here at dawn. They always come back at dusk.','@Then I know when to find them.'],
+ zekeFirst:['Water, friend? In Dustfall, water is worth more than gold. Bring me a full waterskin and I\u2019ll show you my desert gear.','@A full waterskin. Where would I find one?','The Old Well, east of here \u2014 there\u2019s a skin there. Fill it at the Oasis, and bring it back to me.','@The Old Well, then the Oasis. I\u2019ll be back with it full.'],
+ zekeRepeat:['The Old Well has the skin. The Oasis has the water. Bring me a full waterskin.','@On it, Zeke.'],
+ zekeWaterDone:['Ha! A full waterskin \u2014 you\u2019re a friend of the desert now. Here, take these coins, and my shop is open to you whenever you need desert gear.','@Thank you, Zeke. I\u2019ll be back for gear.'],
+ zekeAfter:['Water, friend? No \u2014 you brought the water. My desert gear is yours whenever you need it.','@Good to know, Zeke.'],
+ marenFirst:['You look like someone who digs things up. I buried something in Dustfall when I was young and foolish. A relic. If you go, mind the sand \u2014 it remembers.','@A buried relic? Where did you leave it?','Where the two dead palms lean together, east of here. Dig there, and bring me what you find.','@The two dead palms. I\u2019ll dig it up for you.'],
+ marenRepeat:['The two dead palms, leaning together. Dig there. The sand remembers, but so do I.','@I\u2019m on my way, Maren.'],
+ marenRelicDone:['You found it. My relic. Oh, I was young and foolish \u2014 but I was also right to bury it. Take these coins, and my thanks. The sand remembers you kindly now.','@It belongs with you, Maren. Thank you.'],
+ marenAfter:['The sand remembers you kindly now. You\u2019re a friend of Dustfall, child.','@Thank you, Maren.'],
  jorenAxeDone:['My axe... you found it. Twenty years, and it comes home.','@It belongs with you, Joren. Your father would want it cutting wood, not sitting in a goblin den.','Then I owe you, and I pay my debts. Take this, and my thanks.','@Thank you, Joren. Keep the trees waiting.'],
  jorenAfter:['An axe is a woodcutter\u2019s soul. You gave mine back to me.','@Glad it\u2019s home, Joren.'],
  girlFirst:['Hi! Hi! You\u2019re the one with the ember!','@That\u2019s me. And you must be the one who knows all the secrets.','I know all the secret places in the village. Follow me, I\u2019ll show you one! There\u2019s a chest, and it\u2019s got something shiny in it!','@Lead the way, then. I like shiny.'],
@@ -464,6 +472,19 @@ var THORN_AFTER_PAGES=[
  "East lies Dustfall, where the sand hides old things. The Dust Key waits there."
 ];
 var THORN_KEY_WORDS="You got the Thorn Key! Two of four. When all four are yours, they become the master key.";
+/* The Dune Colossus speaks: the meeting is the narrator plus the Colossus voice. */
+var COLOSSUS_MEET_PAGES=[
+ "The sand shifts beneath your feet, and the Dune Colossus rises, stone grinding on stone, taller than the dunes themselves.",
+ "It speaks in a voice like mountains moving. \u2018The sand remembers,\u2019 it says. \u2018You do not belong here.\u2019",
+ "It has guarded this place since before your people had a name, and it will not let you pass."
+];
+/* Narration after the Dune Colossus is beaten: plays right after the Dust Key item find. */
+var COLOSSUS_AFTER_PAGES=[
+ "The Dune Colossus dissolves into embers, and the desert goes quiet. The sand settles, and the sun feels a little less cruel.",
+ "The third key is yours. One more waits in the far north, and far below, the fifth realm still sleeps.",
+ "North lies Whitepeak, where the storm never sleeps. The Peak Key waits there."
+];
+var COLOSSUS_KEY_WORDS="You got the Dust Key! Three of four. When all four are yours, they become the master key.";
 /* ================= CHARMS ================= */
 var CHARM_NAMES={seeker:'Seeker Charm',lucky:'Lucky Charm',guardian:'Guardian Charm',ember:'Ember Charm'};
 var CHARM_DESC={seeker:'Reveals hidden secrets nearby',lucky:'Enemies drop more coins',guardian:'You take less damage',ember:'Your health slowly comes back'};
@@ -532,7 +553,8 @@ function useConsumable(kind){
 var SHOPS={
  store:{title:'General Store',greet:'Welcome to the General Store! Healing herbs, potions, sturdy bags — and honest armor, all fair prices.'},
  mira:{title:"Mira's Healing",greet:'Sunleaf for cuts, moonpetal for fevers. Herbs are 15 coins, potions 40 — take what you need.'},
- renn:{title:"Renn's Armory",greet:'Steel for those who have earned a blade. A better weapon hits harder; good armor turns a harder blow.'}};
+ renn:{title:"Renn's Armory",greet:'Steel for those who have earned a blade. A better weapon hits harder; good armor turns a harder blow.'},
+ zeke:{title:"Zeke's Desert Gear",greet:'Desert gear for desert folk. Herbs and potions, fair prices — water is dear out here, but my shelves are full.'}};
 var shopId=null, shopOpen=false;
 function shopItems(id){
   var out=[], wt=G.weapon?((G.weaponTier||1)):0, at=G.armorTier||0, bs=G.bagSize||12;
@@ -549,6 +571,10 @@ function shopItems(id){
   if(id==='renn'){
     var wp=[0,150,300];
     for(var t=wt+1;t<=3;t++) out.push({key:'weapon'+t,kind:'weapon',name:WEAPONS[HEROES[G.hero].id][t-1],price:wp[t-1],desc:t===2?'Sharper, stronger — a true fighting blade.':'Its edge burns with the old world\u2019s light.',img:WEAPON_IMG[HEROES[G.hero].id][t-1],tier:t});
+  }
+  if(id==='zeke'){
+    out.push({key:'herb',kind:'consumable',name:'Healing Herb (sunleaf)',price:15,desc:'Restores half an ember. Good to have in the desert.',glyph:'\u{1F33F}'});
+    out.push({key:'potion',kind:'consumable',name:'Healing Potion',price:40,desc:'Restores a full ember. For when a herb will not do.',glyph:'\u{1F9EA}'});
   }
   return out;
 }
@@ -615,7 +641,7 @@ function completeTrouble(){
 var KEY_NAMES={meadow:'Meadow Key',thorn:'Thorn Key',dust:'Dust Key',peak:'Peak Key'};
 var grakImg=new Image(); grakImg.src=GRAK_SPRITE;
 /* SPRITE_DATA lives in data/sprites.js */
-var SPRITE_ASPECT={ hero_swordsman_male:0.585, hero_swordsman_female:0.69, hero_spear_male:0.645, hero_spear_female:0.59, hero_bow_male:0.78, hero_bow_female:1.13, hero_mage_male:0.83, hero_mage_female:0.86, hero_guardian_male:1.375, hero_guardian_female:1.07, npc_bram:0.8, npc_dell:0.6071, npc_renn:0.78, npc_mira:0.51, npc_joren:0.865, npc_girl:0.8929, goblin:0.89,hero_swordsman_male_sb:0.863,hero_swordsman_male_ea:0.863,hero_swordsman_male_eb:0.863,hero_swordsman_male_na:0.863,hero_swordsman_male_nb:0.863,hero_swordsman_female_sb:0.85,hero_swordsman_female_ea:0.85,hero_swordsman_female_eb:0.85,hero_swordsman_female_na:0.85,hero_swordsman_female_nb:0.85,hero_spear_male_sb:0.775,hero_spear_male_ea:0.775,hero_spear_male_eb:0.775,hero_spear_male_na:0.775,hero_spear_male_nb:0.775,hero_spear_female_sb:0.8,hero_spear_female_ea:0.8,hero_spear_female_eb:0.8,hero_spear_female_na:0.8,hero_spear_female_nb:0.8,hero_bow_male_sb:0.975,hero_bow_male_ea:0.975,hero_bow_male_eb:0.975,hero_bow_male_na:0.975,hero_bow_male_nb:0.975,hero_bow_female_sb:1.1625,hero_bow_female_ea:1.163,hero_bow_female_eb:1.163,hero_bow_female_na:1.163,hero_bow_female_nb:1.163,hero_mage_male_sb:0.925,hero_mage_male_ea:0.925,hero_mage_male_eb:0.925,hero_mage_male_na:0.925,hero_mage_male_nb:0.925,hero_mage_female_sb:0.938,hero_mage_female_ea:0.938,hero_mage_female_eb:0.938,hero_mage_female_na:0.938,hero_mage_female_nb:0.938,hero_guardian_male_sb:1.375, hero_guardian_male_sa:1.375,hero_guardian_male_ea:1.375,hero_guardian_male_eb:1.375,hero_guardian_male_na:1.375,hero_guardian_male_nb:1.375,hero_guardian_female_sb:1.2,hero_guardian_female_ea:1.2,hero_guardian_female_eb:1.2,hero_guardian_female_na:1.2,hero_guardian_female_nb:1.2,goat_ea:1.156,goat_eb:1.156,goblin_sb:1.2,goblin_ea:1.2,goblin_eb:1.2,goblin_na:1.2,goblin_nb:1.2,girl_sb:0.8929,girl_ea:0.8929,girl_eb:0.8929,girl_na:0.8929,girl_nb:0.8929,grak_sa:0.871,grak_sb:0.879,grak_ea:0.879,grak_eb:0.879,grak_na:0.879,grak_nb:0.879,hero_mage_male_sa:0.925,hero_mage_female_sa:0.938,hero_guardian_female_sa:1.2,hero_atk_swordsman_a:1.3,hero_atk_swordsman_b:1.3,hero_atk_swordsman_c:1.3,hero_atk_spear_a:1.5,hero_atk_spear_b:1.5,hero_atk_spear_c:1.5,hero_atk_bow_a:0.988,hero_atk_bow_b:0.988,hero_atk_bow_c:0.988,hero_atk_mage_a:1.312,hero_atk_mage_b:1.312,hero_atk_mage_c:1.312,hero_atk_guardian_a:0.9,hero_atk_guardian_b:0.9,hero_atk_guardian_c:0.9,hero_swordsman_male_nw:1.0156,hero_swordsman_male_nw_sb:1.0156,hero_swordsman_male_nw_ea:1.0156,hero_swordsman_male_nw_eb:1.0156,hero_swordsman_male_nw_na:1.0156,hero_swordsman_male_nw_nb:1.0156,hero_swordsman_female_nw:0.8438,hero_swordsman_female_nw_sb:0.8438,hero_swordsman_female_nw_ea:0.8438,hero_swordsman_female_nw_eb:0.8438,hero_swordsman_female_nw_na:0.8438,hero_swordsman_female_nw_nb:0.8438,hero_spear_male_nw:0.9531,hero_spear_male_nw_sb:0.9531,hero_spear_male_nw_ea:0.9531,hero_spear_male_nw_eb:0.9531,hero_spear_male_nw_na:0.9531,hero_spear_male_nw_nb:0.9531,hero_spear_female_nw:0.9375,hero_spear_female_nw_sb:0.9375,hero_spear_female_nw_ea:0.9375,hero_spear_female_nw_eb:0.9375,hero_spear_female_nw_na:0.9375,hero_spear_female_nw_nb:0.9375,hero_bow_male_nw:1.0469,hero_bow_male_nw_sb:1.0469,hero_bow_male_nw_ea:1.0469,hero_bow_male_nw_eb:1.0469,hero_bow_male_nw_na:1.0469,hero_bow_male_nw_nb:1.0469,hero_bow_female_nw:1.1562,hero_bow_female_nw_sb:1.1562,hero_bow_female_nw_ea:1.1562,hero_bow_female_nw_eb:1.1562,hero_bow_female_nw_na:1.1562,hero_bow_female_nw_nb:1.1562,hero_mage_male_nw:1.0312,hero_mage_male_nw_sb:1.0312,hero_mage_male_nw_ea:1.0312,hero_mage_male_nw_eb:1.0312,hero_mage_male_nw_na:1.0312,hero_mage_male_nw_nb:1.0312,hero_mage_female_nw:1.0469,hero_mage_female_nw_sb:1.0469,hero_mage_female_nw_ea:1.0469,hero_mage_female_nw_eb:1.0469,hero_mage_female_nw_na:1.0469,hero_mage_female_nw_nb:1.0469,hero_guardian_male_nw:1.375,hero_guardian_male_nw_sb:1.375,hero_guardian_male_nw_ea:1.375,hero_guardian_male_nw_eb:1.375,hero_guardian_male_nw_na:1.375,hero_guardian_male_nw_nb:1.375,hero_guardian_female_nw:1.2031,hero_guardian_female_nw_sb:1.2031,hero_guardian_female_nw_ea:1.2031,hero_guardian_female_nw_eb:1.2031,hero_guardian_female_nw_na:1.2031,hero_guardian_female_nw_nb:1.2031,hero_atk_swordsman_female_a:1.175,hero_atk_swordsman_female_b:1.175,hero_atk_swordsman_female_c:1.175,hero_atk_spear_female_a:1.225,hero_atk_spear_female_b:1.225,hero_atk_spear_female_c:1.225,hero_atk_bow_female_a:1.45,hero_atk_bow_female_b:1.45,hero_atk_bow_female_c:1.45,hero_atk_mage_female_a:1.4875,hero_atk_mage_female_b:1.4875,hero_atk_mage_female_c:1.4875,hero_atk_guardian_female_a:1.3125,hero_atk_guardian_female_b:1.3125,hero_atk_guardian_female_c:1.3125,wpon_sword:0.3438,wpon_spear:0.1667,wpon_bow:0.2188,wpon_mage:0.2292,wpon_guardian:0.7812,wpon_dagger:0.4,wolf:0.7083,wolf_sb:0.7083,wolf_na:1.0972,wolf_nb:1.0972,wolf_ea:1.3333,wolf_eb:1.4394,wisp:0.6806,wisp_ea:0.6806,wisp_na:0.6806,wisp_sb:0.7639,wisp_eb:0.7639,wisp_nb:0.7639,npc_sable:0.4107,golem:0.607,golem_ea:0.607,golem_eb:0.911,golem_sb:0.607,golem_na:0.607,golem_nb:0.911};
+var SPRITE_ASPECT={ hero_swordsman_male:0.585, hero_swordsman_female:0.69, hero_spear_male:0.645, hero_spear_female:0.59, hero_bow_male:0.78, hero_bow_female:1.13, hero_mage_male:0.83, hero_mage_female:0.86, hero_guardian_male:1.375, hero_guardian_female:1.07, npc_bram:0.8, npc_dell:0.6071, npc_renn:0.78, npc_mira:0.51, npc_joren:0.865, npc_girl:0.8929, goblin:0.89,hero_swordsman_male_sb:0.863,hero_swordsman_male_ea:0.863,hero_swordsman_male_eb:0.863,hero_swordsman_male_na:0.863,hero_swordsman_male_nb:0.863,hero_swordsman_female_sb:0.85,hero_swordsman_female_ea:0.85,hero_swordsman_female_eb:0.85,hero_swordsman_female_na:0.85,hero_swordsman_female_nb:0.85,hero_spear_male_sb:0.775,hero_spear_male_ea:0.775,hero_spear_male_eb:0.775,hero_spear_male_na:0.775,hero_spear_male_nb:0.775,hero_spear_female_sb:0.8,hero_spear_female_ea:0.8,hero_spear_female_eb:0.8,hero_spear_female_na:0.8,hero_spear_female_nb:0.8,hero_bow_male_sb:0.975,hero_bow_male_ea:0.975,hero_bow_male_eb:0.975,hero_bow_male_na:0.975,hero_bow_male_nb:0.975,hero_bow_female_sb:1.1625,hero_bow_female_ea:1.163,hero_bow_female_eb:1.163,hero_bow_female_na:1.163,hero_bow_female_nb:1.163,hero_mage_male_sb:0.925,hero_mage_male_ea:0.925,hero_mage_male_eb:0.925,hero_mage_male_na:0.925,hero_mage_male_nb:0.925,hero_mage_female_sb:0.938,hero_mage_female_ea:0.938,hero_mage_female_eb:0.938,hero_mage_female_na:0.938,hero_mage_female_nb:0.938,hero_guardian_male_sb:1.375, hero_guardian_male_sa:1.375,hero_guardian_male_ea:1.375,hero_guardian_male_eb:1.375,hero_guardian_male_na:1.375,hero_guardian_male_nb:1.375,hero_guardian_female_sb:1.2,hero_guardian_female_ea:1.2,hero_guardian_female_eb:1.2,hero_guardian_female_na:1.2,hero_guardian_female_nb:1.2,goat_ea:1.156,goat_eb:1.156,goblin_sb:1.2,goblin_ea:1.2,goblin_eb:1.2,goblin_na:1.2,goblin_nb:1.2,girl_sb:0.8929,girl_ea:0.8929,girl_eb:0.8929,girl_na:0.8929,girl_nb:0.8929,grak_sa:0.871,grak_sb:0.879,grak_ea:0.879,grak_eb:0.879,grak_na:0.879,grak_nb:0.879,hero_mage_male_sa:0.925,hero_mage_female_sa:0.938,hero_guardian_female_sa:1.2,hero_atk_swordsman_a:1.3,hero_atk_swordsman_b:1.3,hero_atk_swordsman_c:1.3,hero_atk_spear_a:1.5,hero_atk_spear_b:1.5,hero_atk_spear_c:1.5,hero_atk_bow_a:0.988,hero_atk_bow_b:0.988,hero_atk_bow_c:0.988,hero_atk_mage_a:1.312,hero_atk_mage_b:1.312,hero_atk_mage_c:1.312,hero_atk_guardian_a:0.9,hero_atk_guardian_b:0.9,hero_atk_guardian_c:0.9,hero_swordsman_male_nw:1.0156,hero_swordsman_male_nw_sb:1.0156,hero_swordsman_male_nw_ea:1.0156,hero_swordsman_male_nw_eb:1.0156,hero_swordsman_male_nw_na:1.0156,hero_swordsman_male_nw_nb:1.0156,hero_swordsman_female_nw:0.8438,hero_swordsman_female_nw_sb:0.8438,hero_swordsman_female_nw_ea:0.8438,hero_swordsman_female_nw_eb:0.8438,hero_swordsman_female_nw_na:0.8438,hero_swordsman_female_nw_nb:0.8438,hero_spear_male_nw:0.9531,hero_spear_male_nw_sb:0.9531,hero_spear_male_nw_ea:0.9531,hero_spear_male_nw_eb:0.9531,hero_spear_male_nw_na:0.9531,hero_spear_male_nw_nb:0.9531,hero_spear_female_nw:0.9375,hero_spear_female_nw_sb:0.9375,hero_spear_female_nw_ea:0.9375,hero_spear_female_nw_eb:0.9375,hero_spear_female_nw_na:0.9375,hero_spear_female_nw_nb:0.9375,hero_bow_male_nw:1.0469,hero_bow_male_nw_sb:1.0469,hero_bow_male_nw_ea:1.0469,hero_bow_male_nw_eb:1.0469,hero_bow_male_nw_na:1.0469,hero_bow_male_nw_nb:1.0469,hero_bow_female_nw:1.1562,hero_bow_female_nw_sb:1.1562,hero_bow_female_nw_ea:1.1562,hero_bow_female_nw_eb:1.1562,hero_bow_female_nw_na:1.1562,hero_bow_female_nw_nb:1.1562,hero_mage_male_nw:1.0312,hero_mage_male_nw_sb:1.0312,hero_mage_male_nw_ea:1.0312,hero_mage_male_nw_eb:1.0312,hero_mage_male_nw_na:1.0312,hero_mage_male_nw_nb:1.0312,hero_mage_female_nw:1.0469,hero_mage_female_nw_sb:1.0469,hero_mage_female_nw_ea:1.0469,hero_mage_female_nw_eb:1.0469,hero_mage_female_nw_na:1.0469,hero_mage_female_nw_nb:1.0469,hero_guardian_male_nw:1.375,hero_guardian_male_nw_sb:1.375,hero_guardian_male_nw_ea:1.375,hero_guardian_male_nw_eb:1.375,hero_guardian_male_nw_na:1.375,hero_guardian_male_nw_nb:1.375,hero_guardian_female_nw:1.2031,hero_guardian_female_nw_sb:1.2031,hero_guardian_female_nw_ea:1.2031,hero_guardian_female_nw_eb:1.2031,hero_guardian_female_nw_na:1.2031,hero_guardian_female_nw_nb:1.2031,hero_atk_swordsman_female_a:1.175,hero_atk_swordsman_female_b:1.175,hero_atk_swordsman_female_c:1.175,hero_atk_spear_female_a:1.225,hero_atk_spear_female_b:1.225,hero_atk_spear_female_c:1.225,hero_atk_bow_female_a:1.45,hero_atk_bow_female_b:1.45,hero_atk_bow_female_c:1.45,hero_atk_mage_female_a:1.4875,hero_atk_mage_female_b:1.4875,hero_atk_mage_female_c:1.4875,hero_atk_guardian_female_a:1.3125,hero_atk_guardian_female_b:1.3125,hero_atk_guardian_female_c:1.3125,wpon_sword:0.3438,wpon_spear:0.1667,wpon_bow:0.2188,wpon_mage:0.2292,wpon_guardian:0.7812,wpon_dagger:0.4,wolf:0.7083,wolf_sb:0.7083,wolf_na:1.0972,wolf_nb:1.0972,wolf_ea:1.3333,wolf_eb:1.4394,wisp:0.6806,wisp_ea:0.6806,wisp_na:0.6806,wisp_sb:0.7639,wisp_eb:0.7639,wisp_nb:0.7639,npc_sable:0.4107,npc_zeke:0.655,npc_maren:0.5375,golem:0.607,golem_ea:0.607,golem_eb:0.911,golem_sb:0.607,golem_na:0.607,golem_nb:0.911,colossus:1.27};
 var spriteImgs={};
 Object.keys(SPRITE_DATA).forEach(function(k){ var im=new Image(); im.src=SPRITE_DATA[k]; spriteImgs[k]=im; });
 /* ================= SCENERY ART (real artwork, Meadowlands) ================= */
@@ -1047,6 +1073,7 @@ function drawHeroSprite(g,hx,hy){
 var keySpriteImg=new Image(); keySpriteImg.src=MEADOW_KEY_SPRITE;
 function grakStats(){ return G.diff==='Easy'?{hp:6,dmg:1}:G.diff==='Hard'?{hp:14,dmg:3}:{hp:10,dmg:2}; }
 function thornStats(){ return G.diff==='Easy'?{hp:8,dmg:1}:G.diff==='Hard'?{hp:16,dmg:3}:{hp:12,dmg:2}; }
+function colossusStats(){ return G.diff==='Easy'?{hp:10,dmg:1}:G.diff==='Hard'?{hp:18,dmg:3}:{hp:14,dmg:2}; }
 function hasKey(k){ return (G.keys||[]).indexOf(k)>=0; }
 /* screens: col,row on the meadow grid */
 var SCREENS={
@@ -1106,10 +1133,11 @@ function isShrine(id){ return id==='shrine'||id==='fshrine'||id==='dshrine'; }
 var NPC_SPOTS={
  village:[
   {id:'bram',x:560,y:230},{id:'renn',x:290,y:250},{id:'mira',x:355,y:576},
-  {id:'dell',x:160,y:545},{id:'girl',x:640,y:250}
+  {id:'dell',x:160,y:545},{id:'girl',x:640,y:250},{id:'maren',x:480,y:420}
  ],
  fedge:[{id:'joren',x:200,y:260}],
- fden:[{id:'sable',x:480,y:300}]};
+ fden:[{id:'sable',x:480,y:300}],
+ ddunes:[{id:'zeke',x:480,y:320}]};
 var CHEST_SPOTS=[{x:852,y:118},{x:60,y:545},{x:60,y:60},{x:905,y:545}];
 var CHEST_PRIZES=['shard','coins','seeker','hidden'];
 var CHARM_SPOTS={east:[{id:'lucky',x:905,y:300}],north:[{id:'guardian',x:480,y:60}],west:[{id:'ember',x:55,y:300}]};
@@ -1173,7 +1201,7 @@ var SFX={
   roar:function(){ if(AC){ var t=AC.currentTime; tone(90,t,.7,'sawtooth',.2,null,45); noiseBurst(t,.5,.2,500,120); } }
 };
 /* Spoken dialogue — browser speech. Profiles are [pitch,rate,gender]. */
-var VOICE={bram:[.55,.85,0],dell:[.9,.95,0],renn:[.75,1,0],mira:[1.25,1,1],joren:[.65,.9,0],sable:[1.35,1,1],girl:[1.7,1.15,1],grak:[.35,.8,0],narr:[.6,.85,0]};
+var VOICE={bram:[.55,.85,0],dell:[.9,.95,0],renn:[.75,1,0],mira:[1.25,1,1],joren:[.65,.9,0],sable:[1.35,1,1],girl:[1.7,1.15,1],grak:[.35,.8,0],narr:[.6,.85,0],zeke:[.8,.9,0],maren:[1.1,.8,1],colossus:[.3,.7,0]};
 var VHER={swordsman:[.9,1],spear:[1,1],bow:[1.1,1.05],mage:[1.2,.95],guardian:[.7,.9]};
 var sayN=0;
 function vPick(f){try{var vs=speechSynthesis.getVoices().filter(v=>/^en/i.test(v.lang));if(!vs.length)return;var m=f?/female|zira|samantha|aria|jenny/i:/male|daniel|david|guy/i;return vs.find(v=>m.test(v.name))||(f?vs[vs.length-1]:vs[0])}catch(e){return}}
@@ -1233,7 +1261,7 @@ function storeSlots(s){ try{ localStorage.setItem(SLOTKEY,JSON.stringify(s)); }c
 function newState(slot,heroIdx,gender,diff){
   return { slot:slot, hero:heroIdx, gender:gender, diff:diff, screen:'village', x:480, y:520,
     hp:6, maxEmbers:3, coins:0, herbs:0, weapon:false, potions:0, weaponTier:0, armorTier:0, bagSize:12, quest:'none', keys:[], grakDown:false, grakMet:false,
-    pelts:0, axe:'none', thornMet:false, thornDown:false, mazeDone:false,
+    pelts:0, axe:'none', thornMet:false, thornDown:false, mazeDone:false, water:'none', relic:'none', colossusMet:false, colossusDown:false,
     visited:{village:true}, herbsTaken:{}, enemiesDown:{}, millChest:false, girlChest:false, girlChests:0,
     goat:'none', goatFollow:false, trouble:'none', goblinKills:0, charms:[], equipped:[],
     talked:{}, rennAfter:false, girlMet:false, shrineSeen:false, playSec:0, thornSeen:false, dustSeen:false, lastShrine:'village' };
@@ -1251,6 +1279,10 @@ function persist(){
   if(G.thornMet===undefined) G.thornMet=false;
   if(G.thornDown===undefined) G.thornDown=false;
   if(G.mazeDone===undefined) G.mazeDone=false;
+  if(G.water===undefined) G.water='none';
+  if(G.relic===undefined) G.relic='none';
+  if(G.colossusMet===undefined) G.colossusMet=false;
+  if(G.colossusDown===undefined) G.colossusDown=false;
   if(G.lastShrine===undefined) G.lastShrine='village';
   if(G.potions===undefined) G.potions=0;
   if(G.weaponTier===undefined) G.weaponTier=G.weapon?1:0;
@@ -1299,7 +1331,7 @@ function renderSlots(){
 }
 function slotClicked(i){
   var s=loadSlots()[i];
-  if(s){ G=s; if(!G.keys) G.keys=[]; if(G.grakDown===undefined) G.grakDown=false; if(G.grakMet===undefined) G.grakMet=false; if(G.pelts===undefined) G.pelts=0; if(G.axe===undefined) G.axe='none'; if(G.thornMet===undefined) G.thornMet=false; if(G.thornDown===undefined) G.thornDown=false; if(G.mazeDone===undefined) G.mazeDone=false; enterGame(false); }
+  if(s){ G=s; if(!G.keys) G.keys=[]; if(G.grakDown===undefined) G.grakDown=false; if(G.grakMet===undefined) G.grakMet=false; if(G.pelts===undefined) G.pelts=0; if(G.axe===undefined) G.axe='none'; if(G.thornMet===undefined) G.thornMet=false; if(G.thornDown===undefined) G.thornDown=false; if(G.mazeDone===undefined) G.mazeDone=false; if(G.water===undefined) G.water='none'; if(G.relic===undefined) G.relic='none'; if(G.colossusMet===undefined) G.colossusMet=false; if(G.colossusDown===undefined) G.colossusDown=false; enterGame(false); }
   else openSetup(i);
 }
 function openSetup(i){
@@ -1377,18 +1409,18 @@ function showPanel(i){
   cut0();
 }
 var bossMeetActive=false;
-var bossMeetId='grak'; /* which boss the meeting is for: 'grak' or 'thornwolf' */
+var bossMeetId='grak'; /* which boss the meeting is for: 'grak', 'thornwolf' or 'colossus' */
 function who(t){$('cutBox').querySelector('.who').textContent=t}
 function advanceCutscene(){
   if(!cutActive) return;
   SFX.select();
   cutPage++;
   if(cutPage<cutPages.length){ var pg=cutPages[cutPage],sp=pg[0]==='@'?'grak':'narr',b=bossMeetActive&&sp!==cutSp; $('cutText').textContent=pg.replace(/^@/,'');if(b)who(sp==='grak'?'GRAK, THE GOBLIN KING':'THE OLD STORIES');sp==='grak'?bossMeetActive&&say('grak',pg.slice(1),b):say('narr',pg,b);cutSp=sp;return;}
-  if(bossMeetActive){ if(bossMeetId==='thornwolf') endThornMeeting(); else endBossMeeting(); return; }
+  if(bossMeetActive){ if(bossMeetId==='thornwolf') endThornMeeting(); else if(bossMeetId==='colossus') endColossusMeeting(); else endBossMeeting(); return; }
   if(cutStandalone){ endCutscene(); return; }
   cutPanel++; showPanel(cutPanel);
 }
-function endCutscene(){ if(!cutActive) return; if(bossMeetActive){ if(bossMeetId==='thornwolf') endThornMeeting(); else endBossMeeting(); return; } cutActive=false; cutStandalone=false; if(cutDone) cutDone(); }
+function endCutscene(){ if(!cutActive) return; if(bossMeetActive){ if(bossMeetId==='thornwolf') endThornMeeting(); else if(bossMeetId==='colossus') endColossusMeeting(); else endBossMeeting(); return; } cutActive=false; cutStandalone=false; if(cutDone) cutDone(); }
 function startBossMeeting(){
   bossMeetId='grak';
   bossMeetActive=true;cutActive=true;cutStandalone=false;
@@ -1444,6 +1476,32 @@ function startThornAfter(){
   cutPages=THORN_AFTER_PAGES.slice();cutPage=0;
   cutDone=function(){ showView('gameView'); };
   cut0();
+}
+function startColossusMeeting(){
+  bossMeetId='colossus';
+  bossMeetActive=true;cutActive=true;cutStandalone=false;
+  showView('cutView');
+  var img=$('cutImg');img.src=COLOSSUS_CLOSEUP;img.className='';
+  var fx=$('cutFx');fx.className='fx';$('cutEmbers').style.display='none';
+  who('THE OLD STORIES');
+  cutPages=COLOSSUS_MEET_PAGES.slice(); cutPage=0;
+  cut0();
+  bossMusic=true;SFX.roar();
+}
+function endColossusMeeting(){
+  bossMeetActive=false;cutActive=false;stopVoice();
+  who('THE OLD STORIES');
+  showView('gameView');
+  toast('The fight begins — defeat the Dune Colossus, guardian of the Dust Key!');
+}
+function startColossusAfter(){
+  bossMeetActive=false;cutStandalone=true;cutActive=true;
+  showView('cutView');
+  var img=$('cutImg');img.src=DUST_KEY_IMG;img.className='';
+  var fx=$('cutFx');fx.className='fx';$('cutEmbers').style.display='none';
+  who('THE OLD STORIES');
+  cutPages=COLOSSUS_AFTER_PAGES.slice();cutPage=0;
+  cutDone=function(){ showView('gameView'); };
 }
 /* ================= THORN MAZE ================= */
 /* A small grid maze on the Thorn Maze screen: guide the ember to the bright
@@ -1905,11 +1963,16 @@ function spawnScreen(id){
     var ts=thornStats();
     enemies.push({x:480,y:170,hp:ts.hp,maxhp:ts.hp,t:0,idx:99,hitT:0,boss:true,bossId:'thornwolf',dmg:ts.dmg,dying:false,dieT:0});
   }
+  if(id==='darena'&&!G.colossusDown){
+    var cs=colossusStats();
+    enemies.push({x:480,y:220,hp:cs.hp,maxhp:cs.hp,t:0,idx:99,hitT:0,boss:true,bossId:'colossus',dmg:cs.dmg,dying:false,dieT:0});
+  }
   (HERB_SPOTS[id]||[]).forEach(function(hs,hi){ if(!G.herbsTaken[id+':'+hi]) herbsHere.push({x:hs[0],y:hs[1],idx:hi}); });
   (DIG_SPOTS[id]||[]).forEach(function(ds,di){ if(!G.digsTaken||!G.digsTaken[id+':'+di]) digHere.push({x:ds[0],y:ds[1],idx:di}); });
   (NPC_SPOTS[id]||[]).forEach(function(ns){ npcs.push({id:ns.id,x:ns.x,y:ns.y,homeX:ns.x,homeY:ns.y}); });
   if(id==='mill'&&!G.millChest) pickups.push({kind:'chest',x:520,y:330});
   if(id==='fcave'&&G.axe!=='found'&&G.axe!=='done') pickups.push({kind:'axe',x:480,y:330});
+  if(id==='dwell'&&G.water==='given') pickups.push({kind:'waterskin',x:480,y:330});
   if(id==='flower'&&G.goat==='active') goatHere={x:GOAT_SPOT.x,y:GOAT_SPOT.y};
   if(id==='village'){ chestVisible = G.girlMet && G.girlChests<4 && girlState==='atchest'; }
 }
@@ -1922,6 +1985,9 @@ function enterScreen(id,fromDir){
   } else if(id==='flair'&&G&&!G.thornDown){
     bossMusic=true;
     if(!G.thornMet){ G.thornMet=true; persist(); startThornMeeting(); }
+  } else if(id==='darena'&&G&&!G.colossusDown){
+    bossMusic=true;
+    if(!G.colossusMet){ G.colossusMet=true; persist(); startColossusMeeting(); }
   } else bossMusic=false;
   if(isShrine(id)){ lastShrine=id; G.lastShrine=id; }
   if(id==='fedge'&&G&&!G.thornSeen){ G.thornSeen=true; persist(); startThornwoodEntry(); }
@@ -2097,8 +2163,24 @@ function drawThornwolf(g,e){
   g.strokeStyle='#ffd97a'; g.lineWidth=1; g.strokeRect(e.x-52.5,e.y-132.5,105,9);
   g.fillStyle='#ffd97a'; g.font='bold 12px Georgia'; g.textAlign='center'; g.fillText('THORNWOLF, ALPHA OF THE SHADOW WOLVES',e.x,e.y-140);
 }
+function drawColossus(g,e){
+  var h=140, alpha=1;
+  if(e.dying){ var k=Math.max(0,e.dieT/1.8); alpha=k; h=140*(0.7+0.3*k); }
+  g.save(); g.globalAlpha=alpha;
+  var ok=drawSpriteFig(g,e.x,e.y,'colossus',h,false,e.hitT>0);
+  if(!ok){
+    if(e.hitT>0) g.filter='brightness(1.8)';
+    g.fillStyle='#8a7a5e'; g.beginPath(); g.ellipse(e.x,e.y-10,h*0.35,h*0.28,0,0,7); g.fill();
+    g.fillStyle='#ffb347'; g.beginPath(); g.arc(e.x-12,e.y-22,3,0,7); g.arc(e.x+12,e.y-22,3,0,7); g.fill();
+  }
+  g.restore();
+  g.fillStyle='rgba(0,0,0,.55)'; g.fillRect(e.x-60,e.y-162,120,8);
+  g.fillStyle='#e25822'; g.fillRect(e.x-60,e.y-162,120*Math.max(0,e.hp/e.maxhp),8);
+  g.strokeStyle='#ffd97a'; g.lineWidth=1; g.strokeRect(e.x-60.5,e.y-162.5,121,9);
+  g.fillStyle='#ffd97a'; g.font='bold 12px Georgia'; g.textAlign='center'; g.fillText('DUNE COLOSSUS, ANCIENT SANDSTONE GOLEM',e.x,e.y-170);
+}
 function drawEnemy(g,e){
-  if(e.boss){ if(e.bossId==='thornwolf') drawThornwolf(g,e); else drawGrak(g,e); return; }
+  if(e.boss){ if(e.bossId==='thornwolf') drawThornwolf(g,e); else if(e.bossId==='colossus') drawColossus(g,e); else drawGrak(g,e); return; }
   var phase=(e.moving)?(Math.floor((e.walkT||0)*8)%2):0;
   var fk='goblin', flip=false, h=46, wy=e.y;
   if(e.kind==='wolf'){
@@ -2188,6 +2270,12 @@ function drawWorld(g,screenId,ox,oy,drawDynamics){
     g.fillStyle='#c9a86a'; g.beginPath(); g.ellipse(d.x,d.y-3,10,5,0,0,7); g.fill();
     g.fillStyle='#8a6f3f'; g.fillRect(d.x-2,d.y-8,4,4);
   });
+  /* Old Maren's relic: a marked mound where the two dead palms lean, at Dead Palms */
+  if(screenId==='ddead'&&G&&G.relic==='given'){
+    g.fillStyle='rgba(255,200,80,'+(0.3+Math.sin(Date.now()/300)*0.15)+')'; g.beginPath(); g.arc(480,330,26,0,7); g.fill();
+    g.fillStyle='#a88a4f'; g.beginPath(); g.ellipse(480,330,15,8,0,0,7); g.fill();
+    g.fillStyle='#c9a86a'; g.beginPath(); g.ellipse(480,330-3,10,5,0,0,7); g.fill();
+  }
   /* herbs */
   herbsHere.forEach(function(h){
     g.fillStyle='#4d7a33'; g.beginPath(); g.ellipse(h.x,h.y,13,7,0,0,7); g.fill();
@@ -2219,6 +2307,11 @@ function drawWorld(g,screenId,ox,oy,drawDynamics){
       g.fillStyle='rgba(255,200,80,'+(0.3+Math.sin(Date.now()/300)*0.15)+')'; g.beginPath(); g.arc(p.x,p.y,24,0,7); g.fill();
       g.fillStyle='#8a6d2f'; g.fillRect(p.x-2,p.y-14,4,28);
       g.fillStyle='#b8bcc4'; g.fillRect(p.x-10,p.y-18,20,8);
+    } else if(p.kind==='waterskin'){
+      /* the empty waterskin at the Old Well, glowing so the hero can spot it */
+      g.fillStyle='rgba(120,200,220,'+(0.3+Math.sin(Date.now()/300)*0.15)+')'; g.beginPath(); g.arc(p.x,p.y,24,0,7); g.fill();
+      g.fillStyle='#4f9a8a'; g.beginPath(); g.ellipse(p.x,p.y,12,15,0,0,7); g.fill();
+      g.fillStyle='#2a6a5e'; g.fillRect(p.x-3,p.y-18,6,6);
     }
   });
   /* village girl chest */
@@ -2263,6 +2356,8 @@ function npcHasQuest(id){
   if(id==='dell') return G.goat==='none'||G.goat==='following';
   if(id==='joren') return G.axe==='none'||G.axe==='found';
   if(id==='sable') return (G.pelts||0)>0;
+  if(id==='zeke') return G.water==='none'||G.water==='full';
+  if(id==='maren') return G.relic==='none'||G.relic==='found';
   return false;
 }
 </script>
@@ -2379,6 +2474,18 @@ function talkTo(npc){
     else if(G.axe==='done') openDialogue('joren',LINES.jorenAfter);
     else openDialogue('joren',LINES.jorenRepeat);
   }
+  else if(id==='zeke'){
+    if(G.water==='none'){ openDialogue('zeke',LINES.zekeFirst,function(){ G.water='given'; persist(); updateHUD(); toast('Quest: bring Zeke a full waterskin — skin at the Old Well, water at the Oasis'); }); }
+    else if(G.water==='full'){ openDialogue('zeke',LINES.zekeWaterDone,function(){ G.water='done'; G.coins+=40; persist(); updateHUD(); toast('Zeke pays you 40 coins — and his desert gear is open to you now.'); openShop('zeke'); }); }
+    else if(G.water==='done'){ openDialogue('zeke',LINES.zekeAfter,function(){ openShop('zeke'); }); }
+    else openDialogue('zeke',LINES.zekeRepeat);
+  }
+  else if(id==='maren'){
+    if(G.relic==='none'){ openDialogue('maren',LINES.marenFirst,function(){ G.relic='given'; persist(); updateHUD(); toast('Quest: dig up Old Maren\u2019s relic where the two dead palms lean'); }); }
+    else if(G.relic==='found'){ openDialogue('maren',LINES.marenRelicDone,function(){ G.relic='done'; G.coins+=50; persist(); updateHUD(); toast('Old Maren pays you 50 coins for her relic.'); }); }
+    else if(G.relic==='done') openDialogue('maren',LINES.marenAfter);
+    else openDialogue('maren',LINES.marenRepeat);
+  }
   else if(id==='sable'){
     /* Sable buys every wolf pelt the hero carries, 5 coins apiece, once her lines are done. */
     if(first) openDialogue('sable',LINES.sableFirst,function(){ sellPelts(); });
@@ -2439,7 +2546,11 @@ function tryInteract(){
   for(i=0;i<pickups.length;i++){ if(pickups[i].kind==='axe'&&dist(player.x,player.y,pickups[i].x,pickups[i].y)<56){
     pickups.splice(i,1); G.axe='found'; SFX.chest(); persist(); updateHUD();
     toast('You found Joren\u2019s axe! Bring it back to him at the Forest Edge.'); return; } }
+  for(i=0;i<pickups.length;i++){ if(pickups[i].kind==='waterskin'&&dist(player.x,player.y,pickups[i].x,pickups[i].y)<56){
+    pickups.splice(i,1); G.water='skin'; SFX.chest(); persist(); updateHUD();
+    toast('You found the empty waterskin! Fill it at the Oasis, then bring it back to Zeke.'); return; } }
   if(curScreen==='fmaze'&&!G.mazeDone&&dist(player.x,player.y,480,320)<56){ openMaze(); return; }
+  if(curScreen==='doasis'&&G.water==='skin'&&dist(player.x,player.y,480,330)<70){ fillWaterskin(); return; }
   if(isShrine(curScreen)&&dist(player.x,player.y,480,240)<84){
     G.hp=G.maxEmbers*2; lastShrine=curScreen; G.lastShrine=curScreen; G.x=Math.round(player.x); G.y=Math.round(player.y);
     persist(); SFX.shrine(); updateHUD();
@@ -2448,6 +2559,7 @@ function tryInteract(){
   }
   for(i=0;i<herbsHere.length;i++){ if(dist(player.x,player.y,herbsHere[i].x,herbsHere[i].y)<46){ collectHerb(i); return; } }
   for(i=0;i<digHere.length;i++){ if(dist(player.x,player.y,digHere[i].x,digHere[i].y)<46){ collectDig(i); return; } }
+  if(curScreen==='ddead'&&G.relic==='given'&&dist(player.x,player.y,480,330)<56){ collectRelic(); return; }
 }
 function collectHerb(i){
   var h=herbsHere[i]; herbsHere.splice(i,1);
@@ -2465,6 +2577,14 @@ function collectDig(i){
   SFX.coin(); burst(d.x,d.y,6,['#f0c93e','#ffe97a']);
   toast('You dug up '+val+' coins from the sand!');
   persist(); updateHUD();
+}
+function fillWaterskin(){
+  G.water='full'; SFX.chest(); persist(); updateHUD();
+  toast('You filled the waterskin at the Oasis! Bring it back to Zeke at the Dunes.');
+}
+function collectRelic(){
+  G.relic='found'; SFX.chest(); persist(); updateHUD();
+  toast('You dug up Old Maren\u2019s relic! Bring it back to her in the village.');
 }
 function doAttack(){
   if(!inGame||dlgOpen||itemOpen||paused||trans||shopOpen) return;
@@ -2488,7 +2608,7 @@ function doAttack(){
   });
 }
 function killEnemy(e){
-  if(e.boss){ if(e.bossId==='thornwolf') killThornwolf(e); else killGrak(e); return; }
+  if(e.boss){ if(e.bossId==='thornwolf') killThornwolf(e); else if(e.bossId==='colossus') killColossus(e); else killGrak(e); return; }
   enemies.splice(enemies.indexOf(e),1);
   G.enemiesDown[curScreen+':'+e.idx]=true;
   if(e.kind==='goblin') G.goblinKills=(G.goblinKills||0)+1;
@@ -2532,6 +2652,21 @@ function finishThornwolf(e){
   bossMusic=false;
   persist(); updateHUD();
   showItemFind(THORN_KEY_IMG,THORN_KEY_WORDS,function(){ toast('The Thornwolf dropped 50 coins — and the Thorn Key is yours (2 of 4).'); startThornAfter(); });
+}
+function killColossus(e){
+  /* bigger, slower ember dissolve than a regular enemy: the Colossus crumbles for 1.8s, then is gone */
+  e.dying=true; e.dieT=1.8; e.hp=0;
+  SFX.defeat(); SFX.roar();
+  burst(e.x,e.y,26,['#ffb347','#e25822','#ffd97a','#fff3c4']);
+}
+function finishColossus(e){
+  var i=enemies.indexOf(e); if(i>=0) enemies.splice(i,1);
+  G.enemiesDown['darena:colossus']=true; G.colossusDown=true;
+  G.coins+=50;
+  if(!hasKey('dust')) G.keys.push('dust');
+  bossMusic=false;
+  persist(); updateHUD();
+  showItemFind(DUST_KEY_IMG,COLOSSUS_KEY_WORDS,function(){ toast('The Dune Colossus dropped 50 coins — and the Dust Key is yours (3 of 4).'); startColossusAfter(); });
 }
 /* ================= UPDATE LOOP ================= */
 var lastTs=0;
@@ -2589,7 +2724,7 @@ function update(dt){
       if(e.boss&&e.dying){
         e.dieT-=dt;
         if(Math.random()<.5) burst(e.x+(Math.random()*80-40),e.y+(Math.random()*60-30),2,['#ffb347','#e25822','#ffd97a']);
-        if(e.dieT<=0){ if(e.bossId==='thornwolf') finishThornwolf(e); else finishGrak(e); }
+        if(e.dieT<=0){ if(e.bossId==='thornwolf') finishThornwolf(e); else if(e.bossId==='colossus') finishColossus(e); else finishGrak(e); }
       }
     });
     particles.forEach(function(p){ p.life-=dt; p.x+=p.vx*dt; p.y+=p.vy*dt; p.vy-=26*dt; });
@@ -2887,6 +3022,7 @@ function openBag(){
   }
   if(hasKey('meadow')) $('bagList').innerHTML+='<div style="text-align:center;margin-top:10px"><img src="'+MEADOW_KEY_SPRITE+'" alt="Meadow Key" style="width:72px;filter:drop-shadow(0 0 12px rgba(255,200,80,.6))"><div style="color:#ffd97a;font-size:13px;margin-top:4px">Meadow Key — rides on your key ring</div></div>';
   if(hasKey('thorn')) $('bagList').innerHTML+='<div style="text-align:center;margin-top:10px"><img src="'+THORN_KEY_SPRITE+'" alt="Thorn Key" style="width:72px;filter:drop-shadow(0 0 12px rgba(120,200,255,.6))"><div style="color:#9fd8ff;font-size:13px;margin-top:4px">Thorn Key — rides on your key ring</div></div>';
+  if(hasKey('dust')) $('bagList').innerHTML+='<div style="text-align:center;margin-top:10px"><img src="'+DUST_KEY_SPRITE+'" alt="Dust Key" style="width:72px;filter:drop-shadow(0 0 12px rgba(255,190,100,.6))"><div style="color:#ffcf8a;font-size:13px;margin-top:4px">Dust Key — rides on your key ring</div></div>';
   var btns=$('bagList').querySelectorAll('.charm-btn');
   btns.forEach(function(b){ b.addEventListener('click',function(){ toggleCharm(b.getAttribute('data-charm')); }); });
   var ubtns=$('bagList').querySelectorAll('.use-btn');
@@ -2956,6 +3092,10 @@ function enterGame(fromCutscene){
   if(G.thornMet===undefined) G.thornMet=false;
   if(G.thornDown===undefined) G.thornDown=false;
   if(G.mazeDone===undefined) G.mazeDone=false;
+  if(G.water===undefined) G.water='none';
+  if(G.relic===undefined) G.relic='none';
+  if(G.colossusMet===undefined) G.colossusMet=false;
+  if(G.colossusDown===undefined) G.colossusDown=false;
   if(G.lastShrine===undefined) G.lastShrine='village';
   if(G.potions===undefined) G.potions=0;
   if(G.weaponTier===undefined) G.weaponTier=G.weapon?1:0;
